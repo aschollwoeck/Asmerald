@@ -1,0 +1,25 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Text;
+using TypeProofSql.Expressions;
+using TypeProofSql.QueryBuilders;
+using TypeProofSql.Columns;
+using System.Linq;
+using TypeProofSql.{{ nspace }}.Statements;
+
+namespace TypeProofSql.{{ nspace }}
+{
+    public static partial class TypeProofSql{{ extension_name }}Extensions
+    {
+        {% for ext in extensions %}
+            public static {{ ext.return_class_name.full_class_name }} {{ extension_name }}{% if ext.return_class_name.generics.size > 0 %}<{{ ext.return_class_name.generics | join: ", "  }}>{% endif %}(this {{ ext.base_class.class_name }} stmt{% for prop in ext.return_class_name.properties %}, {%if prop.is_list %}params {{ prop.class_name }}[] {% else %}{{ prop.class_name }} {% endif %}{{ prop.para }}{% endfor %})
+            {% for gentyp in ext.return_class_name.generics %}where {{ gentyp }} : ITable, new() {% endfor %}
+            {
+                return new {{ ext.return_class_name.full_class_name }}(
+                    stmt.QueryBuilder
+                    {% for prop in ext.return_class_name.properties %}, {{ prop.para }}{% endfor %}
+                    {% for gentyp in ext.generic_types %}, new {{ gentyp }}(){% endfor %});
+            }
+        {% endfor %}
+    }
+}

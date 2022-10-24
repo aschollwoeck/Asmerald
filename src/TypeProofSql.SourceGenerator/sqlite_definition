@@ -1,0 +1,145 @@
+﻿sqlDialect=SQLite
+Directory=C:\Users\Alexander\Source\Repos\TypeProofSql\TypeProofSql
+
+[COMMON_CLASSES]
+SQLiteDSLContext = SQLiteDSLContext
+ConditionalGroupStatement = ConditionalGroupStatement
+ConditionalStatement = ConditionalStatement
+
+[CLASSES]
+Not = Not
+
+With = With
+WithTable = WithTable(ITable table, ISelectColumn[] selectColumns)
+WithTable<T> = WithTable<T>(ISelectColumn[] selectColumns) : WithTable(new T(), selectColumns)
+WithTableAdditional = WithTableAdditional(ITable table, ISelectColumn[] selectColumns)
+WithTableAdditional<T> = WithTableAdditional<T>(ISelectColumn[] selectColumns) : WithTableAdditional(new T(), selectColumns)
+Recursive = Recursive(ITable table, ISelectColumn[] selectColumns)
+Recursive<T> = Recursive<T>(ISelectColumn[] selectColumns) : Recursive(new T(), selectColumns)
+
+Materialized = Materialized(IQueryBuilder subQuery)
+
+As = As
+AsSelect = AsSelect(IQueryBuilder subQuery)
+
+All = All
+
+Select = Select
+SelectColumns = SelectColumns(ISelectColumn[] columns)
+Distinct = Distinct
+DistinctColumns = DistinctColumns(ISelectColumn[] columns)
+
+Delete = Delete
+Insert = Insert
+Into = Into(ITable table)
+Into<T> = Into<T>() : Into(new T())
+
+Update = Update(ITable table)
+Update<T> = Update<T>() : Update(new T())
+
+From = From(ITable table)
+FromSubQuery = FromSubQuery(IQueryBuilder subQueryBuilder, ITable table)
+From<T> = From<T>() : From(new T())
+FromSubQuery<T> = FromSubQuery<T>(IQueryBuilder subQueryBuilder) : FromSubQuery(subQueryBuilder, new T())
+
+TableAs = TableAs(string alias)
+
+Join = Join(ITable left, ITable right)
+Join<T1, T2> = Join<T1, T2>(T1 left, T2 right)
+JoinSubQuery = JoinSubQuery(IQueryBuilder subQueryBuilder)
+JoinAs = JoinAs(string alias)
+;ConditionalJoin<T1, T2> = ConditionalJoin<T1, T2>((ISelectColumn<T1> col1, ISelectColumn<T2> col2)[] on) : Join<T1, T2>(new T1(), new T2())
+;NonConditionalJoin = NonConditionalJoin(ITable left, ITable right) : Join(left, right)
+;NonConditionalJoin<T1, T2> = NonConditionalJoin<T1, T2>() : NonConditionalJoin(new T1(), new T2())
+;CrossJoin<T1, T2> = CrossJoin<T1, T2>() : NonConditionalJoin<T1, T2>()
+;FullOuterJoin<T1, T2> = FullOuterJoin<T1, T2>((ISelectColumn<T1> col1, ISelectColumn<T2> col2)[] on) : ConditionalJoin<T1, T2>(on)
+;InnerJoin<T1, T2> = InnerJoin<T1, T2>((ISelectColumn<T1> col1, ISelectColumn<T2> col2)[] on) : ConditionalJoin<T1, T2>(on)
+;LeftOuterJoin<T1, T2> = LeftOuterJoin<T1, T2>((ISelectColumn<T1> col1, ISelectColumn<T2> col2)[] on) : ConditionalJoin<T1, T2>(on)
+;RightOuterJoin<T1, T2> = RightOuterJoin<T1, T2>((ISelectColumn<T1> col1, ISelectColumn<T2> col2)[] on) : ConditionalJoin<T1, T2>(on)
+ConditionalJoin<T1, T2> = ConditionalJoin<T1, T2>() : Join<T1, T2>(new T1(), new T2())
+NonConditionalJoin = NonConditionalJoin(ITable left, ITable right) : Join(left, right)
+NonConditionalJoin<T1, T2> = NonConditionalJoin<T1, T2>() : NonConditionalJoin(new T1(), new T2())
+CrossJoin<T1, T2> = CrossJoin<T1, T2>() : NonConditionalJoin<T1, T2>()
+FullOuterJoin<T1, T2> = FullOuterJoin<T1, T2>() : ConditionalJoin<T1, T2>()
+InnerJoin<T1, T2> = InnerJoin<T1, T2>() : ConditionalJoin<T1, T2>()
+LeftOuterJoin<T1, T2> = LeftOuterJoin<T1, T2>() : ConditionalJoin<T1, T2>()
+RightOuterJoin<T1, T2> = RightOuterJoin<T1, T2>() : ConditionalJoin<T1, T2>()
+
+On = On(ISelectColumn left, ISelectColumn right)
+OnMulti = OnMulti((ISelectColumn left, ISelectColumn right) on)
+On<T1, T2> = On<T1, T2>(ISelectColumn<T1> left, ISelectColumn<T2> right) : On(left, right)
+OnMulti<T1, T2> = OnMulti<T1, T2>((ISelectColumn<T1> left, ISelectColumn<T2> right) on)
+
+Where = Where(ConditionalExpression conditionalExpression) : ConditionalGroup
+And = And(ConditionalGroupStatement groupStatement, ConditionalExpression conditionalExpression) : Conditional(groupStatement, conditionalExpression)
+AndGroup = AndGroup(ConditionalExpression conditionalExpression) : ConditionalGroup(conditionalExpression)
+Or = Or(ConditionalGroupStatement groupStatement, ConditionalExpression conditionalExpression) : Conditional(groupStatement, conditionalExpression)
+OrGroup = OrGroup(ConditionalExpression conditionalExpression) : ConditionalGroup(conditionalExpression)
+
+Having = Having(ConditionalExpression conditionalExpression) : ConditionalGroup(conditionalExpression)
+
+GroupBy = GroupBy(IColumn[] groupByColumns)
+OrderBy = OrderBy(IOrderByColumn[] orderByColumns)
+
+Limit = Limit(int limit)
+Offset = Offset(int offset)
+
+Set = Set(ValueExpression[] valueExpressions)
+Value = Value(ValueExpression[] valueExpressions)
+
+Compound = Compound(IQueryBuilder subQueryBuilder)
+Union = Union(IQueryBuilder subQueryBuilder) : Compound(subQueryBuilder)
+UnionAll = UnionAll(IQueryBuilder subQueryBuilder) : Compound(subQueryBuilder)
+Intersect = Intersect(IQueryBuilder subQueryBuilder) : Compound(subQueryBuilder)
+Except = Except(IQueryBuilder subQueryBuilder) : Compound(subQueryBuilder)
+
+[CHAINING]
+;With = _COMMON_TBL_EXPR_
+;With<T>
+With = SQLiteDSLContext : With; SQLiteDSLContext : WithTable<T>; AsSelect : WithTableAdditional<T>; Materialized : WithTableAdditional<T>
+Recursive = With : Recursive<T>
+;Recursive = _COMMON_TBL_EXPR_
+
+Materialized = As : Materialized; Not : Materialized; WithTable : Materialized; WithTableAdditional : Materialized
+
+Not = As : Not; AsSelect : Not
+
+Select = SQLiteDSLContext : Select; SQLiteDSLContext : SelectColumns; AsSelect : Select; AsSelect : SelectColumns; Materialized : Select; Materialized : SelectColumns; Compound : Select; Compound : SelectColumns
+All = Select : All; Distinct : All
+Distinct = SelectColumns : Distinct; Select : DistinctColumns; Select : Distinct
+From = Select : From<T>; SelectColumns : From<T>; DistinctColumns : From<T>; All : From<T>; Delete : From<T>
+As = From : TableAs; Join : JoinAs; Recursive : AsSelect; WithTable<T> : AsSelect; WithTableAdditional<T> : AsSelect; Recursive : As; WithTable : As
+
+InnerJoin = From : InnerJoin<T1, T2>; NonConditionalJoin : InnerJoin<T1, T2>
+LeftJoin = From : LeftOuterJoin<T1, T2>; NonConditionalJoin : LeftOuterJoin<T1, T2>
+RightJoin = From : RightOuterJoin<T1, T2>; NonConditionalJoin : RightOuterJoin<T1, T2>
+FullJoin = From : FullOuterJoin<T1, T2>; NonConditionalJoin : FullOuterJoin<T1, T2>
+CrossJoin = From : CrossJoin<T1, T2>; NonConditionalJoin : CrossJoin<T1, T2>
+
+On = Join : On<T1, T2>; Join : OnMulti<T1, T2>; JoinAs : On<T1, T2>; JoinAs : OnMulti<T1, T2>; ConditionalJoin<T1, T2> : On<T1, T2>; ConditionalJoin<T1, T2> : OnMulti<T1, T2>
+
+;Where
+WhereGroup = From : ConditionalGroupStatement; On : ConditionalGroupStatement; OnMulti : ConditionalGroupStatement; NonConditionalJoin : ConditionalGroupStatement; ConditionalJoin<T1, T2> : ConditionalGroupStatement
+
+
+GroupBy = From : GroupBy; ConditionalGroupStatement : GroupBy
+
+Having = GroupBy : Having; Where : Having
+
+Limit = From : Limit; GroupBy : Limit; OrderBy : Limit; Where : Limit
+;Conditional : Limit; ConditionalGroup : Limit
+Offset = Limit : Offset
+
+OrderBy = From : OrderBy; GroupBy : OrderBy; Where : OrderBy
+;Conditional : OrderBy; ConditionalGroup : OrderBy
+
+Insert = SQLiteDSLContext : Insert
+Into = Insert : Into<T>
+Values = Into<T> : Value
+
+Update = SQLiteDSLContext : Update<T>
+Set = Update<T> : Set
+
+Delete = SQLiteDSLContext : Delete
+
+UnionAll = From<T> : UnionAll

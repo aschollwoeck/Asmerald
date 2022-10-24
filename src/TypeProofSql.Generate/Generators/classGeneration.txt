@@ -1,0 +1,39 @@
+﻿using TypeProofSql;
+using TypeProofSql.Columns;
+
+{% if nspace != "" %}
+namespace {{nspace}}
+{
+{% endif %}
+
+{% for table in tables %}
+public class {{table.name_class}} : ITable
+{
+    string ITable.Name() => "{{table.name}}";
+
+    {% for column in table.columns %}
+    public static {{column.name_class}} {{column.name_method}}() => new {{column.name_class}}();
+    {% endfor %}
+
+    {% for column in table.columns %}
+    public class {{column.name_class}} : {{column.type}}<{{table.name_class}}>, ISelectColumn<{{table.name_class}}>, ISelectColumnAlias<{{table.name_class}}>
+    {
+        private readonly string _name = "{{column.name}}";
+
+        string ISelectColumn.Name => _name;
+
+        public {{column.name_class}}() { }
+
+        public override string Name() => _name;
+
+        public override ISelectColumnAlias<{{table.name_class}}> As(string name) => new AliasColumn<{{table.name_class}}>(this, name);
+
+        public override ISelectColumn<{{table.name_class}}> Count() => new CountColumn<{{table.name_class}}>(this);
+    }
+{% endfor %}
+}
+{% endfor %}
+
+{% if nspace != "" %}
+}
+{% endif %}
