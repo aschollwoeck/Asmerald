@@ -1,0 +1,108 @@
+﻿flowchart LR
+
+Root -->|With| With
+With -->|Recursive| Recursive
+Root -->|With| WithTable
+Recursive -->|As| WithAs
+WithTable -->|As| WithAs
+WithAs --> |Not| WithNot
+WithNot --> |Materialized| Materialized
+WithAs --> |Materialized| Materialized
+
+WithAs --> |With| WithAdditionalTable
+Materialized -->|With| WithAdditionalTable
+
+
+Root -->|Select| Select
+Root -->|Select| SelectColumns
+
+subgraph selectcore
+    Select -->|All| All
+    Distinct --> |All| All
+
+    Select -->|Distinct| Distinct
+    Select -->|Distinct| DistinctColumns
+
+    SelectColumns -->|From| From
+    All --> |From| From
+    DistinctColumns --> |From| From
+
+    From -->|InnerJoin| ConditionalJoin
+    From -->|LeftJoin| ConditionalJoin
+    From -->|RightJoin| ConditionalJoin
+    From -->|FullJoin| ConditionalJoin
+
+
+    subgraph IJoin
+    From -->|CrossJoin| NonConditionalJoin
+    ConditionalJoin -->|On| On
+    ConditionalJoin -->|On| OnMulti
+    end
+
+
+    subgraph IWhere
+    Where
+    WhereGroup
+    end
+
+    IJoin -->|Where| IWhere
+    IJoin -->|GroupBy| GroupBy
+    IWhere -->|GroupBy| GroupBy
+    GroupBy -->|Having| Having
+    IWhere -->|Having| Having
+end
+
+//selectcore -->|Union| selectcore
+//selectcore -->|UnionAll| selectcore
+//selectcore -->|Intersect| selectcore
+//selectcore -->|Except| selectcore
+
+subgraph IOrderBy
+    OrderBy --> IOrderByEnd
+    OrderBy -->|Collate| Collate
+    Collate --> IOrderByEnd
+    OrderBy -->|Asc| Asc
+    Collate -->|Asc| Asc
+    Asc --> IOrderByEnd
+    OrderBy -->|Desc| Desc
+    Collate -->|Desc| Desc
+    Desc --> IOrderByEnd
+    OrderBy -->|Nulls| Nulls
+    Collate -->|Nulls| Nulls
+    Asc -->|Nulls| Nulls
+    Desc --> |Nulls| Nulls
+    Nulls -->|First| First
+    First --> IOrderByEnd
+    Nulls -->|Last| Last
+    Last --> IOrderByEnd
+end
+
+selectcore -->|OrderBy| IOrderBy
+selectcore -->|Limit| Limit
+IOrderBy -->|Limit| Limit
+Limit -->|Offset| Offset
+
+
+
+Root -->|Insert| Insert
+Root -->|Replace| Replace
+Insert -->|Into| Into
+Replace -->|Into| Into
+Insert -->|Or| InsertOr
+InsertOr -->|Abort| Abort
+InsertOr -->|Fail| Fail
+InsertOr -->|Ignore| Ignore
+InsertOr -->|Replace| Replace
+InsertOr -->|Rollback| Rollback
+Abort -->|Into| Into
+Fail -->|Into| Into
+Ignore -->|Into| Into
+Rollback -->|Into| Into
+
+Into -->|As| IntoAs
+Into -->|Values| Values
+IntoAs -->|Values| Values
+Into -->|Default| Default
+IntoAs -->|Default| Default
+Default -->|Values| DefaultValues
+
