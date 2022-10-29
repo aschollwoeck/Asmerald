@@ -28,9 +28,5 @@ namespace TypeProofSql.SQLite
         {
             return new ConditionalGroupStatement(stmt.QueryBuilder);
         }
-        public static ConditionalGroupStatement WhereGroup(this ConditionalJoinStatement stmt)
-        {
-            return new ConditionalGroupStatement(stmt.QueryBuilder);
-        }
     }
 }

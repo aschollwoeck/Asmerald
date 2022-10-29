@@ -41,7 +41,16 @@ namespace TypeProofSql.SourceGenerator.Generators
                 {
                     w.Write($"<{String.Join(", ", ext.return_class_name.generics)}>");
                 }
-                w.Write($"(this {ext.base_class.class_name} stmt");
+                w.Write($"(this {ext.base_class.class_name}");
+
+                if(ext.base_class.generics != null && ext.base_class.generics.Count > 0)
+                {
+                    w.Write("<");
+                    w.Write(String.Join(", ", ext.base_class.generics));
+                    w.Write(">");
+                }
+
+                w.Write(" stmt");
 
                 foreach (var prop in ext.return_class_name.properties)
                 {

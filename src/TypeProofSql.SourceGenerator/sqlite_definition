@@ -1,5 +1,5 @@
 ﻿sqlDialect=SQLite
-Directory=C:\Users\Alexander\Source\Repos\TypeProofSql\TypeProofSql
+Directory=C:\Users\Scholli\Source\Repos\TypeSafeSql\src\TypeProofSql
 
 [COMMON_CLASSES]
 SQLiteDSLContext = SQLiteDSLContext
@@ -45,7 +45,7 @@ FromSubQuery<T> = FromSubQuery<T>(IQueryBuilder subQueryBuilder) : FromSubQuery(
 TableAs = TableAs(string alias)
 
 Join = Join(ITable left, ITable right)
-Join<T1, T2> = Join<T1, T2>(T1 left, T2 right)
+Join<T1, T2> = Join<T1, T2>(T1 left, T2 right) : Join(left, right)
 JoinSubQuery = JoinSubQuery(IQueryBuilder subQueryBuilder)
 JoinAs = JoinAs(string alias)
 ;ConditionalJoin<T1, T2> = ConditionalJoin<T1, T2>((ISelectColumn<T1> col1, ISelectColumn<T2> col2)[] on) : Join<T1, T2>(new T1(), new T2())
@@ -108,7 +108,7 @@ Select = SQLiteDSLContext : Select; SQLiteDSLContext : SelectColumns; AsSelect :
 All = Select : All; Distinct : All
 Distinct = SelectColumns : Distinct; Select : DistinctColumns; Select : Distinct
 From = Select : From<T>; SelectColumns : From<T>; DistinctColumns : From<T>; All : From<T>; Delete : From<T>
-As = From : TableAs; Join : JoinAs; Recursive : AsSelect; WithTable<T> : AsSelect; WithTableAdditional<T> : AsSelect; Recursive : As; WithTable : As
+As = From : TableAs; Join : JoinAs; Recursive : AsSelect; WithTable : AsSelect; WithTableAdditional : AsSelect; Recursive : As; WithTable : As
 
 InnerJoin = From : InnerJoin<T1, T2>; NonConditionalJoin : InnerJoin<T1, T2>
 LeftJoin = From : LeftOuterJoin<T1, T2>; NonConditionalJoin : LeftOuterJoin<T1, T2>
@@ -119,7 +119,7 @@ CrossJoin = From : CrossJoin<T1, T2>; NonConditionalJoin : CrossJoin<T1, T2>
 On = Join : On<T1, T2>; Join : OnMulti<T1, T2>; JoinAs : On<T1, T2>; JoinAs : OnMulti<T1, T2>; ConditionalJoin<T1, T2> : On<T1, T2>; ConditionalJoin<T1, T2> : OnMulti<T1, T2>
 
 ;Where
-WhereGroup = From : ConditionalGroupStatement; On : ConditionalGroupStatement; OnMulti : ConditionalGroupStatement; NonConditionalJoin : ConditionalGroupStatement; ConditionalJoin<T1, T2> : ConditionalGroupStatement
+WhereGroup = From : ConditionalGroupStatement; On : ConditionalGroupStatement; OnMulti : ConditionalGroupStatement; NonConditionalJoin : ConditionalGroupStatement
 
 
 GroupBy = From : GroupBy; ConditionalGroupStatement : GroupBy
@@ -135,11 +135,11 @@ OrderBy = From : OrderBy; GroupBy : OrderBy; Where : OrderBy
 
 Insert = SQLiteDSLContext : Insert
 Into = Insert : Into<T>
-Values = Into<T> : Value
+Values = Into : Value
 
 Update = SQLiteDSLContext : Update<T>
-Set = Update<T> : Set
+Set = Update : Set
 
 Delete = SQLiteDSLContext : Delete
 
-UnionAll = From<T> : UnionAll
+UnionAll = From : UnionAll

@@ -36,13 +36,13 @@ namespace TypeProofSql.SQLite
         {
             return new OnMultiStatement<T1, T2>(stmt.QueryBuilder, on);
         }
-        public static OnStatement<T1, T2> On<T1, T2>(this ConditionalJoinStatement stmt, ISelectColumn<T1> left, ISelectColumn<T2> right)
+        public static OnStatement<T1, T2> On<T1, T2>(this ConditionalJoinStatement<T1, T2> stmt, ISelectColumn<T1> left, ISelectColumn<T2> right)
             where T1 : ITable, new()
             where T2 : ITable, new()
         {
             return new OnStatement<T1, T2>(stmt.QueryBuilder, left, right);
         }
-        public static OnMultiStatement<T1, T2> On<T1, T2>(this ConditionalJoinStatement stmt, (ISelectColumn<T1> left, ISelectColumn<T2> right) on)
+        public static OnMultiStatement<T1, T2> On<T1, T2>(this ConditionalJoinStatement<T1, T2> stmt, (ISelectColumn<T1> left, ISelectColumn<T2> right) on)
             where T1 : ITable, new()
             where T2 : ITable, new()
         {

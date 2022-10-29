@@ -9,19 +9,13 @@ using TypeProofSql.Statements;
 
 namespace TypeProofSql.Statements.SQLite
 {
-    public class JoinStatement<T1, T2> : IStatement
+    public class JoinStatement<T1, T2> : JoinStatement
         where T1 : ITable, new()
         where T2 : ITable, new()
     {
-        public IQueryBuilder QueryBuilder { get; private set; }
-        public T1 Left { get; private set; }
-        public T2 Right { get; private set; }
         public JoinStatement(IQueryBuilder queryBuilder, T1 left, T2 right)
+            : base(queryBuilder, left, right)
         {
-            this.QueryBuilder = queryBuilder;
-            this.QueryBuilder.AddStatment(this);
-            this.Left = left;
-            this.Right = right;
         }
     }
 }
