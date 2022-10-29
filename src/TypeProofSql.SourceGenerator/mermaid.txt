@@ -1,22 +1,28 @@
 ﻿flowchart LR
 
-Root -->|With| With
-With -->|Recursive| Recursive
 Root -->|With| WithTable
-Recursive -->|As| WithAs
-WithTable -->|As| WithAs
-WithAs --> |Not| WithNot
-WithNot --> |Materialized| Materialized
-WithAs --> |Materialized| Materialized
+Root -->|With| With
 
-WithAs --> |With| WithAdditionalTable
-Materialized -->|With| WithAdditionalTable
+subgraph IWith
+    With -->|Recursive| Recursive
+    Recursive -->|As| WithAs
+    WithTable -->|As| WithAs
+    WithAs --> |Not| WithNot
+    WithNot --> |Materialized| Materialized
+    WithAs --> |Materialized| Materialized
+
+    WithAs --> |With| WithAdditionalTable
+    Materialized -->|With| WithAdditionalTable
+
+    WithAs --> IWithEnd
+    Materialized --> IWithEnd
+end
 
 
 Root -->|Select| Select
 Root -->|Select| SelectColumns
 
-subgraph selectcore
+subgraph ISelect
     Select -->|All| All
     Distinct --> |All| All
 
@@ -27,22 +33,27 @@ subgraph selectcore
     All --> |From| From
     DistinctColumns --> |From| From
 
+    subgraph IJoin
+        From -->|CrossJoin| NonConditionalJoin
+        ConditionalJoin -->|On| On
+        ConditionalJoin -->|On| OnMulti
+
+        NonConditionalJoin --> IJoinEnd
+        On --> IJoinEnd
+        OnMulti --> IJoinEnd
+    end
+    
     From -->|InnerJoin| ConditionalJoin
     From -->|LeftJoin| ConditionalJoin
     From -->|RightJoin| ConditionalJoin
     From -->|FullJoin| ConditionalJoin
 
-
-    subgraph IJoin
-    From -->|CrossJoin| NonConditionalJoin
-    ConditionalJoin -->|On| On
-    ConditionalJoin -->|On| OnMulti
-    end
-
-
     subgraph IWhere
-    Where
-    WhereGroup
+        Where
+        WhereGroup
+
+        Where --> IWhereEnd
+        WhereGroup --> IWhereEnd
     end
 
     IJoin -->|Where| IWhere
@@ -50,12 +61,18 @@ subgraph selectcore
     IWhere -->|GroupBy| GroupBy
     GroupBy -->|Having| Having
     IWhere -->|Having| Having
+
+    From --> ISelectEnd
+    IJoin --> ISelectEnd
+    IWhere --> ISelectEnd
+    GroupBy --> ISelectEnd
+    Having --> ISelectEnd
 end
 
-//selectcore -->|Union| selectcore
-//selectcore -->|UnionAll| selectcore
-//selectcore -->|Intersect| selectcore
-//selectcore -->|Except| selectcore
+//ISelect -->|Union| ISelect
+//ISelect -->|UnionAll| ISelect
+//ISelect -->|Intersect| ISelect
+//ISelect -->|Except| ISelect
 
 subgraph IOrderBy
     OrderBy --> IOrderByEnd
@@ -77,8 +94,8 @@ subgraph IOrderBy
     Last --> IOrderByEnd
 end
 
-selectcore -->|OrderBy| IOrderBy
-selectcore -->|Limit| Limit
+ISelect -->|OrderBy| IOrderBy
+ISelect -->|Limit| Limit
 IOrderBy -->|Limit| Limit
 Limit -->|Offset| Offset
 
@@ -86,27 +103,35 @@ Limit -->|Offset| Offset
 
 Root -->|Insert| Insert
 Root -->|Replace| Replace
-Insert -->|Into| Into
-Replace -->|Into| Into
-Insert -->|Or| InsertOr
-InsertOr -->|Abort| Abort
-InsertOr -->|Fail| Fail
-InsertOr -->|Ignore| Ignore
-InsertOr -->|Replace| Replace
-InsertOr -->|Rollback| Rollback
-Abort -->|Into| Into
-Fail -->|Into| Into
-Ignore -->|Into| Into
-Rollback -->|Into| Into
 
-Into -->|As| IntoAs
-Into -->|Values| InsertValues
-IntoAs -->|Values| InsertValues
-Into -->|Select| InsertSelect
-IntoAs -->|Select| InsertSelect
-Into -->|Default| Default
-IntoAs -->|Default| Default
-Default -->|Values| DefaultValues
+subgraph IInsert
+    Insert -->|Into| Into
+    Replace -->|Into| Into
+    Insert -->|Or| InsertOr
+    InsertOr -->|Abort| Abort
+    InsertOr -->|Fail| Fail
+    InsertOr -->|Ignore| Ignore
+    InsertOr -->|Replace| Replace
+    InsertOr -->|Rollback| Rollback
+    Abort -->|Into| Into
+    Fail -->|Into| Into
+    Ignore -->|Into| Into
+    Rollback -->|Into| Into
+
+    Into -->|As| IntoAs
+    Into -->|Values| InsertValues
+    IntoAs -->|Values| InsertValues
+    Into -->|Select| InsertSelect
+    IntoAs -->|Select| InsertSelect
+    Into -->|Default| Default
+    IntoAs -->|Default| Default
+    Default -->|Values| DefaultValues
+
+    InsertValues --> IInsertEnd
+    InsertSelect --> IInsertEnd
+    DefaultValues --> IInsertEnd
+    IUpsert --> IInsertEnd
+end
 
 InsertSelect -->|On| UpsertOn
 InsertValues -->|On| UpsertOn
@@ -121,9 +146,29 @@ subgraph IUpsert
     UpsertNothing -->|On|UpsertOn
     UpsertSet -->|On|UpsertOn
     UpsertWhere -->|On|UpsertOn
+
+    UpsertNothing --> IUpsertEnd
+    UpsertSet --> IUpsertEnd
+    UpsertWhere --> IUpsertEnd
 end
 
 
 Returning -->|All|ReturningAll
 
 IUpsert -->|Returning| Returning
+
+
+Root -->|Delete| Delete
+
+subgraph IDelete
+    Delete -->|From| DeleteFrom
+    DeleteFrom -->|Where| DeleteWhere
+    DeleteFrom -->|Where| DeleteWhereGroup
+
+    DeleteFrom --> IDeleteEnd
+    DeleteWhere --> IDeleteEnd
+    DeleteWhereGroup --> IDeleteEnd
+end
+
+DeleteWhere -->|Returning| Returning
+DeleteWhereGroup -->|Returning| Returning
