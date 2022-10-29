@@ -100,9 +100,30 @@ Ignore -->|Into| Into
 Rollback -->|Into| Into
 
 Into -->|As| IntoAs
-Into -->|Values| Values
-IntoAs -->|Values| Values
+Into -->|Values| InsertValues
+IntoAs -->|Values| InsertValues
+Into -->|Select| InsertSelect
+IntoAs -->|Select| InsertSelect
 Into -->|Default| Default
 IntoAs -->|Default| Default
 Default -->|Values| DefaultValues
 
+InsertSelect -->|On| UpsertOn
+InsertValues -->|On| UpsertOn
+
+subgraph IUpsert
+    UpsertOn -->|Conflict| Conflict
+    Conflict -->|Do| UpsertDo
+    UpsertDo -->|Nothing| UpsertNothing
+    UpsertDo -->|Update|UpsertUpdate
+    UpsertUpdate -->|Set| UpsertSet
+    UpsertSet -->|Where| UpsertWhere
+    UpsertNothing -->|On|UpsertOn
+    UpsertSet -->|On|UpsertOn
+    UpsertWhere -->|On|UpsertOn
+end
+
+
+Returning -->|All|ReturningAll
+
+IUpsert -->|Returning| Returning
