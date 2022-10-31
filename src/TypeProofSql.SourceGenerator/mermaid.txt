@@ -34,7 +34,6 @@ subgraph ISelect
     DistinctColumns --> |From| From
 
     subgraph IJoin
-        From -->|CrossJoin| NonConditionalJoin
         ConditionalJoin -->|On| On
         ConditionalJoin -->|On| OnMulti
 
@@ -47,6 +46,7 @@ subgraph ISelect
     From -->|LeftJoin| ConditionalJoin
     From -->|RightJoin| ConditionalJoin
     From -->|FullJoin| ConditionalJoin
+    From -->|CrossJoin| NonConditionalJoin
 
     subgraph IWhere
         Where
@@ -133,6 +133,44 @@ subgraph IInsert
     IUpsert --> IInsertEnd
 end
 
+Root --> |Update| Update
+subgraph IUpdate
+    Update -->|Set| UpdateSet
+    Update -->|Or| UpdateOr
+
+    UpdateOr -->|Abort| UpdateAbort
+    UpdateOr -->|Fail| UpdateFail
+    UpdateOr -->|Ignore| UpdateIgnore
+    UpdateOr -->|Replace| UpdateReplace
+    UpdateOr -->|Rollback| UpdateRollback
+
+    UpdateAbort -->|Set| UpdateSet
+    UpdateFail -->|Set| UpdateSet
+    UpdateIgnore -->|Set| UpdateSet
+    UpdateReplace -->|Set| UpdateSet
+    UpdateRollback -->|Set| UpdateSet
+
+    UpdateSet -->|From| UpdateFrom
+    UpdateSet -->|Where| UpdateWhere
+    UpdateSet -->|Where| IUpdateReturning
+
+    subgraph IUpdateJoin
+        UpdateFrom -->|InnerJoin| UpdateConditionalJoin
+        UpdateFrom -->|LeftJoin| UpdateConditionalJoin
+        UpdateFrom -->|RightJoin| UpdateConditionalJoin
+        UpdateFrom -->|FullJoin| UpdateConditionalJoin
+    end
+
+    UpdateFrom --> |Where| UpdateWhere
+    UpdateFrom --> |Returning| IUpdateReturning
+    UpdateWhere --> |Returning| IUpdateReturning
+
+    UpdateSet --> IUpdateEnd
+    UpdateFrom --> IUpdateEnd
+    UpdateWhere --> IUpdateEnd
+    IUpdateReturning --> IUpdateEnd
+end
+
 InsertSelect -->|On| UpsertOn
 InsertValues -->|On| UpsertOn
 
@@ -156,6 +194,7 @@ end
 Returning -->|All|ReturningAll
 
 IUpsert -->|Returning| Returning
+IUpdate -->|Returning| Returning
 
 
 Root -->|Delete| Delete
