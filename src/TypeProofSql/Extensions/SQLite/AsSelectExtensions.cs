@@ -10,17 +10,17 @@ using TypeProofSql.Statements.SQLite;
 
 namespace TypeProofSql.SQLite
 {
-    public static partial class TypeProofSqlOrExtensions
+    public static partial class TypeProofSqlAsSelectExtensions
     {
-        public static InsertOrStatement Or<T>(this IntoStatement<T> stmt)
+        public static WithAsSelectStatement<T> AsSelect<T>(this RecursiveStatement<T> stmt)
             where T : ITable, new()
         {
-            return new InsertOrStatement(stmt.QueryBuilder);
+            return new WithAsSelectStatement<T>(stmt.QueryBuilder);
         }
-        public static UpdateOrStatement<T> Or<T>(this UpdateStatement<T> stmt)
+        public static WithAsSelectStatement<T> AsSelect<T>(this WithTableStatement<T> stmt)
             where T : ITable, new()
         {
-            return new UpdateOrStatement<T>(stmt.QueryBuilder);
+            return new WithAsSelectStatement<T>(stmt.QueryBuilder);
         }
     }
 }

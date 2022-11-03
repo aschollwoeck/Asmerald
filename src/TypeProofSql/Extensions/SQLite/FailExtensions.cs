@@ -12,10 +12,14 @@ namespace TypeProofSql.SQLite
 {
     public static partial class TypeProofSqlFailExtensions
     {
-        public static UpdateFail<T>Statement Fail<T>(this UpdateOr<T> stmt)
+        public static FailStatement Fail(this InsertOrStatement stmt)
+        {
+            return new FailStatement(stmt.QueryBuilder);
+        }
+        public static UpdateFailStatement<T> Fail<T>(this UpdateOrStatement<T> stmt)
             where T : ITable, new()
         {
-            return new UpdateFail<T>Statement(stmt.QueryBuilder);
+            return new UpdateFailStatement<T>(stmt.QueryBuilder);
         }
     }
 }

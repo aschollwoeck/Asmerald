@@ -156,7 +156,7 @@ namespace TypeProofSql.SourceGenerator
 
         private IEnumerable<Knot> GetDerivedClasses(Knot cls, List<(Knot baseClass, string method, Knot retClass)> methodChaining)
         {
-            if (cls.Code.StartsWith("I") == false) return new Knot[] { cls };
+            if (cls.Code.StartsWith("SG") == false) return new Knot[] { cls };
 
             List<string> res = new List<string>();
 
@@ -167,33 +167,5 @@ namespace TypeProofSql.SourceGenerator
                 .Select(rc => GetDerivedClasses(rc, methodChaining))
                 .SelectMany(rc => rc);
         }
-
-        //private IEnumerable<string> GetReturnSubgraphClasses(string base_subgraph, List<(string baseClass, string method, string retClass)> methodChaining)
-        //{
-        //    if (base_subgraph.StartsWith("I") == false) return new string[] { base_subgraph };
-
-        //    List<string> res = new List<string>();
-
-        //    return methodChaining
-        //        .Where(mc => mc.method == String.Empty)
-        //        .Where(mc => mc.baseClass == base_subgraph + "Start")
-        //        .Select(mc => mc.retClass)
-        //        .Select(rc => GetReturnSubgraphClasses(rc, methodChaining))
-        //        .SelectMany(rc => rc);
-        //}
-
-        //private IEnumerable<string> GetBaseSubgraphClasses(string return_subgraph, List<(string baseClass, string method, string retClass)> methodChaining)
-        //{
-        //    if (return_subgraph.StartsWith("I") == false) return new string[] { return_subgraph };
-
-        //    List<string> res = new List<string>();
-
-        //    return methodChaining
-        //        .Where(mc => mc.method == String.Empty)
-        //        .Where(mc => mc.retClass == return_subgraph + "End")
-        //        .Select(mc => mc.baseClass)
-        //        .Select(bc => GetBaseSubgraphClasses(bc, methodChaining))
-        //        .SelectMany(bc => bc);
-        //}
     }
 }

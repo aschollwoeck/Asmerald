@@ -17,27 +17,27 @@ namespace TypeProofSql.SQLite
         {
             return new UpdateSetStatement<T>(stmt.QueryBuilder, valueExpressions);
         }
-        public static UpdateSetStatement<T> Set<T>(this UpdateAbort<T> stmt, params ValueExpression[] valueExpressions)
+        public static UpdateSetStatement<T> Set<T>(this UpdateAbortStatement<T> stmt, params ValueExpression[] valueExpressions)
             where T : ITable, new()
         {
             return new UpdateSetStatement<T>(stmt.QueryBuilder, valueExpressions);
         }
-        public static UpdateSetStatement<T> Set<T>(this UpdateFail<T> stmt, params ValueExpression[] valueExpressions)
+        public static UpdateSetStatement<T> Set<T>(this UpdateFailStatement<T> stmt, params ValueExpression[] valueExpressions)
             where T : ITable, new()
         {
             return new UpdateSetStatement<T>(stmt.QueryBuilder, valueExpressions);
         }
-        public static UpdateSetStatement<T> Set<T>(this UpdateIgnore<T> stmt, params ValueExpression[] valueExpressions)
+        public static UpdateSetStatement<T> Set<T>(this UpdateIgnoreStatement<T> stmt, params ValueExpression[] valueExpressions)
             where T : ITable, new()
         {
             return new UpdateSetStatement<T>(stmt.QueryBuilder, valueExpressions);
         }
-        public static UpdateSetStatement<T> Set<T>(this UpdateReplace<T> stmt, params ValueExpression[] valueExpressions)
+        public static UpdateSetStatement<T> Set<T>(this UpdateReplaceStatement<T> stmt, params ValueExpression[] valueExpressions)
             where T : ITable, new()
         {
             return new UpdateSetStatement<T>(stmt.QueryBuilder, valueExpressions);
         }
-        public static UpdateSetStatement<T> Set<T>(this UpdateRollback<T> stmt, params ValueExpression[] valueExpressions)
+        public static UpdateSetStatement<T> Set<T>(this UpdateRollbackStatement<T> stmt, params ValueExpression[] valueExpressions)
             where T : ITable, new()
         {
             return new UpdateSetStatement<T>(stmt.QueryBuilder, valueExpressions);

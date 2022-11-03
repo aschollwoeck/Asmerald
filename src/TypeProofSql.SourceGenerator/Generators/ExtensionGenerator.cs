@@ -91,7 +91,7 @@ namespace TypeProofSql.SourceGenerator.Generators
                     {
                         if (ext.return_class_name.generics != null && ext.return_class_name.generics.Contains(gentyp)) continue;
 
-                        w.Write($", new {gentyp}()");
+                        //w.Write($", new {gentyp}()");
                     }
                 }
                 w.WriteLine(");");

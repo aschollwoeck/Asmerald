@@ -9,13 +9,13 @@ using TypeProofSql.Statements;
 
 namespace TypeProofSql.Statements.SQLite
 {
-    public class OnMultiStatement<T1, T2> : IStatement
-        where T1 : ITable, new()
-        where T2 : ITable, new()
+    public class OnMultiStatement<T, J> : IStatement
+        where T : ITable, new()
+        where J : ITable, new()
     {
         public IQueryBuilder QueryBuilder { get; private set; }
-        public (ISelectColumn<T1> left, ISelectColumn<T2> right) On { get; private set; }
-        public OnMultiStatement(IQueryBuilder queryBuilder, (ISelectColumn<T1> left, ISelectColumn<T2> right) on)
+        public (ISelectColumn<T> left, ISelectColumn<J> right) On { get; private set; }
+        public OnMultiStatement(IQueryBuilder queryBuilder, (ISelectColumn<T> left, ISelectColumn<J> right) on)
         {
             this.QueryBuilder = queryBuilder;
             this.QueryBuilder.AddStatment(this);

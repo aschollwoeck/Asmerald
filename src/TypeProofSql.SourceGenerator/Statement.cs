@@ -42,6 +42,11 @@ namespace TypeProofSql.SourceGenerator
         public string nspace { get; set; } = "";
         public string extension_name { get; set; } = "";
         public List<Extension> extensions { get; set; } = new List<Extension>();
+        public override string ToString()
+        {
+            return extension_name;
+        }
+
         internal class Extension
         {
             public GenerateCodeStatement base_class { get; set; }

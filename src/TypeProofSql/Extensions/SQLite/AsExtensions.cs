@@ -15,22 +15,17 @@ namespace TypeProofSql.SQLite
         public static WithAsStatement As<T>(this RecursiveStatement<T> stmt)
             where T : ITable, new()
         {
-            return new WithAsStatement(stmt.QueryBuilder, new T());
+            return new WithAsStatement(stmt.QueryBuilder);
         }
         public static WithAsStatement As<T>(this WithTableStatement<T> stmt)
             where T : ITable, new()
         {
-            return new WithAsStatement(stmt.QueryBuilder, new T());
+            return new WithAsStatement(stmt.QueryBuilder);
         }
-        public static WithAsSelectStatement<T> As<T>(this RecursiveStatement<T> stmt)
+        public static IntoAsStatement As<T>(this IntoStatement<T> stmt, string alias)
             where T : ITable, new()
         {
-            return new WithAsSelectStatement<T>(stmt.QueryBuilder);
-        }
-        public static WithAsSelectStatement<T> As<T>(this WithTableStatement<T> stmt)
-            where T : ITable, new()
-        {
-            return new WithAsSelectStatement<T>(stmt.QueryBuilder);
+            return new IntoAsStatement(stmt.QueryBuilder, alias);
         }
     }
 }

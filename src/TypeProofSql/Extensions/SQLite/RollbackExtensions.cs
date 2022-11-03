@@ -12,10 +12,14 @@ namespace TypeProofSql.SQLite
 {
     public static partial class TypeProofSqlRollbackExtensions
     {
-        public static UpdateRollback<T>Statement Rollback<T>(this UpdateOr<T> stmt)
+        public static RollbackStatement Rollback(this InsertOrStatement stmt)
+        {
+            return new RollbackStatement(stmt.QueryBuilder);
+        }
+        public static UpdateRollbackStatement<T> Rollback<T>(this UpdateOrStatement<T> stmt)
             where T : ITable, new()
         {
-            return new UpdateRollback<T>Statement(stmt.QueryBuilder);
+            return new UpdateRollbackStatement<T>(stmt.QueryBuilder);
         }
     }
 }

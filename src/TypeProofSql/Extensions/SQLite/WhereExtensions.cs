@@ -15,26 +15,26 @@ namespace TypeProofSql.SQLite
         public static UpdateWhereStatement Where<T>(this UpdateSetStatement<T> stmt)
             where T : ITable, new()
         {
-            return new UpdateWhereStatement(stmt.QueryBuilder, new T());
+            return new UpdateWhereStatement(stmt.QueryBuilder);
         }
-        public static UpdateWhereStatement Where<T>(this UpdateFrom<T> stmt)
+        public static UpdateWhereStatement Where<T>(this UpdateFromStatement<T> stmt)
             where T : ITable, new()
         {
-            return new UpdateWhereStatement(stmt.QueryBuilder, new T());
+            return new UpdateWhereStatement(stmt.QueryBuilder);
         }
         public static UpsertWhereStatement Where(this UpsertSetStatement stmt)
         {
             return new UpsertWhereStatement(stmt.QueryBuilder);
         }
-        public static DeleteWhereStatement Where<T>(this DeleteFrom<T> stmt)
+        public static DeleteWhereStatement Where<T>(this DeleteFromStatement<T> stmt)
             where T : ITable, new()
         {
-            return new DeleteWhereStatement(stmt.QueryBuilder, new T());
+            return new DeleteWhereStatement(stmt.QueryBuilder);
         }
-        public static DeleteWhereGroupStatement Where<T>(this DeleteFrom<T> stmt)
+        public static DeleteWhereGroupStatement Where<T>(this DeleteFromStatement<T> stmt)
             where T : ITable, new()
         {
-            return new DeleteWhereGroupStatement(stmt.QueryBuilder, new T());
+            return new DeleteWhereGroupStatement(stmt.QueryBuilder);
         }
     }
 }

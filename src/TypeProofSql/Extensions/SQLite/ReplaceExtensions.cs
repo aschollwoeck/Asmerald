@@ -16,10 +16,14 @@ namespace TypeProofSql.SQLite
         {
             return new ReplaceStatement(stmt.QueryBuilder);
         }
-        public static UpdateReplace<T>Statement Replace<T>(this UpdateOr<T> stmt)
+        public static ReplaceStatement Replace(this InsertOrStatement stmt)
+        {
+            return new ReplaceStatement(stmt.QueryBuilder);
+        }
+        public static UpdateReplaceStatement<T> Replace<T>(this UpdateOrStatement<T> stmt)
             where T : ITable, new()
         {
-            return new UpdateReplace<T>Statement(stmt.QueryBuilder);
+            return new UpdateReplaceStatement<T>(stmt.QueryBuilder);
         }
     }
 }

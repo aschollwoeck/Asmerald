@@ -10,16 +10,16 @@ using TypeProofSql.Statements.SQLite;
 
 namespace TypeProofSql.SQLite
 {
-    public static partial class TypeProofSqlUpdateExtensions
+    public static partial class TypeProofSqlDefaultExtensions
     {
-        public static UpdateStatement<T> Update<T>(this SQLiteDSLContext stmt)
+        public static DefaultStatement Default<T>(this IntoStatement<T> stmt)
             where T : ITable, new()
         {
-            return new UpdateStatement<T>(stmt.QueryBuilder);
+            return new DefaultStatement(stmt.QueryBuilder);
         }
-        public static UpsertUpdateStatement Update(this UpsertDoStatement stmt)
+        public static DefaultStatement Default(this IntoAsStatement stmt)
         {
-            return new UpsertUpdateStatement(stmt.QueryBuilder);
+            return new DefaultStatement(stmt.QueryBuilder);
         }
     }
 }

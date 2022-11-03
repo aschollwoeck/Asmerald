@@ -12,17 +12,26 @@ namespace TypeProofSql.SQLite
 {
     public static partial class TypeProofSqlOnExtensions
     {
-        public static OnStatement<T1, T2> On<T1, T2>(this ConditionalJoinStatement<T1, T2> stmt, ISelectColumn<T1> left, ISelectColumn<T2> right)
-            where T1 : ITable, new()
-            where T2 : ITable, new()
+        public static OnStatement<T, J> On<T, J>(this ConditionalJoinStatement<T, J> stmt, ISelectColumn<T> left, ISelectColumn<J> right)
+            where T : ITable, new()
+            where J : ITable, new()
         {
-            return new OnStatement<T1, T2>(stmt.QueryBuilder, left, right);
+            return new OnStatement<T, J>(stmt.QueryBuilder, left, right);
         }
-        public static OnMultiStatement<T1, T2> On<T1, T2>(this ConditionalJoinStatement<T1, T2> stmt, (ISelectColumn<T1> left, ISelectColumn<T2> right) on)
-            where T1 : ITable, new()
-            where T2 : ITable, new()
+        public static OnMultiStatement<T, J> On<T, J>(this ConditionalJoinStatement<T, J> stmt, (ISelectColumn<T> left, ISelectColumn<J> right) on)
+            where T : ITable, new()
+            where J : ITable, new()
         {
-            return new OnMultiStatement<T1, T2>(stmt.QueryBuilder, on);
+            return new OnMultiStatement<T, J>(stmt.QueryBuilder, on);
+        }
+        public static UpsertOnStatement On<T>(this InsertSelectStatement<T> stmt)
+            where T : ITable, new()
+        {
+            return new UpsertOnStatement(stmt.QueryBuilder);
+        }
+        public static UpsertOnStatement On(this InsertValuesStatement stmt)
+        {
+            return new UpsertOnStatement(stmt.QueryBuilder);
         }
         public static UpsertOnStatement On(this UpsertNothingStatement stmt)
         {

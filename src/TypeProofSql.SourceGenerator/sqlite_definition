@@ -1,5 +1,6 @@
 ﻿sqlDialect=SQLite
-Directory=C:\Users\Alexander\Source\Repos\TypeSafeSql\src\TypeProofSql
+;Directory=C:\Users\Alexander\Source\Repos\TypeSafeSql\src\TypeProofSql
+Directory=..\..\..\..\TypeProofSql
 
 [COMMON_CLASSES]
 SQLiteDSLContext = SQLiteDSLContext
@@ -43,30 +44,30 @@ FromSubQuery<T> = FromSubQuery<T>(IQueryBuilder subQueryBuilder) : FromSubQuery(
 TableAs = TableAs(string alias)
 
 Join = Join(ITable left, ITable right)
-Join<T1, T2> = Join<T1, T2>(T1 left, T2 right) : Join(left, right)
+Join<T, J> = Join<T, J>(T left, J right) : Join(left, right)
 JoinSubQuery = JoinSubQuery(IQueryBuilder subQueryBuilder)
 JoinAs = JoinAs(string alias)
-;ConditionalJoin<T1, T2> = ConditionalJoin<T1, T2>((ISelectColumn<T1> col1, ISelectColumn<T2> col2)[] on) : Join<T1, T2>(new T1(), new T2())
+;ConditionalJoin<T, J> = ConditionalJoin<T, J>((ISelectColumn<T> col1, ISelectColumn<J> col2)[] on) : Join<T, J>(new T(), new J())
 ;NonConditionalJoin = NonConditionalJoin(ITable left, ITable right) : Join(left, right)
-;NonConditionalJoin<T1, T2> = NonConditionalJoin<T1, T2>() : NonConditionalJoin(new T1(), new T2())
-;CrossJoin<T1, T2> = CrossJoin<T1, T2>() : NonConditionalJoin<T1, T2>()
-;FullOuterJoin<T1, T2> = FullOuterJoin<T1, T2>((ISelectColumn<T1> col1, ISelectColumn<T2> col2)[] on) : ConditionalJoin<T1, T2>(on)
-;InnerJoin<T1, T2> = InnerJoin<T1, T2>((ISelectColumn<T1> col1, ISelectColumn<T2> col2)[] on) : ConditionalJoin<T1, T2>(on)
-;LeftOuterJoin<T1, T2> = LeftOuterJoin<T1, T2>((ISelectColumn<T1> col1, ISelectColumn<T2> col2)[] on) : ConditionalJoin<T1, T2>(on)
-;RightOuterJoin<T1, T2> = RightOuterJoin<T1, T2>((ISelectColumn<T1> col1, ISelectColumn<T2> col2)[] on) : ConditionalJoin<T1, T2>(on)
-ConditionalJoin<T1, T2> = ConditionalJoin<T1, T2>() : Join<T1, T2>(new T1(), new T2())
+;NonConditionalJoin<T, J> = NonConditionalJoin<T, J>() : NonConditionalJoin(new T(), new J())
+;CrossJoin<T, J> = CrossJoin<T, J>() : NonConditionalJoin<T, J>()
+;FullOuterJoin<T, J> = FullOuterJoin<T, J>((ISelectColumn<T> col1, ISelectColumn<J> col2)[] on) : ConditionalJoin<T, J>(on)
+;InnerJoin<T, J> = InnerJoin<T, J>((ISelectColumn<T> col1, ISelectColumn<J> col2)[] on) : ConditionalJoin<T, J>(on)
+;LeftOuterJoin<T, J> = LeftOuterJoin<T, J>((ISelectColumn<T> col1, ISelectColumn<J> col2)[] on) : ConditionalJoin<T, J>(on)
+;RightOuterJoin<T, J> = RightOuterJoin<T, J>((ISelectColumn<T> col1, ISelectColumn<J> col2)[] on) : ConditionalJoin<T, J>(on)
+ConditionalJoin<T, J> = ConditionalJoin<T, J>() : Join<T, J>(new T(), new J())
 NonConditionalJoin = NonConditionalJoin(ITable left, ITable right) : Join(left, right)
-NonConditionalJoin<T1, T2> = NonConditionalJoin<T1, T2>() : NonConditionalJoin(new T1(), new T2())
-CrossJoin<T1, T2> = CrossJoin<T1, T2>() : NonConditionalJoin<T1, T2>()
-FullOuterJoin<T1, T2> = FullOuterJoin<T1, T2>() : ConditionalJoin<T1, T2>()
-InnerJoin<T1, T2> = InnerJoin<T1, T2>() : ConditionalJoin<T1, T2>()
-LeftOuterJoin<T1, T2> = LeftOuterJoin<T1, T2>() : ConditionalJoin<T1, T2>()
-RightOuterJoin<T1, T2> = RightOuterJoin<T1, T2>() : ConditionalJoin<T1, T2>()
+NonConditionalJoin<T, J> = NonConditionalJoin<T, J>() : NonConditionalJoin(new T(), new J())
+CrossJoin<T, J> = CrossJoin<T, J>() : NonConditionalJoin<T, J>()
+FullOuterJoin<T, J> = FullOuterJoin<T, J>() : ConditionalJoin<T, J>()
+InnerJoin<T, J> = InnerJoin<T, J>() : ConditionalJoin<T, J>()
+LeftOuterJoin<T, J> = LeftOuterJoin<T, J>() : ConditionalJoin<T, J>()
+RightOuterJoin<T, J> = RightOuterJoin<T, J>() : ConditionalJoin<T, J>()
 
 On = On(ISelectColumn left, ISelectColumn right)
 OnMulti = OnMulti((ISelectColumn left, ISelectColumn right) on)
-On<T1, T2> = On<T1, T2>(ISelectColumn<T1> left, ISelectColumn<T2> right) : On(left, right)
-OnMulti<T1, T2> = OnMulti<T1, T2>((ISelectColumn<T1> left, ISelectColumn<T2> right) on)
+On<T, J> = On<T, J>(ISelectColumn<T> left, ISelectColumn<J> right) : On(left, right)
+OnMulti<T, J> = OnMulti<T, J>((ISelectColumn<T> left, ISelectColumn<J> right) on)
 
 WhereGroup = WhereGroup
 Where = Where(ConditionalExpression conditionalExpression) : ConditionalGroup
@@ -113,24 +114,24 @@ Update<T> = Update<T>() : Update(new T())
 UpdateSet = UpdateSet(ITable table, ValueExpression[] valueExpressions)
 UpdateSet<T> = UpdateSet<T>(ValueExpression[] valueExpressions) : UpdateSet(new T(), valueExpressions)
 UpdateOr = UpdateOr(ITable table)
-UpdateOr<T> = UpdateOr<T> : UpdateOr(new T())
+UpdateOr<T> = UpdateOr<T>() : UpdateOr(new T())
 
 UpdateAbort = UpdateAbort(ITable table)
-UpdateAbort<T> = UpdateAbort<T> : UpdateAbort(new T())
+UpdateAbort<T> = UpdateAbort<T>() : UpdateAbort(new T())
 UpdateFail = UpdateFail(ITable table)
-UpdateFail<T> = UpdateFail<T> : UpdateAbort(new T())
+UpdateFail<T> = UpdateFail<T>() : UpdateAbort(new T())
 UpdateIgnore = UpdateIgnore(ITable table)
-UpdateIgnore<T> = UpdateIgnore<T> : UpdateAbort(new T())
+UpdateIgnore<T> = UpdateIgnore<T>() : UpdateAbort(new T())
 UpdateReplace = UpdateReplace(ITable table)
-UpdateReplace<T> = UpdateReplace<T> : UpdateAbort(new T())
+UpdateReplace<T> = UpdateReplace<T>() : UpdateAbort(new T())
 UpdateRollback = UpdateRollback(ITable table)
-UpdateRollback<T> = UpdateRollback<T> : UpdateAbort(new T())
+UpdateRollback<T> = UpdateRollback<T>() : UpdateAbort(new T())
 
 UpdateFrom = UpdateFrom(ITable table)
-UpdateFrom<T> = UpdateFrom<T> : UpdateFrom(new T())
+UpdateFrom<T> = UpdateFrom<T>() : UpdateFrom(new T())
 UpdateWhere = UpdateWhere
 
-UpdateConditionalJoin<T1, T2> = UpdateConditionalJoin<T1, T2>() : ConditionalJoin<T1, T2>()
+UpdateConditionalJoin<T, J> = UpdateConditionalJoin<T, J>() : ConditionalJoin<T, J>()
 
 UpsertOn = UpsertOn
 Conflict = Conflict
@@ -148,7 +149,7 @@ ReturningAll = ReturningAll
 
 Delete = Delete
 DeleteFrom = DeleteFrom(ITable table)
-DeleteFrom<T> = DeleteFrom<T> : DeleteFrom(new T())
+DeleteFrom<T> = DeleteFrom<T>() : DeleteFrom(new T())
 DeleteWhere = DeleteWhere
 DeleteWhereGroup = DeleteWhereGroup
 
@@ -179,13 +180,13 @@ Distinct = SelectColumns : Distinct; Select : DistinctColumns; Select : Distinct
 From = Select : From<T>; SelectColumns : From<T>; DistinctColumns : From<T>; All : From<T>; Delete : From<T>
 As = From : TableAs; Join : JoinAs; Recursive : AsSelect; WithTable : AsSelect; WithTableAdditional : AsSelect; Recursive : As; WithTable : As
 
-InnerJoin = From : InnerJoin<T1, T2>; NonConditionalJoin : InnerJoin<T1, T2>
-LeftJoin = From : LeftOuterJoin<T1, T2>; NonConditionalJoin : LeftOuterJoin<T1, T2>
-RightJoin = From : RightOuterJoin<T1, T2>; NonConditionalJoin : RightOuterJoin<T1, T2>
-FullJoin = From : FullOuterJoin<T1, T2>; NonConditionalJoin : FullOuterJoin<T1, T2>
-CrossJoin = From : CrossJoin<T1, T2>; NonConditionalJoin : CrossJoin<T1, T2>
+InnerJoin = From : InnerJoin<T, J>; NonConditionalJoin : InnerJoin<T, J>
+LeftJoin = From : LeftOuterJoin<T, J>; NonConditionalJoin : LeftOuterJoin<T, J>
+RightJoin = From : RightOuterJoin<T, J>; NonConditionalJoin : RightOuterJoin<T, J>
+FullJoin = From : FullOuterJoin<T, J>; NonConditionalJoin : FullOuterJoin<T, J>
+CrossJoin = From : CrossJoin<T, J>; NonConditionalJoin : CrossJoin<T, J>
 
-On = Join : On<T1, T2>; Join : OnMulti<T1, T2>; JoinAs : On<T1, T2>; JoinAs : OnMulti<T1, T2>; ConditionalJoin<T1, T2> : On<T1, T2>; ConditionalJoin<T1, T2> : OnMulti<T1, T2>
+On = Join : On<T, J>; Join : OnMulti<T, J>; JoinAs : On<T, J>; JoinAs : OnMulti<T, J>; ConditionalJoin<T, J> : On<T, J>; ConditionalJoin<T, J> : OnMulti<T, J>
 
 ;Where
 WhereGroup = From : ConditionalGroupStatement; On : ConditionalGroupStatement; OnMulti : ConditionalGroupStatement; NonConditionalJoin : ConditionalGroupStatement

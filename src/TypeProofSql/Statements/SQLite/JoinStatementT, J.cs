@@ -9,11 +9,12 @@ using TypeProofSql.Statements;
 
 namespace TypeProofSql.Statements.SQLite
 {
-    public class DeleteFrom<T>Statement : DeleteFromStatement
+    public class JoinStatement<T, J> : JoinStatement
         where T : ITable, new()
+        where J : ITable, new()
     {
-        public DeleteFrom(IQueryBuilder queryBuilder)
-            : base(queryBuilder, new T())
+        public JoinStatement(IQueryBuilder queryBuilder, T left, J right)
+            : base(queryBuilder, left, right)
         {
         }
     }

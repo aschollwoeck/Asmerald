@@ -9,12 +9,12 @@ using TypeProofSql.Statements;
 
 namespace TypeProofSql.Statements.SQLite
 {
-    public class ConditionalJoinStatement<T1, T2> : JoinStatement<T1, T2>
-        where T1 : ITable, new()
-        where T2 : ITable, new()
+    public class OnStatement<T, J> : OnStatement
+        where T : ITable, new()
+        where J : ITable, new()
     {
-        public ConditionalJoinStatement(IQueryBuilder queryBuilder)
-            : base(queryBuilder, new T1(), new T2())
+        public OnStatement(IQueryBuilder queryBuilder, ISelectColumn<T> left, ISelectColumn<J> right)
+            : base(queryBuilder, left, right)
         {
         }
     }

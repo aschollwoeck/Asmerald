@@ -41,7 +41,7 @@ public class Program
 
         var et = dslCtxt
             .Update<Tbl_Cards>()
-            .Set(new[] { Tbl_Cards.Name().Value("hi") })
+            .Set<Tbl_Cards>(new[] { Tbl_Cards.Name().Value("hi") })
             .Where(Tbl_Cards.Name().Equal("test"))
             .QueryBuilder
             .BuildPreparedStatement();
@@ -128,6 +128,7 @@ public class Program
 
         sql = dslCtxt
             .Select()
+            .All()
             .From<Table1>()
             .InnerJoin<Table1, Table2>()
             .On(new Table1.Column1(), new Table2.Column2())

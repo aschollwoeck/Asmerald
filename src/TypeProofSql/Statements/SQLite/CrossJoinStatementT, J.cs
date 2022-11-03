@@ -9,11 +9,11 @@ using TypeProofSql.Statements;
 
 namespace TypeProofSql.Statements.SQLite
 {
-    public class UpdateConditionalJoinStatement<T1, T2> : ConditionalJoinStatement<T1, T2>
-        where T1 : ITable, new()
-        where T2 : ITable, new()
+    public class CrossJoinStatement<T, J> : NonConditionalJoinStatement<T, J>
+        where T : ITable, new()
+        where J : ITable, new()
     {
-        public UpdateConditionalJoinStatement(IQueryBuilder queryBuilder)
+        public CrossJoinStatement(IQueryBuilder queryBuilder)
             : base(queryBuilder)
         {
         }

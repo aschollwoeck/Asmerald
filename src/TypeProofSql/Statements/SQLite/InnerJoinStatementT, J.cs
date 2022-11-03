@@ -9,9 +9,9 @@ using TypeProofSql.Statements;
 
 namespace TypeProofSql.Statements.SQLite
 {
-    public class InnerJoinStatement<T1, T2> : ConditionalJoinStatement<T1, T2>
-        where T1 : ITable, new()
-        where T2 : ITable, new()
+    public class InnerJoinStatement<T, J> : ConditionalJoinStatement<T, J>
+        where T : ITable, new()
+        where J : ITable, new()
     {
         public InnerJoinStatement(IQueryBuilder queryBuilder)
             : base(queryBuilder)

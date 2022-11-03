@@ -15,25 +15,25 @@ namespace TypeProofSql.SQLite
         public static UnionStatement Union<T>(this FromStatement<T> stmt, IQueryBuilder subQueryBuilder)
             where T : ITable, new()
         {
-            return new UnionStatement(stmt.QueryBuilder, subQueryBuilder, new T());
+            return new UnionStatement(stmt.QueryBuilder, subQueryBuilder);
         }
-        public static UnionStatement Union<T1, T2>(this NonConditionalJoinStatement<T1, T2> stmt, IQueryBuilder subQueryBuilder)
-            where T1 : ITable, new()
-            where T2 : ITable, new()
+        public static UnionStatement Union<T, J>(this NonConditionalJoinStatement<T, J> stmt, IQueryBuilder subQueryBuilder)
+            where T : ITable, new()
+            where J : ITable, new()
         {
-            return new UnionStatement(stmt.QueryBuilder, subQueryBuilder, new T1(), new T2());
+            return new UnionStatement(stmt.QueryBuilder, subQueryBuilder);
         }
-        public static UnionStatement Union<T1, T2>(this OnStatement<T1, T2> stmt, IQueryBuilder subQueryBuilder)
-            where T1 : ITable, new()
-            where T2 : ITable, new()
+        public static UnionStatement Union<T, J>(this OnStatement<T, J> stmt, IQueryBuilder subQueryBuilder)
+            where T : ITable, new()
+            where J : ITable, new()
         {
-            return new UnionStatement(stmt.QueryBuilder, subQueryBuilder, new T1(), new T2());
+            return new UnionStatement(stmt.QueryBuilder, subQueryBuilder);
         }
-        public static UnionStatement Union<T1, T2>(this OnMultiStatement<T1, T2> stmt, IQueryBuilder subQueryBuilder)
-            where T1 : ITable, new()
-            where T2 : ITable, new()
+        public static UnionStatement Union<T, J>(this OnMultiStatement<T, J> stmt, IQueryBuilder subQueryBuilder)
+            where T : ITable, new()
+            where J : ITable, new()
         {
-            return new UnionStatement(stmt.QueryBuilder, subQueryBuilder, new T1(), new T2());
+            return new UnionStatement(stmt.QueryBuilder, subQueryBuilder);
         }
         public static UnionStatement Union(this WhereStatement stmt, IQueryBuilder subQueryBuilder)
         {

@@ -9,11 +9,12 @@ using TypeProofSql.Statements;
 
 namespace TypeProofSql.Statements.SQLite
 {
-    public class UpdateRollback<T>Statement : UpdateAbortStatement
+    public class ConditionalJoinStatement<T, J> : JoinStatement<T, J>
         where T : ITable, new()
+        where J : ITable, new()
     {
-        public UpdateRollback(IQueryBuilder queryBuilder)
-            : base(queryBuilder, new T())
+        public ConditionalJoinStatement(IQueryBuilder queryBuilder)
+            : base(queryBuilder, new T(), new J())
         {
         }
     }

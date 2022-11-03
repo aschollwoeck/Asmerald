@@ -9,10 +9,10 @@ using TypeProofSql.Statements;
 
 namespace TypeProofSql.Statements.SQLite
 {
-    public class UpdateAbort<T>Statement : UpdateAbortStatement
+    public class UpdateFromStatement<T> : UpdateFromStatement
         where T : ITable, new()
     {
-        public UpdateAbort(IQueryBuilder queryBuilder)
+        public UpdateFromStatement(IQueryBuilder queryBuilder)
             : base(queryBuilder, new T())
         {
         }

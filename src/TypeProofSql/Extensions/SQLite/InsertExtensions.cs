@@ -10,12 +10,11 @@ using TypeProofSql.Statements.SQLite;
 
 namespace TypeProofSql.SQLite
 {
-    public static partial class TypeProofSqlRecursiveExtensions
+    public static partial class TypeProofSqlInsertExtensions
     {
-        public static RecursiveStatement<T> Recursive<T>(this WithStatement stmt, params ISelectColumn[] selectColumns)
-            where T : ITable, new()
+        public static InsertStatement Insert(this SQLiteDSLContext stmt)
         {
-            return new RecursiveStatement<T>(stmt.QueryBuilder, selectColumns);
+            return new InsertStatement(stmt.QueryBuilder);
         }
     }
 }

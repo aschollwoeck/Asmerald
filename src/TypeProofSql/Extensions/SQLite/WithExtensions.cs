@@ -12,9 +12,10 @@ namespace TypeProofSql.SQLite
 {
     public static partial class TypeProofSqlWithExtensions
     {
-        public static WithTableStatement With(this SQLiteDSLContext stmt, ITable table, params ISelectColumn[] selectColumns)
+        public static WithTableStatement<T> With<T>(this SQLiteDSLContext stmt, params ISelectColumn[] selectColumns)
+            where T : ITable, new()
         {
-            return new WithTableStatement(stmt.QueryBuilder, table, selectColumns);
+            return new WithTableStatement<T>(stmt.QueryBuilder, selectColumns);
         }
         public static WithStatement With(this SQLiteDSLContext stmt)
         {

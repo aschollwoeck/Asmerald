@@ -27,12 +27,12 @@ namespace TypeProofSql.SQLite
         public static ReturningStatement Returning<T>(this UpdateSetStatement<T> stmt)
             where T : ITable, new()
         {
-            return new ReturningStatement(stmt.QueryBuilder, new T());
+            return new ReturningStatement(stmt.QueryBuilder);
         }
-        public static ReturningStatement Returning<T>(this UpdateFrom<T> stmt)
+        public static ReturningStatement Returning<T>(this UpdateFromStatement<T> stmt)
             where T : ITable, new()
         {
-            return new ReturningStatement(stmt.QueryBuilder, new T());
+            return new ReturningStatement(stmt.QueryBuilder);
         }
         public static ReturningStatement Returning(this UpdateWhereStatement stmt)
         {
@@ -53,12 +53,12 @@ namespace TypeProofSql.SQLite
         public static ReturningSelectStatement Returning<T>(this UpdateSetStatement<T> stmt, params ISelectColumn[] columns)
             where T : ITable, new()
         {
-            return new ReturningSelectStatement(stmt.QueryBuilder, columns, new T());
+            return new ReturningSelectStatement(stmt.QueryBuilder, columns);
         }
-        public static ReturningSelectStatement Returning<T>(this UpdateFrom<T> stmt, params ISelectColumn[] columns)
+        public static ReturningSelectStatement Returning<T>(this UpdateFromStatement<T> stmt, params ISelectColumn[] columns)
             where T : ITable, new()
         {
-            return new ReturningSelectStatement(stmt.QueryBuilder, columns, new T());
+            return new ReturningSelectStatement(stmt.QueryBuilder, columns);
         }
         public static ReturningSelectStatement Returning(this UpdateWhereStatement stmt, params ISelectColumn[] columns)
         {

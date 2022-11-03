@@ -15,25 +15,25 @@ namespace TypeProofSql.SQLite
         public static ExceptStatement Except<T>(this FromStatement<T> stmt, IQueryBuilder subQueryBuilder)
             where T : ITable, new()
         {
-            return new ExceptStatement(stmt.QueryBuilder, subQueryBuilder, new T());
+            return new ExceptStatement(stmt.QueryBuilder, subQueryBuilder);
         }
-        public static ExceptStatement Except<T1, T2>(this NonConditionalJoinStatement<T1, T2> stmt, IQueryBuilder subQueryBuilder)
-            where T1 : ITable, new()
-            where T2 : ITable, new()
-        {
-            return new ExceptStatement(stmt.QueryBuilder, subQueryBuilder, new T1(), new T2());
-        }
-        public static ExceptStatement Except(this OnStatement stmt, IQueryBuilder subQueryBuilder)
-            where T1 : ITable, new()
-            where T2 : ITable, new()
+        public static ExceptStatement Except<T, J>(this NonConditionalJoinStatement<T, J> stmt, IQueryBuilder subQueryBuilder)
+            where T : ITable, new()
+            where J : ITable, new()
         {
             return new ExceptStatement(stmt.QueryBuilder, subQueryBuilder);
         }
-        public static ExceptStatement Except<T1, T2>(this OnMultiStatement<T1, T2> stmt, IQueryBuilder subQueryBuilder)
-            where T1 : ITable, new()
-            where T2 : ITable, new()
+        public static ExceptStatement Except<T, J>(this OnStatement<T, J> stmt, IQueryBuilder subQueryBuilder)
+            where T : ITable, new()
+            where J : ITable, new()
         {
-            return new ExceptStatement(stmt.QueryBuilder, subQueryBuilder, new T1(), new T2());
+            return new ExceptStatement(stmt.QueryBuilder, subQueryBuilder);
+        }
+        public static ExceptStatement Except<T, J>(this OnMultiStatement<T, J> stmt, IQueryBuilder subQueryBuilder)
+            where T : ITable, new()
+            where J : ITable, new()
+        {
+            return new ExceptStatement(stmt.QueryBuilder, subQueryBuilder);
         }
         public static ExceptStatement Except(this WhereStatement stmt, IQueryBuilder subQueryBuilder)
         {

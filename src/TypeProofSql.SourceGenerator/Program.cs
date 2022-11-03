@@ -22,7 +22,9 @@ var dir = iniSqlite.Global["Directory"];
 if(System.IO.Directory.Exists(Path.Combine(dir, "Statements")) == false) System.IO.Directory.CreateDirectory(Path.Combine(dir, "Statements"));
 if (System.IO.Directory.Exists(Path.Combine(dir, "Extensions")) == false) System.IO.Directory.CreateDirectory(Path.Combine(dir, "Extensions"));
 var stmtDir = System.IO.Directory.CreateDirectory(Path.Combine(dir, "Statements", iniSqlite.Global["sqlDialect"]));
+stmtDir.GetFiles().ToList().ForEach(f => f.Delete());
 var extDir = System.IO.Directory.CreateDirectory(Path.Combine(dir, "Extensions", iniSqlite.Global["sqlDialect"]));
+extDir.GetFiles().ToList().ForEach(f => f.Delete());
 
 Dictionary<string, GenerateCodeStatement> classNames = new();
 

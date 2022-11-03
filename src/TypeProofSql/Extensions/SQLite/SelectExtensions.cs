@@ -28,9 +28,23 @@ namespace TypeProofSql.SQLite
         {
             return new SelectStatement(stmt.QueryBuilder);
         }
+        public static SelectStatement Select(this IntersectStatement stmt)
+        {
+            return new SelectStatement(stmt.QueryBuilder);
+        }
         public static SelectStatement Select(this ExceptStatement stmt)
         {
             return new SelectStatement(stmt.QueryBuilder);
+        }
+        public static InsertSelectStatement<T> Select<T>(this IntoStatement<T> stmt, params ISelectColumn<T>[] columns)
+            where T : ITable, new()
+        {
+            return new InsertSelectStatement<T>(stmt.QueryBuilder, columns);
+        }
+        public static InsertSelectStatement<T> Select<T>(this IntoAsStatement stmt, params ISelectColumn<T>[] columns)
+            where T : ITable, new()
+        {
+            return new InsertSelectStatement<T>(stmt.QueryBuilder, columns);
         }
     }
 }

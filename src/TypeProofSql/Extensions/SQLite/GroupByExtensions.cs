@@ -12,23 +12,23 @@ namespace TypeProofSql.SQLite
 {
     public static partial class TypeProofSqlGroupByExtensions
     {
-        public static GroupByStatement GroupBy<T1, T2>(this NonConditionalJoinStatement<T1, T2> stmt, params IColumn[] groupByColumns)
-            where T1 : ITable, new()
-            where T2 : ITable, new()
+        public static GroupByStatement GroupBy<T, J>(this NonConditionalJoinStatement<T, J> stmt, params IColumn[] groupByColumns)
+            where T : ITable, new()
+            where J : ITable, new()
         {
-            return new GroupByStatement(stmt.QueryBuilder, groupByColumns, new T1(), new T2());
+            return new GroupByStatement(stmt.QueryBuilder, groupByColumns);
         }
-        public static GroupByStatement GroupBy<T1, T2>(this OnStatement<T1, T2> stmt, params IColumn[] groupByColumns)
-            where T1 : ITable, new()
-            where T2 : ITable, new()
+        public static GroupByStatement GroupBy<T, J>(this OnStatement<T, J> stmt, params IColumn[] groupByColumns)
+            where T : ITable, new()
+            where J : ITable, new()
         {
-            return new GroupByStatement(stmt.QueryBuilder, groupByColumns, new T1(), new T2());
+            return new GroupByStatement(stmt.QueryBuilder, groupByColumns);
         }
-        public static GroupByStatement GroupBy<T1, T2>(this OnMultiStatement<T1, T2> stmt, params IColumn[] groupByColumns)
-            where T1 : ITable, new()
-            where T2 : ITable, new()
+        public static GroupByStatement GroupBy<T, J>(this OnMultiStatement<T, J> stmt, params IColumn[] groupByColumns)
+            where T : ITable, new()
+            where J : ITable, new()
         {
-            return new GroupByStatement(stmt.QueryBuilder, groupByColumns, new T1(), new T2());
+            return new GroupByStatement(stmt.QueryBuilder, groupByColumns);
         }
         public static GroupByStatement GroupBy(this WhereStatement stmt, params IColumn[] groupByColumns)
         {
