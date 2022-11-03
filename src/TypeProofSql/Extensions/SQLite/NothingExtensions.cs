@@ -10,11 +10,11 @@ using TypeProofSql.Statements.SQLite;
 
 namespace TypeProofSql.SQLite
 {
-    public static partial class TypeProofSqlInsertExtensions
+    public static partial class TypeProofSqlNothingExtensions
     {
-        public static InsertStatement Insert(this SQLiteDSLContext stmt)
+        public static UpsertNothingStatement Nothing(this UpsertDoStatement stmt)
         {
-            return new InsertStatement(stmt.QueryBuilder);
+            return new UpsertNothingStatement(stmt.QueryBuilder);
         }
     }
 }

@@ -12,19 +12,11 @@ namespace TypeProofSql.SQLite
 {
     public static partial class TypeProofSqlMaterializedExtensions
     {
-        public static MaterializedStatement Materialized(this AsStatement stmt, IQueryBuilder subQuery)
+        public static MaterializedStatement Materialized(this WithNotStatement stmt, IQueryBuilder subQuery)
         {
             return new MaterializedStatement(stmt.QueryBuilder, subQuery);
         }
-        public static MaterializedStatement Materialized(this NotStatement stmt, IQueryBuilder subQuery)
-        {
-            return new MaterializedStatement(stmt.QueryBuilder, subQuery);
-        }
-        public static MaterializedStatement Materialized(this WithTableStatement stmt, IQueryBuilder subQuery)
-        {
-            return new MaterializedStatement(stmt.QueryBuilder, subQuery);
-        }
-        public static MaterializedStatement Materialized(this WithTableAdditionalStatement stmt, IQueryBuilder subQuery)
+        public static MaterializedStatement Materialized(this WithAsStatement stmt, IQueryBuilder subQuery)
         {
             return new MaterializedStatement(stmt.QueryBuilder, subQuery);
         }

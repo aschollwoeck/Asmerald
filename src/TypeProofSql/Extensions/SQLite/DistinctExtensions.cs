@@ -12,17 +12,13 @@ namespace TypeProofSql.SQLite
 {
     public static partial class TypeProofSqlDistinctExtensions
     {
-        public static DistinctStatement Distinct(this SelectColumnsStatement stmt)
+        public static DistinctStatement Distinct(this SelectStatement stmt)
         {
             return new DistinctStatement(stmt.QueryBuilder);
         }
         public static DistinctColumnsStatement Distinct(this SelectStatement stmt, params ISelectColumn[] columns)
         {
             return new DistinctColumnsStatement(stmt.QueryBuilder, columns);
-        }
-        public static DistinctStatement Distinct(this SelectStatement stmt)
-        {
-            return new DistinctStatement(stmt.QueryBuilder);
         }
     }
 }

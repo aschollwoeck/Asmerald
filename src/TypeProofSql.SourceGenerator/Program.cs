@@ -19,8 +19,8 @@ var iniSqlite = parser.Parse(File.ReadAllText("sqlite_definition"));
 var dir = iniSqlite.Global["Directory"];
 
 // Get the current SQL dialect, e.g. SQLite, etc. for namespace and folder name
-System.IO.Directory.CreateDirectory(Path.Combine(dir, "Statements"));
-System.IO.Directory.CreateDirectory(Path.Combine(dir, "Extensions"));
+if(System.IO.Directory.Exists(Path.Combine(dir, "Statements")) == false) System.IO.Directory.CreateDirectory(Path.Combine(dir, "Statements"));
+if (System.IO.Directory.Exists(Path.Combine(dir, "Extensions")) == false) System.IO.Directory.CreateDirectory(Path.Combine(dir, "Extensions"));
 var stmtDir = System.IO.Directory.CreateDirectory(Path.Combine(dir, "Statements", iniSqlite.Global["sqlDialect"]));
 var extDir = System.IO.Directory.CreateDirectory(Path.Combine(dir, "Extensions", iniSqlite.Global["sqlDialect"]));
 
@@ -46,61 +46,105 @@ foreach (var item in iniSqlite.Sections["CLASSES"])
 var extensionTemplate = ReadResource("extensionGeneration.txt");
 var extensionTemplateParsed = Scriban.Template.ParseLiquid(extensionTemplate);
 
+
+
+
 // Now chain classes together with extension methods
 foreach (var item in iniSqlite.Sections["CHAINING"])
 {
     // Now do create extension methods for chaining
-    BuildExtension(item.KeyName, item.Value.Split(';').Select(s => s.Trim()));
-}
+    //var ext = BuildExtensions(item.KeyName, item.Value.Split(';').Select(s => s.Trim()));
 
-void BuildExtension(string name, IEnumerable<string> values)
-{
-    // Prepare Scriban properties
-    var extension_name = name.FirstCharToUpper();
-    var extensions = values.Select(v => {
-
-        var classes = v.Split(":");
-
-        var baseClass = classes[0].Trim();
-        var returnClass = classes[1].Trim();
-
-        if (!classNames.ContainsKey(baseClass))
-        {
-            throw new NotImplementedException($"Class '{baseClass}' is not yet defined!");
-        }
-
-        if (!classNames.ContainsKey(returnClass))
-        {
-            throw new NotImplementedException($"Class '{returnClass}' is not yet defined!");
-        }
-
-        //return_class_name
-        //base_class
-        //paras
-
-        return new { return_class_name = classNames[returnClass], base_class = classNames[baseClass] };
-    }).ToList();
-
-    // Now generate code via Scriban!
-    var e = new GenerateExtensionCodeStatement()
-    {
-        nspace = iniSqlite.Global["sqlDialect"],
-        extension_name = extension_name,
-        extensions = extensions
-        .Select(e => new GenerateExtensionCodeStatement.Extension()
-        {
-            base_class = e.base_class,
-            return_class_name = e.return_class_name
-        })
-        .ToList()
-    };
-
-    var generatedCode = new TypeProofSql.SourceGenerator.Generators.ExtensionGenerator().Generate(e);
+    //var generatedCode = new TypeProofSql.SourceGenerator.Generators.ExtensionGenerator().Generate(e);
 
     //var generatedCode = extensionTemplateParsed.RenderAsync(new { nspace = iniSqlite.Global["sqlDialect"], extension_name = extension_name, extensions = extensions });
 
     // Write code to file
-    File.WriteAllText(System.IO.Path.Combine(extDir.FullName, extension_name + "Extensions") + ".cs", generatedCode);
+    //File.WriteAllText(System.IO.Path.Combine(extDir.FullName, extension_name + "Extensions") + ".cs", generatedCode);
+}
+
+//Now do create extension methods for chaining
+var ext = GetExtensions();
+foreach (var genCode in ext)
+{
+    var generatedCode = new TypeProofSql.SourceGenerator.Generators.ExtensionGenerator().Generate(genCode);
+
+    //Write code to file
+    File.WriteAllText(System.IO.Path.Combine(extDir.FullName, genCode.extension_name + "Extensions") + ".cs", generatedCode);
+}
+
+
+
+//GenerateExtensionCodeStatement BuildExtensions(string name, IEnumerable<string> values)
+//{
+//    // Prepare Scriban properties
+//    var extension_name = name.FirstCharToUpper();
+//    var extensions = values.Select(v => {
+
+//        var classes = v.Split(":");
+
+//        var baseClass = classes[0].Trim();
+//        var returnClass = classes[1].Trim();
+
+//        if (!classNames.ContainsKey(baseClass))
+//        {
+//            throw new NotImplementedException($"Class '{baseClass}' is not yet defined!");
+//        }
+
+//        if (!classNames.ContainsKey(returnClass))
+//        {
+//            throw new NotImplementedException($"Class '{returnClass}' is not yet defined!");
+//        }
+
+//        //return_class_name
+//        //base_class
+//        //paras
+
+//        return new { return_class_name = classNames[returnClass], base_class = classNames[baseClass] };
+//    }).ToList();
+
+//    // Now generate code
+//    var e = new GenerateExtensionCodeStatement()
+//    {
+//        nspace = iniSqlite.Global["sqlDialect"],
+//        extension_name = extension_name,
+//        extensions = extensions
+//        .Select(e => new GenerateExtensionCodeStatement.Extension()
+//        {
+//            base_class = e.base_class,
+//            return_class_name = e.return_class_name
+//        })
+//        .ToList()
+//    };
+//}
+
+IEnumerable<GenerateExtensionCodeStatement> GetExtensions()
+{
+    MermaidReader mermaidReader = new MermaidReader();
+    var mermaidRes = mermaidReader.Parse(new StreamReader("mermaid.txt"));
+
+    return mermaidRes.GroupBy(ext => ext.method)
+        .Select(ext => new GenerateExtensionCodeStatement()
+        {
+            nspace = iniSqlite.Global["sqlDialect"],
+            extension_name = ext.Key,
+            extensions = ext.Select(e => new GenerateExtensionCodeStatement.Extension()
+            {
+                base_class = classNames[e.baseClass],
+                return_class_name = classNames[e.retClass],
+                generic_types = JoinLists(classNames[e.retClass].generics, classNames[e.baseClass].generics).ToList()
+            }).ToList()
+        }).ToList();
+}
+
+IEnumerable<T> JoinLists<T>(IEnumerable<T> l1, IEnumerable<T> l2)
+{
+    List<T> res = new List<T>();
+
+    if (l1 != null) res.AddRange(l1);
+    if (l2 != null) res.AddRange(l2);
+
+    return res.Distinct();
 }
 
 List<int> FindParaCommas(string paras)

@@ -12,33 +12,25 @@ namespace TypeProofSql.SQLite
 {
     public static partial class TypeProofSqlAsExtensions
     {
-        public static TableAsStatement As(this FromStatement stmt, string alias)
+        public static WithAsStatement As<T>(this RecursiveStatement<T> stmt)
+            where T : ITable, new()
         {
-            return new TableAsStatement(stmt.QueryBuilder, alias);
+            return new WithAsStatement(stmt.QueryBuilder, new T());
         }
-        public static JoinAsStatement As(this JoinStatement stmt, string alias)
+        public static WithAsStatement As<T>(this WithTableStatement<T> stmt)
+            where T : ITable, new()
         {
-            return new JoinAsStatement(stmt.QueryBuilder, alias);
+            return new WithAsStatement(stmt.QueryBuilder, new T());
         }
-        public static AsSelectStatement As(this RecursiveStatement stmt, IQueryBuilder subQuery)
+        public static WithAsSelectStatement<T> As<T>(this RecursiveStatement<T> stmt)
+            where T : ITable, new()
         {
-            return new AsSelectStatement(stmt.QueryBuilder, subQuery);
+            return new WithAsSelectStatement<T>(stmt.QueryBuilder);
         }
-        public static AsSelectStatement As(this WithTableStatement stmt, IQueryBuilder subQuery)
+        public static WithAsSelectStatement<T> As<T>(this WithTableStatement<T> stmt)
+            where T : ITable, new()
         {
-            return new AsSelectStatement(stmt.QueryBuilder, subQuery);
-        }
-        public static AsSelectStatement As(this WithTableAdditionalStatement stmt, IQueryBuilder subQuery)
-        {
-            return new AsSelectStatement(stmt.QueryBuilder, subQuery);
-        }
-        public static AsStatement As(this RecursiveStatement stmt)
-        {
-            return new AsStatement(stmt.QueryBuilder);
-        }
-        public static AsStatement As(this WithTableStatement stmt)
-        {
-            return new AsStatement(stmt.QueryBuilder);
+            return new WithAsSelectStatement<T>(stmt.QueryBuilder);
         }
     }
 }

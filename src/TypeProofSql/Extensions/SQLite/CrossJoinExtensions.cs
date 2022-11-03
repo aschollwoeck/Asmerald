@@ -12,17 +12,12 @@ namespace TypeProofSql.SQLite
 {
     public static partial class TypeProofSqlCrossJoinExtensions
     {
-        public static CrossJoinStatement<T1, T2> CrossJoin<T1, T2>(this FromStatement stmt)
+        public static NonConditionalJoinStatement<T1, T2> CrossJoin<T1, T2, T>(this FromStatement<T> stmt)
             where T1 : ITable, new()
             where T2 : ITable, new()
+            where T : ITable, new()
         {
-            return new CrossJoinStatement<T1, T2>(stmt.QueryBuilder);
-        }
-        public static CrossJoinStatement<T1, T2> CrossJoin<T1, T2>(this NonConditionalJoinStatement stmt)
-            where T1 : ITable, new()
-            where T2 : ITable, new()
-        {
-            return new CrossJoinStatement<T1, T2>(stmt.QueryBuilder);
+            return new NonConditionalJoinStatement<T1, T2>(stmt.QueryBuilder, new T());
         }
     }
 }

@@ -12,13 +12,9 @@ namespace TypeProofSql.SQLite
 {
     public static partial class TypeProofSqlNotExtensions
     {
-        public static NotStatement Not(this AsStatement stmt)
+        public static WithNotStatement Not(this WithAsStatement stmt)
         {
-            return new NotStatement(stmt.QueryBuilder);
-        }
-        public static NotStatement Not(this AsSelectStatement stmt)
-        {
-            return new NotStatement(stmt.QueryBuilder);
+            return new WithNotStatement(stmt.QueryBuilder);
         }
     }
 }

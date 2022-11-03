@@ -1,5 +1,5 @@
 ﻿sqlDialect=SQLite
-Directory=C:\Users\Scholli\Source\Repos\TypeSafeSql\src\TypeProofSql
+Directory=C:\Users\Alexander\Source\Repos\TypeSafeSql\src\TypeProofSql
 
 [COMMON_CLASSES]
 SQLiteDSLContext = SQLiteDSLContext
@@ -19,8 +19,14 @@ Recursive<T> = Recursive<T>(ISelectColumn[] selectColumns) : Recursive(new T(), 
 
 Materialized = Materialized(IQueryBuilder subQuery)
 
+WithAs = WithAs
+WithNot = WithNot
+
 As = As
 AsSelect = AsSelect(IQueryBuilder subQuery)
+WithAsSelect = WithAsSelect(ITable table)
+WithAsSelect<T> = WithAsSelect<T>() : WithAsSelect(new T())
+
 
 All = All
 
@@ -28,14 +34,6 @@ Select = Select
 SelectColumns = SelectColumns(ISelectColumn[] columns)
 Distinct = Distinct
 DistinctColumns = DistinctColumns(ISelectColumn[] columns)
-
-Delete = Delete
-Insert = Insert
-Into = Into(ITable table)
-Into<T> = Into<T>() : Into(new T())
-
-Update = Update(ITable table)
-Update<T> = Update<T>() : Update(new T())
 
 From = From(ITable table)
 FromSubQuery = FromSubQuery(IQueryBuilder subQueryBuilder, ITable table)
@@ -70,6 +68,7 @@ OnMulti = OnMulti((ISelectColumn left, ISelectColumn right) on)
 On<T1, T2> = On<T1, T2>(ISelectColumn<T1> left, ISelectColumn<T2> right) : On(left, right)
 OnMulti<T1, T2> = OnMulti<T1, T2>((ISelectColumn<T1> left, ISelectColumn<T2> right) on)
 
+WhereGroup = WhereGroup
 Where = Where(ConditionalExpression conditionalExpression) : ConditionalGroup
 And = And(ConditionalGroupStatement groupStatement, ConditionalExpression conditionalExpression) : Conditional(groupStatement, conditionalExpression)
 AndGroup = AndGroup(ConditionalExpression conditionalExpression) : ConditionalGroup(conditionalExpression)
@@ -80,12 +79,82 @@ Having = Having(ConditionalExpression conditionalExpression) : ConditionalGroup(
 
 GroupBy = GroupBy(IColumn[] groupByColumns)
 OrderBy = OrderBy(IOrderByColumn[] orderByColumns)
+Collate = Collate
+Asc = Asc
+Desc = Desc
+Nulls = Nulls
+First = First
+Last = Last
 
 Limit = Limit(int limit)
 Offset = Offset(int offset)
 
+Insert = Insert
+Replace = Replace
+InsertOr = InsertOr
+Abort = Abort
+Fail = Fail
+Ignore = Ignore
+Rollback = Rollback
+Into = Into(ITable table)
+Into<T> = Into<T>() : Into(new T())
+IntoAs = IntoAs(string alias)
+
+InsertSelect = InsertSelect(ISelectColumn[] columns)
+InsertSelect<T> = InsertSelect<T>(ISelectColumn<T>[] columns) : InsertSelect(columns)
+InsertValues = InsertValues(ValueExpression[] valueExpressions)
+
+Default = Default
+DefaultValues = DefaultValues
+
+Update = Update(ITable table)
+Update<T> = Update<T>() : Update(new T())
+
+UpdateSet = UpdateSet(ITable table, ValueExpression[] valueExpressions)
+UpdateSet<T> = UpdateSet<T>(ValueExpression[] valueExpressions) : UpdateSet(new T(), valueExpressions)
+UpdateOr = UpdateOr(ITable table)
+UpdateOr<T> = UpdateOr<T> : UpdateOr(new T())
+
+UpdateAbort = UpdateAbort(ITable table)
+UpdateAbort<T> = UpdateAbort<T> : UpdateAbort(new T())
+UpdateFail = UpdateFail(ITable table)
+UpdateFail<T> = UpdateFail<T> : UpdateAbort(new T())
+UpdateIgnore = UpdateIgnore(ITable table)
+UpdateIgnore<T> = UpdateIgnore<T> : UpdateAbort(new T())
+UpdateReplace = UpdateReplace(ITable table)
+UpdateReplace<T> = UpdateReplace<T> : UpdateAbort(new T())
+UpdateRollback = UpdateRollback(ITable table)
+UpdateRollback<T> = UpdateRollback<T> : UpdateAbort(new T())
+
+UpdateFrom = UpdateFrom(ITable table)
+UpdateFrom<T> = UpdateFrom<T> : UpdateFrom(new T())
+UpdateWhere = UpdateWhere
+
+UpdateConditionalJoin<T1, T2> = UpdateConditionalJoin<T1, T2>() : ConditionalJoin<T1, T2>()
+
+UpsertOn = UpsertOn
+Conflict = Conflict
+UpsertDo = UpsertDo
+UpsertNothing = UpsertNothing
+UpsertUpdate = UpsertUpdate
+UpsertSet = UpsertSet
+UpsertWhere = UpsertWhere
+UpsertOn = UpsertOn
+
+Returning = Returning
+ReturningSelect = ReturningSelect(ISelectColumn[] columns)
+ReturningSelect<T> = ReturningSelect<T>(ISelectColumn<T>[] columns) : InsertSelect(columns)
+ReturningAll = ReturningAll
+
+Delete = Delete
+DeleteFrom = DeleteFrom(ITable table)
+DeleteFrom<T> = DeleteFrom<T> : DeleteFrom(new T())
+DeleteWhere = DeleteWhere
+DeleteWhereGroup = DeleteWhereGroup
+
 Set = Set(ValueExpression[] valueExpressions)
 Value = Value(ValueExpression[] valueExpressions)
+
 
 Compound = Compound(IQueryBuilder subQueryBuilder)
 Union = Union(IQueryBuilder subQueryBuilder) : Compound(subQueryBuilder)

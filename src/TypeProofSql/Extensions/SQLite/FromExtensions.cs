@@ -12,30 +12,27 @@ namespace TypeProofSql.SQLite
 {
     public static partial class TypeProofSqlFromExtensions
     {
-        public static FromStatement<T> From<T>(this SelectStatement stmt)
-            where T : ITable, new()
+        public static FromStatement From(this SelectColumnsStatement stmt, ITable table)
         {
-            return new FromStatement<T>(stmt.QueryBuilder);
+            return new FromStatement(stmt.QueryBuilder, table);
         }
-        public static FromStatement<T> From<T>(this SelectColumnsStatement stmt)
-            where T : ITable, new()
+        public static FromStatement From(this AllStatement stmt, ITable table)
         {
-            return new FromStatement<T>(stmt.QueryBuilder);
+            return new FromStatement(stmt.QueryBuilder, table);
         }
-        public static FromStatement<T> From<T>(this DistinctColumnsStatement stmt)
-            where T : ITable, new()
+        public static FromStatement From(this DistinctColumnsStatement stmt, ITable table)
         {
-            return new FromStatement<T>(stmt.QueryBuilder);
+            return new FromStatement(stmt.QueryBuilder, table);
         }
-        public static FromStatement<T> From<T>(this AllStatement stmt)
+        public static UpdateFrom<T>Statement From<T>(this UpdateSetStatement<T> stmt)
             where T : ITable, new()
         {
-            return new FromStatement<T>(stmt.QueryBuilder);
+            return new UpdateFrom<T>Statement(stmt.QueryBuilder);
         }
-        public static FromStatement<T> From<T>(this DeleteStatement stmt)
+        public static DeleteFrom<T>Statement From<T>(this DeleteStatement stmt)
             where T : ITable, new()
         {
-            return new FromStatement<T>(stmt.QueryBuilder);
+            return new DeleteFrom<T>Statement(stmt.QueryBuilder);
         }
     }
 }

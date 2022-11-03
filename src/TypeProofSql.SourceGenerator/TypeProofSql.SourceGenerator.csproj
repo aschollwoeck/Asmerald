@@ -27,6 +27,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Update="mermaid.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="sqlite_definition">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

@@ -5,16 +5,18 @@ Root -->|With| With
 
 subgraph IWith
     With -->|Recursive| Recursive
-    Recursive -->|As| WithAs
-    WithTable -->|As| WithAs
+    Recursive[Recursive<T>] -->|As| WithAs
+    WithTable[WithTable<T>] -->|As| WithAs
+    Recursive[Recursive<T>] -->|As| WithAsSelect[WithAsSelect<T>]
+    WithTable[WithTable<T>] -->|As| WithAsSelect[WithAsSelect<T>]
     WithAs --> |Not| WithNot
     WithNot --> |Materialized| Materialized
     WithAs --> |Materialized| Materialized
 
-    WithAs --> |With| WithAdditionalTable
-    Materialized -->|With| WithAdditionalTable
+    WithAs --> |With| WithTableAdditional[WithTableAdditional<T>]
+    Materialized -->|With| WithTableAdditional[WithTableAdditional<T>]
 
-    WithAs --> IWithEnd
+    WithAsSelect[WithAsSelect<T>] --> IWithEnd
     Materialized --> IWithEnd
 end
 
@@ -23,6 +25,7 @@ Root -->|Select| Select
 Root -->|Select| SelectColumns
 
 subgraph ISelect
+    
     Select -->|All| All
     Distinct --> |All| All
 
@@ -34,19 +37,19 @@ subgraph ISelect
     DistinctColumns --> |From| From
 
     subgraph IJoin
-        ConditionalJoin -->|On| On
-        ConditionalJoin -->|On| OnMulti
+        ConditionalJoin[ConditionalJoin<T1, T2>] -->|On| On[On<T1, T2>]
+        ConditionalJoin[ConditionalJoin<T1, T2>] -->|On| OnMulti[OnMulti<T1, T2>]
 
-        NonConditionalJoin --> IJoinEnd
-        On --> IJoinEnd
-        OnMulti --> IJoinEnd
+        NonConditionalJoin[NonConditionalJoin<T1, T2>] --> IJoinEnd
+        On[On<T1, T2>] --> IJoinEnd
+        OnMulti[OnMulti<T1, T2>] --> IJoinEnd
     end
     
-    From -->|InnerJoin| ConditionalJoin
-    From -->|LeftJoin| ConditionalJoin
-    From -->|RightJoin| ConditionalJoin
-    From -->|FullJoin| ConditionalJoin
-    From -->|CrossJoin| NonConditionalJoin
+    From[From<T>] -->|InnerJoin| ConditionalJoin[ConditionalJoin<T1, T2>]
+    From[From<T>] -->|LeftJoin| ConditionalJoin[ConditionalJoin<T1, T2>]
+    From[From<T>] -->|RightJoin| ConditionalJoin[ConditionalJoin<T1, T2>]
+    From[From<T>] -->|FullJoin| ConditionalJoin[ConditionalJoin<T1, T2>]
+    From[From<T>] -->|CrossJoin| NonConditionalJoin[NonConditionalJoin<T1, T2>]
 
     subgraph IWhere
         Where
@@ -56,23 +59,28 @@ subgraph ISelect
         WhereGroup --> IWhereEnd
     end
 
-    IJoin -->|Where| IWhere
-    IJoin -->|GroupBy| GroupBy
-    IWhere -->|GroupBy| GroupBy
+    IJoinEnd -->|Where| IWhere
+    IJoinEnd -->|GroupBy| GroupBy
+    IWhereEnd -->|GroupBy| GroupBy
     GroupBy -->|Having| Having
-    IWhere -->|Having| Having
+    IWhereEnd -->|Having| Having
 
-    From --> ISelectEnd
-    IJoin --> ISelectEnd
-    IWhere --> ISelectEnd
+    From[From<T>] --> ISelectEnd
+    IJoinEnd --> ISelectEnd
+    IWhereEnd --> ISelectEnd
     GroupBy --> ISelectEnd
     Having --> ISelectEnd
 end
 
-//ISelect -->|Union| ISelect
-//ISelect -->|UnionAll| ISelect
-//ISelect -->|Intersect| ISelect
-//ISelect -->|Except| ISelect
+ISelectEnd -->|Union| Union
+ISelectEnd -->|UnionAll| UnionAll
+ISelectEnd -->|Intersect| Intersect
+ISelectEnd -->|Except| Except
+
+Union -->|Select| Select
+UnionAll -->|Select| Select
+Intersect -->|Select| Select
+Except -->|Select| Select
 
 subgraph IOrderBy
     OrderBy --> IOrderByEnd
@@ -94,9 +102,9 @@ subgraph IOrderBy
     Last --> IOrderByEnd
 end
 
-ISelect -->|OrderBy| IOrderBy
-ISelect -->|Limit| Limit
-IOrderBy -->|Limit| Limit
+ISelectEnd -->|OrderBy| IOrderByStart
+ISelectEnd -->|Limit| Limit
+IOrderByEnd -->|Limit| Limit
 Limit -->|Offset| Offset
 
 
@@ -105,80 +113,80 @@ Root -->|Insert| Insert
 Root -->|Replace| Replace
 
 subgraph IInsert
-    Insert -->|Into| Into
-    Replace -->|Into| Into
-    Insert -->|Or| InsertOr
+    Insert -->|Into| Into[Into<T>]
+    Replace -->|Into| Into[Into<T>]
+    Insert[Into<T>] -->|Or| InsertOr
     InsertOr -->|Abort| Abort
     InsertOr -->|Fail| Fail
     InsertOr -->|Ignore| Ignore
     InsertOr -->|Replace| Replace
     InsertOr -->|Rollback| Rollback
-    Abort -->|Into| Into
-    Fail -->|Into| Into
-    Ignore -->|Into| Into
-    Rollback -->|Into| Into
+    Abort -->|Into| Into[Into<T>]
+    Fail -->|Into| Into[Into<T>]
+    Ignore -->|Into| Into[Into<T>]
+    Rollback -->|Into| Into[Into<T>]
 
-    Into -->|As| IntoAs
-    Into -->|Values| InsertValues
+    Into[Into<T>] -->|As| IntoAs
+    Into[Into<T>] -->|Values| InsertValues
     IntoAs -->|Values| InsertValues
-    Into -->|Select| InsertSelect
-    IntoAs -->|Select| InsertSelect
-    Into -->|Default| Default
+    Into[Into<T>] -->|Select| InsertSelect<T>
+    IntoAs -->|Select| InsertSelect<T>
+    Into[Into<T>] -->|Default| Default
     IntoAs -->|Default| Default
     Default -->|Values| DefaultValues
 
     InsertValues --> IInsertEnd
-    InsertSelect --> IInsertEnd
+    InsertSelect<T> --> IInsertEnd
     DefaultValues --> IInsertEnd
     IUpsert --> IInsertEnd
 end
 
 Root --> |Update| Update
 subgraph IUpdate
-    Update -->|Set| UpdateSet
-    Update -->|Or| UpdateOr
+    Update[Update<T>] -->|Set| UpdateSet[UpdateSet<T>]
+    Update[Update<T>] -->|Or| UpdateOr[UpdateOr<T>]
 
-    UpdateOr -->|Abort| UpdateAbort
-    UpdateOr -->|Fail| UpdateFail
-    UpdateOr -->|Ignore| UpdateIgnore
-    UpdateOr -->|Replace| UpdateReplace
-    UpdateOr -->|Rollback| UpdateRollback
+    UpdateOr[UpdateOr<T>] -->|Abort| UpdateAbort[UpdateAbort<T>]
+    UpdateOr[UpdateOr<T>] -->|Fail| UpdateFail[UpdateFail<T>]
+    UpdateOr[UpdateOr<T>] -->|Ignore| UpdateIgnore[UpdateIgnore<T>]
+    UpdateOr[UpdateOr<T>] -->|Replace| UpdateReplace[UpdateReplace<T>]
+    UpdateOr[UpdateOr<T>] -->|Rollback| UpdateRollback[UpdateRollback<T>]
 
-    UpdateAbort -->|Set| UpdateSet
-    UpdateFail -->|Set| UpdateSet
-    UpdateIgnore -->|Set| UpdateSet
-    UpdateReplace -->|Set| UpdateSet
-    UpdateRollback -->|Set| UpdateSet
+    UpdateAbort[UpdateAbort<T>] -->|Set| UpdateSet[UpdateSet<T>]
+    UpdateFail[UpdateFail<T>] -->|Set| UpdateSet[UpdateSet<T>]
+    UpdateIgnore[UpdateIgnore<T>] -->|Set| UpdateSet[UpdateSet<T>]
+    UpdateReplace[UpdateReplace<T>] -->|Set| UpdateSet[UpdateSet<T>]
+    UpdateRollback[UpdateRollback<T>] -->|Set| UpdateSet[UpdateSet<T>]
 
-    UpdateSet -->|From| UpdateFrom
-    UpdateSet -->|Where| UpdateWhere
-    UpdateSet -->|Where| IUpdateReturning
+    UpdateSet[UpdateSet<T>] -->|From| UpdateFrom[UpdateFrom<T>]
+    UpdateSet[UpdateSet<T>] -->|Where| UpdateWhere
+    UpdateSet[UpdateSet<T>] -->|Where| IUpdateReturningStart
 
     subgraph IUpdateJoin
-        UpdateFrom -->|InnerJoin| UpdateConditionalJoin
-        UpdateFrom -->|LeftJoin| UpdateConditionalJoin
-        UpdateFrom -->|RightJoin| UpdateConditionalJoin
-        UpdateFrom -->|FullJoin| UpdateConditionalJoin
+        UpdateFrom[UpdateFrom<T>] -->|InnerJoin| UpdateConditionalJoin[UpdateConditionalJoin<T1, T2>]
+        UpdateFrom[UpdateFrom<T>] -->|LeftJoin| UpdateConditionalJoin[UpdateConditionalJoin<T1, T2>]
+        UpdateFrom[UpdateFrom<T>] -->|RightJoin| UpdateConditionalJoin[UpdateConditionalJoin<T1, T2>]
+        UpdateFrom[UpdateFrom<T>] -->|FullJoin| UpdateConditionalJoin[UpdateConditionalJoin<T1, T2>]
     end
 
-    UpdateFrom --> |Where| UpdateWhere
-    UpdateFrom --> |Returning| IUpdateReturning
-    UpdateWhere --> |Returning| IUpdateReturning
+    UpdateFrom[UpdateFrom<T>] --> |Where| UpdateWhere
+    UpdateFrom[UpdateFrom<T>] --> |Returning| IUpdateReturningStart
+    UpdateWhere --> |Returning| IUpdateReturningStart
 
-    UpdateSet --> IUpdateEnd
-    UpdateFrom --> IUpdateEnd
+    UpdateSet[UpdateSet<T>] --> IUpdateEnd
+    UpdateFrom[UpdateFrom<T>] --> IUpdateEnd
     UpdateWhere --> IUpdateEnd
-    IUpdateReturning --> IUpdateEnd
+    IUpdateReturningEnd --> IUpdateEnd
 end
 
-InsertSelect -->|On| UpsertOn
+InsertSelect<T> -->|On| UpsertOn
 InsertValues -->|On| UpsertOn
 
 subgraph IUpsert
     UpsertOn -->|Conflict| Conflict
     Conflict -->|Do| UpsertDo
     UpsertDo -->|Nothing| UpsertNothing
-    UpsertDo -->|Update|UpsertUpdate
+    UpsertDo -->|Update| UpsertUpdate
     UpsertUpdate -->|Set| UpsertSet
     UpsertSet -->|Where| UpsertWhere
     UpsertNothing -->|On|UpsertOn
@@ -193,18 +201,20 @@ end
 
 Returning -->|All|ReturningAll
 
-IUpsert -->|Returning| Returning
-IUpdate -->|Returning| Returning
+IUpsertEnd -->|Returning| Returning
+IUpdateEnd -->|Returning| Returning
+IUpsertEnd -->|Returning| ReturningSelect
+IUpdateEnd -->|Returning| ReturningSelect
 
 
 Root -->|Delete| Delete
 
 subgraph IDelete
-    Delete -->|From| DeleteFrom
-    DeleteFrom -->|Where| DeleteWhere
-    DeleteFrom -->|Where| DeleteWhereGroup
+    Delete -->|From| DeleteFrom[DeleteFrom<T>]
+    DeleteFrom[DeleteFrom<T>] -->|Where| DeleteWhere
+    DeleteFrom[DeleteFrom<T>] -->|Where| DeleteWhereGroup
 
-    DeleteFrom --> IDeleteEnd
+    DeleteFrom[DeleteFrom<T>] --> IDeleteEnd
     DeleteWhere --> IDeleteEnd
     DeleteWhereGroup --> IDeleteEnd
 end

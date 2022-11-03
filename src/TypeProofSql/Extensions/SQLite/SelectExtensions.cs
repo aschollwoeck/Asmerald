@@ -20,29 +20,17 @@ namespace TypeProofSql.SQLite
         {
             return new SelectColumnsStatement(stmt.QueryBuilder, columns);
         }
-        public static SelectStatement Select(this AsSelectStatement stmt)
+        public static SelectStatement Select(this UnionStatement stmt)
         {
             return new SelectStatement(stmt.QueryBuilder);
         }
-        public static SelectColumnsStatement Select(this AsSelectStatement stmt, params ISelectColumn[] columns)
-        {
-            return new SelectColumnsStatement(stmt.QueryBuilder, columns);
-        }
-        public static SelectStatement Select(this MaterializedStatement stmt)
+        public static SelectStatement Select(this UnionAllStatement stmt)
         {
             return new SelectStatement(stmt.QueryBuilder);
         }
-        public static SelectColumnsStatement Select(this MaterializedStatement stmt, params ISelectColumn[] columns)
-        {
-            return new SelectColumnsStatement(stmt.QueryBuilder, columns);
-        }
-        public static SelectStatement Select(this CompoundStatement stmt)
+        public static SelectStatement Select(this ExceptStatement stmt)
         {
             return new SelectStatement(stmt.QueryBuilder);
-        }
-        public static SelectColumnsStatement Select(this CompoundStatement stmt, params ISelectColumn[] columns)
-        {
-            return new SelectColumnsStatement(stmt.QueryBuilder, columns);
         }
     }
 }

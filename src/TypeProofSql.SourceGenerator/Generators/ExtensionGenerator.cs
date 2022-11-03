@@ -37,9 +37,9 @@ namespace TypeProofSql.SourceGenerator.Generators
             {
                 w.Write($"public static {ext.return_class_name.full_class_name} {generateExtension.extension_name}");
 
-                if (ext.return_class_name.generics != null && ext.return_class_name.generics.Count > 0)
+                if (ext.generic_types != null && ext.generic_types.Count > 0)
                 {
-                    w.Write($"<{String.Join(", ", ext.return_class_name.generics)}>");
+                    w.Write($"<{String.Join(", ", ext.generic_types)}>");
                 }
                 w.Write($"(this {ext.base_class.class_name}");
 
@@ -68,9 +68,9 @@ namespace TypeProofSql.SourceGenerator.Generators
                 w.WriteLine(")");
 
                 w.Indent++;
-                if (ext.return_class_name.generics != null)
+                if (ext.generic_types != null)
                 {
-                    foreach (var gentyp in ext.return_class_name.generics)
+                    foreach (var gentyp in ext.generic_types)
                     {
                         w.WriteLine($"where {gentyp} : ITable, new()");
                     }
@@ -89,6 +89,8 @@ namespace TypeProofSql.SourceGenerator.Generators
                 {
                     foreach (var gentyp in ext.generic_types)
                     {
+                        if (ext.return_class_name.generics != null && ext.return_class_name.generics.Contains(gentyp)) continue;
+
                         w.Write($", new {gentyp}()");
                     }
                 }

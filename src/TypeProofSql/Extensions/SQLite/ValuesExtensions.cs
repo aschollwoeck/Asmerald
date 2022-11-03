@@ -12,9 +12,9 @@ namespace TypeProofSql.SQLite
 {
     public static partial class TypeProofSqlValuesExtensions
     {
-        public static ValueStatement Values(this IntoStatement stmt, params ValueExpression[] valueExpressions)
+        public static DefaultValuesStatement Values(this DefaultStatement stmt)
         {
-            return new ValueStatement(stmt.QueryBuilder, valueExpressions);
+            return new DefaultValuesStatement(stmt.QueryBuilder);
         }
     }
 }

@@ -20,5 +20,9 @@ namespace TypeProofSql.SQLite
         {
             return new AllStatement(stmt.QueryBuilder);
         }
+        public static ReturningAllStatement All(this ReturningStatement stmt)
+        {
+            return new ReturningAllStatement(stmt.QueryBuilder);
+        }
     }
 }

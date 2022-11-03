@@ -12,10 +12,9 @@ namespace TypeProofSql.SQLite
 {
     public static partial class TypeProofSqlRecursiveExtensions
     {
-        public static RecursiveStatement<T> Recursive<T>(this WithStatement stmt, params ISelectColumn[] selectColumns)
-            where T : ITable, new()
+        public static RecursiveStatement Recursive(this WithStatement stmt, ITable table, params ISelectColumn[] selectColumns)
         {
-            return new RecursiveStatement<T>(stmt.QueryBuilder, selectColumns);
+            return new RecursiveStatement(stmt.QueryBuilder, table, selectColumns);
         }
     }
 }

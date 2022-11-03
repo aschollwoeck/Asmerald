@@ -10,12 +10,11 @@ using TypeProofSql.Statements.SQLite;
 
 namespace TypeProofSql.SQLite
 {
-    public static partial class TypeProofSqlIntoExtensions
+    public static partial class TypeProofSqlCollateExtensions
     {
-        public static IntoStatement<T> Into<T>(this InsertStatement stmt)
-            where T : ITable, new()
+        public static CollateStatement Collate(this OrderByStatement stmt)
         {
-            return new IntoStatement<T>(stmt.QueryBuilder);
+            return new CollateStatement(stmt.QueryBuilder);
         }
     }
 }
