@@ -13,6 +13,11 @@ namespace TypeProofSql.Statements
 
         public ConditionalExpression ConditionalExpression { get; private set; }
 
+        public ConditionalStatement()
+        {
+
+        }
+
         public ConditionalStatement(ConditionalGroupStatement groupStatement, ConditionalExpression conditionalExpression)
             : this(null, groupStatement, conditionalExpression)
         {

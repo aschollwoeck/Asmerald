@@ -236,7 +236,7 @@ GenerateCodeStatement ParseClass(string classDef)
             }
             else
             {
-                paras.Add(paraString.Substring(commas[i - 1] + 1, commas[i] - commas[i - 1]).Trim());
+                paras.Add(paraString.Substring(commas[i - 1] + 1, commas[i] - commas[i - 1] - 1).Trim());
             }
         }
 
