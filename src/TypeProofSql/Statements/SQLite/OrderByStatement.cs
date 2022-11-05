@@ -12,6 +12,7 @@ namespace TypeProofSql.Statements.SQLite
     {
         public IQueryBuilder QueryBuilder { get; private set; }
         public List<IOrderByColumn> OrderByColumns { get; private set; } = new List<IOrderByColumn>();
+        public OrderByStatement() { }
         public OrderByStatement(IQueryBuilder queryBuilder, IEnumerable<IOrderByColumn> orderByColumns)
         {
             this.QueryBuilder = queryBuilder;

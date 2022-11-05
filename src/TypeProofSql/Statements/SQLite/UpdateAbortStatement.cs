@@ -8,14 +8,13 @@ using TypeProofSql.Expressions;
 
 namespace TypeProofSql.Statements.SQLite
 {
-    public class UpdateAbortStatement : IStatement
+    public class UpdateAbortStatement : AbortStatement
     {
-        public IQueryBuilder QueryBuilder { get; private set; }
         public ITable Table { get; private set; }
+        public UpdateAbortStatement() { }
         public UpdateAbortStatement(IQueryBuilder queryBuilder, ITable table)
+            : base(queryBuilder)
         {
-            this.QueryBuilder = queryBuilder;
-            this.QueryBuilder.AddStatment(this);
             this.Table = table;
         }
     }

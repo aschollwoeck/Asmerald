@@ -11,6 +11,7 @@ namespace TypeProofSql.Statements.SQLite
     public class RollbackStatement : IStatement
     {
         public IQueryBuilder QueryBuilder { get; private set; }
+        public RollbackStatement() { }
         public RollbackStatement(IQueryBuilder queryBuilder)
         {
             this.QueryBuilder = queryBuilder;

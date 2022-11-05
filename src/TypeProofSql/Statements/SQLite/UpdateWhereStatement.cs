@@ -11,6 +11,7 @@ namespace TypeProofSql.Statements.SQLite
     public class UpdateWhereStatement : IStatement
     {
         public IQueryBuilder QueryBuilder { get; private set; }
+        public UpdateWhereStatement() { }
         public UpdateWhereStatement(IQueryBuilder queryBuilder)
         {
             this.QueryBuilder = queryBuilder;

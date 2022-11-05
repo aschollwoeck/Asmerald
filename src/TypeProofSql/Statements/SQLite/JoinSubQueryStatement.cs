@@ -12,6 +12,7 @@ namespace TypeProofSql.Statements.SQLite
     {
         public IQueryBuilder QueryBuilder { get; private set; }
         public IQueryBuilder SubQueryBuilder { get; private set; }
+        public JoinSubQueryStatement() { }
         public JoinSubQueryStatement(IQueryBuilder queryBuilder, IQueryBuilder subQueryBuilder)
         {
             this.QueryBuilder = queryBuilder;

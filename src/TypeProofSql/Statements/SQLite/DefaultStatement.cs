@@ -11,6 +11,7 @@ namespace TypeProofSql.Statements.SQLite
     public class DefaultStatement : IStatement
     {
         public IQueryBuilder QueryBuilder { get; private set; }
+        public DefaultStatement() { }
         public DefaultStatement(IQueryBuilder queryBuilder)
         {
             this.QueryBuilder = queryBuilder;

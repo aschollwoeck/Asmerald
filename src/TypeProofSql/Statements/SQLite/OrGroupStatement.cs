@@ -11,6 +11,7 @@ namespace TypeProofSql.Statements.SQLite
     public class OrGroupStatement : ConditionalGroupStatement
     {
         public ConditionalExpression ConditionalExpression { get; private set; }
+        public OrGroupStatement() { }
         public OrGroupStatement(IQueryBuilder queryBuilder, ConditionalExpression conditionalExpression)
             : base(queryBuilder, conditionalExpression)
         {

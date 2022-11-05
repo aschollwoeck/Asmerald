@@ -13,6 +13,7 @@ namespace TypeProofSql.Statements.SQLite
         public IQueryBuilder QueryBuilder { get; private set; }
         public ITable Table { get; private set; }
         public List<ISelectColumn> SelectColumns { get; private set; } = new List<ISelectColumn>();
+        public RecursiveStatement() { }
         public RecursiveStatement(IQueryBuilder queryBuilder, ITable table, IEnumerable<ISelectColumn> selectColumns)
         {
             this.QueryBuilder = queryBuilder;

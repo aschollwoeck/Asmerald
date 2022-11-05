@@ -47,11 +47,11 @@ subgraph SGSelect
         OnMulti[OnMulti<T, J>] --> SGJoinEnd
     end
     
-    From[From<T>] -->|InnerJoin| ConditionalJoin[ConditionalJoin<T, J>]
-    From[From<T>] -->|LeftJoin| ConditionalJoin[ConditionalJoin<T, J>]
-    From[From<T>] -->|RightJoin| ConditionalJoin[ConditionalJoin<T, J>]
-    From[From<T>] -->|FullJoin| ConditionalJoin[ConditionalJoin<T, J>]
-    From[From<T>] -->|CrossJoin| NonConditionalJoin[NonConditionalJoin<T, J>]
+    From[From<T>] -->|InnerJoin| InnerJoin[InnerJoin<T, J>]
+    From[From<T>] -->|LeftJoin| LeftOuterJoin[LeftOuterJoin<T, J>]
+    From[From<T>] -->|RightJoin| RightOuterJoin[RightOuterJoin<T, J>]
+    From[From<T>] -->|FullJoin| FullOuterJoin[FullOuterJoin<T, J>]
+    From[From<T>] -->|CrossJoin| CrossJoin[CrossJoin<T, J>]
 
     subgraph SGWhere
         Where --> SGWhereStart
@@ -118,21 +118,21 @@ Limit -->|Offset| Offset
 
 
 Root -->|Insert| Insert
-Root -->|Replace| Replace
+Root -->|Replace| InsertReplace
 
 subgraph SGInsert
     Insert -->|Into| Into[Into<T>]
-    Replace -->|Into| Into[Into<T>]
+    InsertReplace -->|Into| Into[Into<T>]
     Insert[Into<T>] -->|Or| InsertOr
-    InsertOr -->|Abort| Abort
-    InsertOr -->|Fail| Fail
-    InsertOr -->|Ignore| Ignore
-    InsertOr -->|Replace| Replace
-    InsertOr -->|Rollback| Rollback
-    Abort -->|Into| Into[Into<T>]
-    Fail -->|Into| Into[Into<T>]
-    Ignore -->|Into| Into[Into<T>]
-    Rollback -->|Into| Into[Into<T>]
+    InsertOr -->|Abort| InsertAbort
+    InsertOr -->|Fail| InsertFail
+    InsertOr -->|Ignore| InsertIgnore
+    InsertOr -->|Replace| InsertReplace
+    InsertOr -->|Rollback| InsertRollback
+    InsertAbort -->|Into| Into[Into<T>]
+    InsertFail -->|Into| Into[Into<T>]
+    InsertIgnore -->|Into| Into[Into<T>]
+    InsertRollback -->|Into| Into[Into<T>]
 
     Into[Into<T>] -->|As| IntoAs
     Into[Into<T>] -->|Values| InsertValues

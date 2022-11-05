@@ -11,6 +11,7 @@ namespace TypeProofSql.Statements.SQLite
     public class LastStatement : IStatement
     {
         public IQueryBuilder QueryBuilder { get; private set; }
+        public LastStatement() { }
         public LastStatement(IQueryBuilder queryBuilder)
         {
             this.QueryBuilder = queryBuilder;

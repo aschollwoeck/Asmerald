@@ -144,9 +144,47 @@ namespace TypeProofSql
                 builder.Append("FROM ");
                 builder.Append(fromStatement.Table.Name());
             }
+            else if(statement is OnStatement onStatement)
+            {
+                builder.Append($"ON {onStatement.Tleft} = {onStatement.Tright}");
+            }
+            else if(statement is OnMultiStatement onMultiStatement)
+            {
+                builder.Append($"ON (");
+                builder.Append(String.Join(" AND ", onMultiStatement.On.Select(o => $"{o.left} = {o.right}")));
+                builder.Append(")");
+            }
+            else if(statement is InnerJoinStatement innerJoinStatement)
+            {
+                builder.Append($"INNER JOIN {innerJoinStatement.J.Name()} ");
+            }
+            else if(statement is CrossJoinStatement crossJoinStatement)
+            {
+                builder.Append($"CROSS JOIN {crossJoinStatement.J.Name()} ");
+            }
+            else if (statement is FullOuterJoinStatement fullOuterJoinStatement)
+            {
+                builder.Append($"FULL OUTER JOIN {fullOuterJoinStatement.J.Name()} ");
+            }
+            else if (statement is LeftOuterJoinStatement leftOuterJoinStatement)
+            {
+                builder.Append($"LEFT OUTER JOIN {leftOuterJoinStatement.J.Name()} ");
+            }
+            else if (statement is RightOuterJoinStatement rightOuterJoinStatement)
+            {
+                builder.Append($"RIGHT OUTER JOIN {rightOuterJoinStatement.J.Name()} ");
+            }
+            else if(statement is JoinAsStatement joinAsStatement)
+            {
+                builder.Append($"AS {joinAsStatement.Alias} ");
+            }
+            else if(statement is JoinSubQueryStatement joinSubQueryStatement)
+            {
+                //builder.Append($"{joinSubQueryStatement.SubQueryBuilder.buil}");
+            }
             else if(statement is InsertStatement insertStatement)
             {
-                builder.Append("INSERT");
+                builder.Append("INSERT ");
             }
             else if(statement is IntoStatement intoStatement)
             {
@@ -277,6 +315,107 @@ namespace TypeProofSql
                 builder.Append("OFFSET @" + paraCount);
                 parameters.Add(paraCount.ToString(), offSetStatement.Offset);
                 paraCount++;
+            }
+            else if(statement is AbortStatement abortStatement)
+            {
+                builder.AppendLine("ABORT ");
+            }
+            else if(statement is AscStatement ascStatement)
+            {
+                builder.Append("ASC ");
+            }
+            else if(statement is CollateStatement collateStatement)
+            {
+                builder.Append("COLLATE ");
+            }
+            else if(statement is ConflictStatement conflictStatement)
+            {
+                builder.Append("CONFLICT ");
+            }
+            else if(statement is DefaultStatement defaultStatement)
+            {
+                builder.Append("DEFAULT ");
+            }
+            else if(statement is DefaultValuesStatement defaultValuesStatement)
+            {
+                builder.Append("VALUES ");
+            }
+            else if(statement is DescStatement descStatement)
+            {
+                builder.Append("DESC ");
+            }
+            else if(statement is ExceptStatement exceptStatement)
+            {
+                builder.AppendLine("EXCEPT ");
+            }
+            else if(statement is FailStatement failStatement)
+            {
+                builder.AppendLine("FAIL ");
+            }
+            else if(statement is FirstStatement firstStatement)
+            {
+                builder.Append("FIRST ");
+            }
+            else if(statement is IgnoreStatement ignoreStatement)
+            {
+                builder.Append("IGNORE ");
+            }
+            else if(statement is IntersectStatement intersectStatement)
+            {
+                builder.AppendLine("INTERSECT ");
+            }
+            else if(statement is LastStatement lastStatement)
+            {
+                builder.Append("LAST ");
+            }
+            else if(statement is NullsStatement nullsStatement)
+            {
+                builder.Append("NULLS ");
+            }
+            else if(statement is ReplaceStatement replaceStatement)
+            {
+                builder.Append("REPLACE ");
+            }
+            else if(statement is ReturningAllStatement returningAllStatement)
+            {
+                builder.Append("* ");
+            }
+            else if(statement is ReturningStatement returningStatement)
+            {
+                builder.Append("RETURNING ");
+            }
+            else if(statement is RollbackStatement rollbackStatement)
+            {
+                builder.Append("ROLLBACK ");
+            }
+            else if(statement is UnionAllStatement unionAllStatement1)
+            {
+                builder.AppendLine("UNION ALL ");
+            }
+            else if(statement is UnionStatement unionStatement)
+            {
+                builder.AppendLine("UNION ");
+            }
+            else if(statement is IntoAsStatement intoAsStatement)
+            {
+                builder.AppendLine($"As {intoAsStatement.Alias}");
+            }
+            else if(statement is InsertValuesStatement insertValuesStatement)
+            {
+                builder.Append("(");
+                builder.Append(String.Join(", ", insertValuesStatement.ValueExpressions.Select(v => v.Column.Name())));
+                builder.Append(") VALUES (");
+                for (int i = 0; i < insertValuesStatement.ValueExpressions.Count; i++)
+                {
+                    builder.Append($"@{paraCount}");
+                    paraCount++;
+                    parameters.Add(paraCount.ToString(), insertValuesStatement.ValueExpressions[i].Value);
+                    if(i < insertValuesStatement.ValueExpressions.Count - 1)
+                    {
+                        builder.Append(", ");
+                    }
+                }
+                builder.AppendLine(")");
             }
             else
             {

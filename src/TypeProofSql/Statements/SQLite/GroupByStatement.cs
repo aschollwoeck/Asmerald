@@ -12,6 +12,7 @@ namespace TypeProofSql.Statements.SQLite
     {
         public IQueryBuilder QueryBuilder { get; private set; }
         public List<IColumn> GroupByColumns { get; private set; } = new List<IColumn>();
+        public GroupByStatement() { }
         public GroupByStatement(IQueryBuilder queryBuilder, IEnumerable<IColumn> groupByColumns)
         {
             this.QueryBuilder = queryBuilder;

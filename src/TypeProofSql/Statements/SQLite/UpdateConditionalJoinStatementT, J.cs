@@ -12,6 +12,7 @@ namespace TypeProofSql.Statements.SQLite
         where T : ITable, new()
         where J : ITable, new()
     {
+        public UpdateConditionalJoinStatement() { }
         public UpdateConditionalJoinStatement(IQueryBuilder queryBuilder)
             : base(queryBuilder)
         {

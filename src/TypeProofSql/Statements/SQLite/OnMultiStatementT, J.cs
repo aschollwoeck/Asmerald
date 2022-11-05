@@ -5,20 +5,18 @@ using TypeProofSql.Columns;
 using TypeProofSql.Statements;
 using TypeProofSql.QueryBuilders;
 using TypeProofSql.Expressions;
+using System.Linq;
 
 namespace TypeProofSql.Statements.SQLite
 {
-    public class OnMultiStatement<T, J> : IStatement
+    public class OnMultiStatement<T, J> : OnMultiStatement
         where T : ITable, new()
         where J : ITable, new()
     {
-        public IQueryBuilder QueryBuilder { get; private set; }
-        public (ISelectColumn<T> left, ISelectColumn<J> right) On { get; private set; }
-        public OnMultiStatement(IQueryBuilder queryBuilder, (ISelectColumn<T> left, ISelectColumn<J> right) on)
+        public OnMultiStatement() { }
+        public OnMultiStatement(IQueryBuilder queryBuilder, IEnumerable<(ISelectColumn<T> left, ISelectColumn<J> right)> on)
+            : base(queryBuilder, new T(), new J(), on.Select(s => (s.left as ISelectColumn, s.right as ISelectColumn)))
         {
-            this.QueryBuilder = queryBuilder;
-            this.QueryBuilder.AddStatment(this);
-            this.On = on;
         }
     }
 }

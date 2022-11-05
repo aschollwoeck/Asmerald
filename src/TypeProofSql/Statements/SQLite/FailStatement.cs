@@ -11,6 +11,7 @@ namespace TypeProofSql.Statements.SQLite
     public class FailStatement : IStatement
     {
         public IQueryBuilder QueryBuilder { get; private set; }
+        public FailStatement() { }
         public FailStatement(IQueryBuilder queryBuilder)
         {
             this.QueryBuilder = queryBuilder;

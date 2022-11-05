@@ -12,6 +12,7 @@ namespace TypeProofSql.Statements.SQLite
     {
         public ConditionalGroupStatement GroupStatement { get; private set; }
         public ConditionalExpression ConditionalExpression { get; private set; }
+        public AndStatement() : base(null, null) { }
         public AndStatement(IQueryBuilder queryBuilder, ConditionalGroupStatement groupStatement, ConditionalExpression conditionalExpression)
             : base(queryBuilder, groupStatement, conditionalExpression)
         {

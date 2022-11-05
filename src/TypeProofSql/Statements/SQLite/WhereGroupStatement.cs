@@ -12,6 +12,7 @@ namespace TypeProofSql.Statements.SQLite
     {
         public IQueryBuilder QueryBuilder { get; private set; }
         public ConditionalGroupStatement GroupExpr { get; private set; }
+        public WhereGroupStatement() { }
         public WhereGroupStatement(IQueryBuilder queryBuilder, ConditionalGroupStatement groupExpr)
         {
             this.QueryBuilder = queryBuilder;

@@ -12,6 +12,7 @@ namespace TypeProofSql.Statements.SQLite
     {
         public IQueryBuilder QueryBuilder { get; private set; }
         public int Limit { get; private set; }
+        public LimitStatement() { }
         public LimitStatement(IQueryBuilder queryBuilder, int limit)
         {
             this.QueryBuilder = queryBuilder;

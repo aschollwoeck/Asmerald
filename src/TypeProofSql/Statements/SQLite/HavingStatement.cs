@@ -11,6 +11,7 @@ namespace TypeProofSql.Statements.SQLite
     public class HavingStatement : ConditionalGroupStatement
     {
         public ConditionalExpression ConditionalExpression { get; private set; }
+        public HavingStatement() { }
         public HavingStatement(IQueryBuilder queryBuilder, ConditionalExpression conditionalExpression)
             : base(queryBuilder, conditionalExpression)
         {

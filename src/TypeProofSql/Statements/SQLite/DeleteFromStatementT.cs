@@ -11,6 +11,7 @@ namespace TypeProofSql.Statements.SQLite
     public class DeleteFromStatement<T> : DeleteFromStatement
         where T : ITable, new()
     {
+        public DeleteFromStatement() { }
         public DeleteFromStatement(IQueryBuilder queryBuilder)
             : base(queryBuilder, new T())
         {

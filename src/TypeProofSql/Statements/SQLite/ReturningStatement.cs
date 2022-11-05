@@ -11,6 +11,7 @@ namespace TypeProofSql.Statements.SQLite
     public class ReturningStatement : IStatement
     {
         public IQueryBuilder QueryBuilder { get; private set; }
+        public ReturningStatement() { }
         public ReturningStatement(IQueryBuilder queryBuilder)
         {
             this.QueryBuilder = queryBuilder;

@@ -11,6 +11,7 @@ namespace TypeProofSql.Statements.SQLite
     public class AbortStatement : IStatement
     {
         public IQueryBuilder QueryBuilder { get; private set; }
+        public AbortStatement() { }
         public AbortStatement(IQueryBuilder queryBuilder)
         {
             this.QueryBuilder = queryBuilder;

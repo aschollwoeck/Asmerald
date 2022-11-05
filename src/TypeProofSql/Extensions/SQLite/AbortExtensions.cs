@@ -12,9 +12,9 @@ namespace TypeProofSql.SQLite
 {
     public static partial class TypeProofSqlAbortExtensions
     {
-        public static AbortStatement Abort(this InsertOrStatement stmt)
+        public static InsertAbortStatement Abort(this InsertOrStatement stmt)
         {
-            return new AbortStatement(stmt.QueryBuilder);
+            return new InsertAbortStatement(stmt.QueryBuilder);
         }
         public static UpdateAbortStatement<T> Abort<T>(this UpdateOrStatement<T> stmt)
             where T : ITable, new()

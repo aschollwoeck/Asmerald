@@ -6,7 +6,7 @@ using System.Text;
 using System.Xml.Linq;
 using TypeProofSql;
 using TypeProofSql.SourceGenerator;
-
+using TypeProofSql.SourceGenerator.Generators;
 
 var parser = new IniParser.Parser.IniDataParser(new IniParser.Model.Configuration.IniParserConfiguration()
 {
@@ -17,14 +17,16 @@ var parser = new IniParser.Parser.IniDataParser(new IniParser.Model.Configuratio
 // Load definitions from config file
 var iniSqlite = parser.Parse(File.ReadAllText("sqlite_definition"));
 var dir = iniSqlite.Global["Directory"];
+var tDir = iniSqlite.Global["TestDirectory"];
 
 // Get the current SQL dialect, e.g. SQLite, etc. for namespace and folder name
-if(System.IO.Directory.Exists(Path.Combine(dir, "Statements")) == false) System.IO.Directory.CreateDirectory(Path.Combine(dir, "Statements"));
+if (System.IO.Directory.Exists(Path.Combine(dir, "Statements")) == false) System.IO.Directory.CreateDirectory(Path.Combine(dir, "Statements"));
 if (System.IO.Directory.Exists(Path.Combine(dir, "Extensions")) == false) System.IO.Directory.CreateDirectory(Path.Combine(dir, "Extensions"));
 var stmtDir = System.IO.Directory.CreateDirectory(Path.Combine(dir, "Statements", iniSqlite.Global["sqlDialect"]));
 stmtDir.GetFiles().ToList().ForEach(f => f.Delete());
 var extDir = System.IO.Directory.CreateDirectory(Path.Combine(dir, "Extensions", iniSqlite.Global["sqlDialect"]));
 extDir.GetFiles().ToList().ForEach(f => f.Delete());
+var testDir = new System.IO.DirectoryInfo(tDir);
 
 Dictionary<string, GenerateCodeStatement> classNames = new();
 
@@ -34,8 +36,8 @@ foreach (var item in iniSqlite.Sections["COMMON_CLASSES"])
     classNames.Add(item.KeyName, new GenerateCodeStatement() { class_name = item.KeyName, class_name_short = item.KeyName, full_class_name = item.KeyName });
 }
 
-var classTemplate = ReadResource("classGeneration.txt");
-var classTemplateParsed = Scriban.Template.ParseLiquid(classTemplate);
+//var classTemplate = ReadResource("classGeneration.txt");
+//var classTemplateParsed = Scriban.Template.ParseLiquid(classTemplate);
 
 // Create classes based on definitions
 foreach (var item in iniSqlite.Sections["CLASSES"])
@@ -44,9 +46,14 @@ foreach (var item in iniSqlite.Sections["CLASSES"])
     classNames.Add(item.KeyName, code);
 }
 
+var genImplTest = new TestGenerator().Generate("NotImplementedTest", classNames.Values);
 
-var extensionTemplate = ReadResource("extensionGeneration.txt");
-var extensionTemplateParsed = Scriban.Template.ParseLiquid(extensionTemplate);
+//Write test to file
+File.WriteAllText(System.IO.Path.Combine(testDir.FullName, "NotImplementedTest") + ".cs", genImplTest);
+
+
+//var extensionTemplate = ReadResource("extensionGeneration.txt");
+//var extensionTemplateParsed = Scriban.Template.ParseLiquid(extensionTemplate);
 
 
 

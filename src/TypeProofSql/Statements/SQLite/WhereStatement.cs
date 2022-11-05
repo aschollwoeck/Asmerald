@@ -11,6 +11,7 @@ namespace TypeProofSql.Statements.SQLite
     public class WhereStatement : ConditionalGroupStatement
     {
         public ConditionalExpression ConditionalExpression { get; private set; }
+        public WhereStatement() { }
         public WhereStatement(IQueryBuilder queryBuilder, ConditionalExpression conditionalExpression)
             : base(queryBuilder)
         {

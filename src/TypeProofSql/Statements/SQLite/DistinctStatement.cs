@@ -11,6 +11,7 @@ namespace TypeProofSql.Statements.SQLite
     public class DistinctStatement : IStatement
     {
         public IQueryBuilder QueryBuilder { get; private set; }
+        public DistinctStatement() { }
         public DistinctStatement(IQueryBuilder queryBuilder)
         {
             this.QueryBuilder = queryBuilder;

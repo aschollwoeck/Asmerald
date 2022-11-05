@@ -11,6 +11,7 @@ namespace TypeProofSql.Statements.SQLite
     public class NullsStatement : IStatement
     {
         public IQueryBuilder QueryBuilder { get; private set; }
+        public NullsStatement() { }
         public NullsStatement(IQueryBuilder queryBuilder)
         {
             this.QueryBuilder = queryBuilder;

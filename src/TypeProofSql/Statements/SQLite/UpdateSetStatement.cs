@@ -13,6 +13,7 @@ namespace TypeProofSql.Statements.SQLite
         public IQueryBuilder QueryBuilder { get; private set; }
         public ITable Table { get; private set; }
         public List<ValueExpression> ValueExpressions { get; private set; } = new List<ValueExpression>();
+        public UpdateSetStatement() { }
         public UpdateSetStatement(IQueryBuilder queryBuilder, ITable table, IEnumerable<ValueExpression> valueExpressions)
         {
             this.QueryBuilder = queryBuilder;

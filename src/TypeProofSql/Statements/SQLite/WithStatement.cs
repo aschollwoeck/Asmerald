@@ -11,6 +11,7 @@ namespace TypeProofSql.Statements.SQLite
     public class WithStatement : IStatement
     {
         public IQueryBuilder QueryBuilder { get; private set; }
+        public WithStatement() { }
         public WithStatement(IQueryBuilder queryBuilder)
         {
             this.QueryBuilder = queryBuilder;

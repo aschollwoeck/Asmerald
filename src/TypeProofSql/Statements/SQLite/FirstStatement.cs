@@ -11,6 +11,7 @@ namespace TypeProofSql.Statements.SQLite
     public class FirstStatement : IStatement
     {
         public IQueryBuilder QueryBuilder { get; private set; }
+        public FirstStatement() { }
         public FirstStatement(IQueryBuilder queryBuilder)
         {
             this.QueryBuilder = queryBuilder;

@@ -17,27 +17,27 @@ namespace TypeProofSql.SQLite
         {
             return new IntoStatement<T>(stmt.QueryBuilder);
         }
-        public static IntoStatement<T> Into<T>(this ReplaceStatement stmt)
+        public static IntoStatement<T> Into<T>(this InsertReplaceStatement stmt)
             where T : ITable, new()
         {
             return new IntoStatement<T>(stmt.QueryBuilder);
         }
-        public static IntoStatement<T> Into<T>(this AbortStatement stmt)
+        public static IntoStatement<T> Into<T>(this InsertAbortStatement stmt)
             where T : ITable, new()
         {
             return new IntoStatement<T>(stmt.QueryBuilder);
         }
-        public static IntoStatement<T> Into<T>(this FailStatement stmt)
+        public static IntoStatement<T> Into<T>(this InsertFailStatement stmt)
             where T : ITable, new()
         {
             return new IntoStatement<T>(stmt.QueryBuilder);
         }
-        public static IntoStatement<T> Into<T>(this IgnoreStatement stmt)
+        public static IntoStatement<T> Into<T>(this InsertIgnoreStatement stmt)
             where T : ITable, new()
         {
             return new IntoStatement<T>(stmt.QueryBuilder);
         }
-        public static IntoStatement<T> Into<T>(this RollbackStatement stmt)
+        public static IntoStatement<T> Into<T>(this InsertRollbackStatement stmt)
             where T : ITable, new()
         {
             return new IntoStatement<T>(stmt.QueryBuilder);

@@ -11,6 +11,7 @@ namespace TypeProofSql.Statements.SQLite
     public class UpsertSetStatement : IStatement
     {
         public IQueryBuilder QueryBuilder { get; private set; }
+        public UpsertSetStatement() { }
         public UpsertSetStatement(IQueryBuilder queryBuilder)
         {
             this.QueryBuilder = queryBuilder;

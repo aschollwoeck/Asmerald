@@ -8,14 +8,13 @@ using TypeProofSql.Expressions;
 
 namespace TypeProofSql.Statements.SQLite
 {
-    public class UpdateIgnoreStatement : IStatement
+    public class UpdateIgnoreStatement : IgnoreStatement
     {
-        public IQueryBuilder QueryBuilder { get; private set; }
         public ITable Table { get; private set; }
+        public UpdateIgnoreStatement() { }
         public UpdateIgnoreStatement(IQueryBuilder queryBuilder, ITable table)
+            : base(queryBuilder)
         {
-            this.QueryBuilder = queryBuilder;
-            this.QueryBuilder.AddStatment(this);
             this.Table = table;
         }
     }

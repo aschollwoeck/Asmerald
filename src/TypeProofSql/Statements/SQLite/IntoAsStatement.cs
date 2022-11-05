@@ -12,6 +12,7 @@ namespace TypeProofSql.Statements.SQLite
     {
         public IQueryBuilder QueryBuilder { get; private set; }
         public string Alias { get; private set; }
+        public IntoAsStatement() { }
         public IntoAsStatement(IQueryBuilder queryBuilder, string alias)
         {
             this.QueryBuilder = queryBuilder;

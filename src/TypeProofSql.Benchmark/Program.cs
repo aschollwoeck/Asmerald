@@ -1,51 +1,134 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Data;
 using System.Security.Cryptography;
 using BenchmarkDotNet.Attributes;
 using BenchmarkDotNet.Running;
+using Dapper;
 using TypeProofSql.SQLite;
 
 namespace TypeProofSql.Benchmark
 {
-    public class TypeProofSqlTests
+    //public class TypeProofSqlTests
+    //{
+
+    //    public TypeProofSqlTests()
+    //    {
+    //    }
+
+    //    [Benchmark]
+    //    public object MultipleWith()
+    //    {
+    //        var dslCtxt = new SQLiteDSLContext();
+    //        var sub = dslCtxt
+    //            .With<Tbl_With>(Tbl_With.Id(), Tbl_With.Name())
+    //            .AsSelect(dslCtxt.Select(Tbl_Cards.Id()).From<Tbl_Cards>().QueryBuilder)
+    //            .With(Tbl_With.Id(), Tbl_With.Name())
+    //            .AsSelect(dslCtxt.Select(Tbl_Cards.Id()).From<Tbl_Cards>().QueryBuilder)
+    //            .Select(Tbl_With.Id())
+    //            .From<Tbl_With>()
+    //            .QueryBuilder
+    //            .BuildPreparedStatement();
+
+    //        return sub;
+    //    }
+
+    //    [Benchmark]
+    //    public object Update()
+    //    {
+    //        var dslCtxt = new SQLiteDSLContext();
+    //        var et = dslCtxt
+    //            .Update<Tbl_Cards>()
+    //            .Set(Tbl_Cards.Name().Value("hi"))
+    //            .Where(Tbl_Cards.Name().Equal("test"))
+    //            .QueryBuilder
+    //            .BuildPreparedStatement();
+
+    //        return et;
+    //    }
+
+    //    [Benchmark]
+    //    public object SelectWhereOrderLimit()
+    //    {
+    //        var dslCtxt = new SQLiteDSLContext();
+    //        var ts = dslCtxt
+    //            .Select(Tbl_Cards.Id(), Tbl_Cards.Name(), Tbl_Cards.Form().As("test"))
+    //            .From<Tbl_Cards>()
+    //            .Where(Tbl_Cards.Id().Greater(10))
+    //            .OrderBy(Tbl_Cards.Id())
+    //            .Limit(50)
+    //            .QueryBuilder
+    //            .BuildPreparedStatement();
+
+    //        return ts;
+    //    }
+
+    //    [Benchmark]
+    //    public object WithRecursive()
+    //    {
+    //        var dslCtxt = new SQLiteDSLContext();
+    //        var sub = dslCtxt
+    //            .With()
+    //            .Recursive<Tbl_With>(Tbl_With.Id(), Tbl_With.Name())
+    //            .As()
+    //            .Not()
+    //            .Materialized(dslCtxt
+    //                .Select(Tbl_Cards.Id())
+    //                .From<Tbl_Cards>()
+    //                .UnionAll(dslCtxt
+    //                    .Select(Tbl_Cards.Id())
+    //                    .From<Tbl_Cards>()
+    //                    .QueryBuilder)
+    //                .QueryBuilder)
+    //            .QueryBuilder
+    //            .BuildPreparedStatement();
+
+    //        return sub;
+    //    }
+
+    //    [Benchmark]
+    //    public object SelectWhereAndGroupOrder()
+    //    {
+    //        var dslCtxt = new SQLiteDSLContext();
+    //        var sql = dslCtxt
+    //            .Select(Tbl_Cards.Id().As("hello"), Tbl_Cards.Name(), Tbl_Cards.Id().As("int"))
+    //            .From<Tbl_Cards>()
+    //            .Where(Tbl_Cards.Name().Equal("hello"))
+    //            .And(Tbl_Cards.Name().Equal("hello2"))
+    //            .And(Tbl_Cards.Name().In(new[] { "1", "2" }))
+    //            .And(Tbl_Cards.Id().Greater(2))
+    //            .And(Tbl_Cards.Id().IsNull())
+    //            .And(Tbl_Cards.Id().LesserOrEqual(3))
+    //            .Or(Tbl_Cards.Id().Greater(2))
+    //            .GroupBy(Tbl_Cards.Id())
+    //            .OrderBy(Tbl_Cards.Id().Asc(), Tbl_Cards.Id().Desc(), Tbl_Cards.Name().Asc(), Tbl_Cards.Name().Desc())
+    //            .QueryBuilder
+    //            .Build();
+
+    //        return sql;
+    //    }
+    //}
+
+    public class PerformanceComparison
     {
+        private IDbConnection dbConnection;
 
-        public TypeProofSqlTests()
+        public PerformanceComparison()
         {
+            this.dbConnection = new Microsoft.Data.Sqlite.SqliteConnection(@"Data Source=C:\Users\Alexander\Desktop\Digillection\digillection.sqlite3;");
+            this.dbConnection.Open();
+        }
+
+        [Benchmark(Baseline = true)]
+        public object DapperRaw()
+        {
+            return this.dbConnection.Query("SELECT Id, Name, Form as 'test' FROM cards WHERE id > @idGr ORDER BY Id LIMIT @limit", 
+                param: new { idGr = 10, limit  = 50})
+                .ToList();
         }
 
         [Benchmark]
-        public object MultipleWith()
-        {
-            var dslCtxt = new SQLiteDSLContext();
-            var sub = dslCtxt
-                .With<Tbl_With>(Tbl_With.Id(), Tbl_With.Name())
-                .AsSelect(dslCtxt.Select(Tbl_Cards.Id()).From<Tbl_Cards>().QueryBuilder)
-                .With(Tbl_With.Id(), Tbl_With.Name())
-                .AsSelect(dslCtxt.Select(Tbl_Cards.Id()).From<Tbl_Cards>().QueryBuilder)
-                .Select(Tbl_With.Id())
-                .From<Tbl_With>()
-                .QueryBuilder
-                .BuildPreparedStatement();
-
-            return sub;
-        }
-
-        [Benchmark]
-        public object Update()
-        {
-            var dslCtxt = new SQLiteDSLContext();
-            var et = dslCtxt
-                .Update<Tbl_Cards>()
-                .Set(Tbl_Cards.Name().Value("hi"))
-                .Where(Tbl_Cards.Name().Equal("test"))
-                .QueryBuilder
-                .BuildPreparedStatement();
-
-            return et;
-        }
-
-        [Benchmark]
-        public object SelectWhereOrderLimit()
+        public object TypeSafeSql()
         {
             var dslCtxt = new SQLiteDSLContext();
             var ts = dslCtxt
@@ -57,52 +140,9 @@ namespace TypeProofSql.Benchmark
                 .QueryBuilder
                 .BuildPreparedStatement();
 
-            return ts;
-        }
-
-        [Benchmark]
-        public object WithRecursive()
-        {
-            var dslCtxt = new SQLiteDSLContext();
-            var sub = dslCtxt
-                .With()
-                .Recursive<Tbl_With>(Tbl_With.Id(), Tbl_With.Name())
-                .As()
-                .Not()
-                .Materialized(dslCtxt
-                    .Select(Tbl_Cards.Id())
-                    .From<Tbl_Cards>()
-                    .UnionAll(dslCtxt
-                        .Select(Tbl_Cards.Id())
-                        .From<Tbl_Cards>()
-                        .QueryBuilder)
-                    .QueryBuilder)
-                .QueryBuilder
-                .BuildPreparedStatement();
-
-            return sub;
-        }
-
-        [Benchmark]
-        public object SelectWhereAndGroupOrder()
-        {
-            var dslCtxt = new SQLiteDSLContext();
-            var sql = dslCtxt
-                .Select(Tbl_Cards.Id().As("hello"), Tbl_Cards.Name(), Tbl_Cards.Id().As("int"))
-                .From<Tbl_Cards>()
-                .Where(Tbl_Cards.Name().Equal("hello"))
-                .And(Tbl_Cards.Name().Equal("hello2"))
-                .And(Tbl_Cards.Name().In(new[] { "1", "2" }))
-                .And(Tbl_Cards.Id().Greater(2))
-                .And(Tbl_Cards.Id().IsNull())
-                .And(Tbl_Cards.Id().LesserOrEqual(3))
-                .Or(Tbl_Cards.Id().Greater(2))
-                .GroupBy(Tbl_Cards.Id())
-                .OrderBy(Tbl_Cards.Id().Asc(), Tbl_Cards.Id().Desc(), Tbl_Cards.Name().Asc(), Tbl_Cards.Name().Desc())
-                .QueryBuilder
-                .Build();
-
-            return sql;
+            return this.dbConnection.Query(ts.Statement, 
+                param: ts.Parameters)
+                .ToList();
         }
     }
 

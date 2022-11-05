@@ -12,9 +12,9 @@ namespace TypeProofSql.SQLite
 {
     public static partial class TypeProofSqlIgnoreExtensions
     {
-        public static IgnoreStatement Ignore(this InsertOrStatement stmt)
+        public static InsertIgnoreStatement Ignore(this InsertOrStatement stmt)
         {
-            return new IgnoreStatement(stmt.QueryBuilder);
+            return new InsertIgnoreStatement(stmt.QueryBuilder);
         }
         public static UpdateIgnoreStatement<T> Ignore<T>(this UpdateOrStatement<T> stmt)
             where T : ITable, new()

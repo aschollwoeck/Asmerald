@@ -12,11 +12,11 @@ namespace TypeProofSql.SQLite
 {
     public static partial class TypeProofSqlLeftJoinExtensions
     {
-        public static ConditionalJoinStatement<T, J> LeftJoin<T, J>(this FromStatement<T> stmt)
+        public static LeftOuterJoinStatement<T, J> LeftJoin<T, J>(this FromStatement<T> stmt)
             where T : ITable, new()
             where J : ITable, new()
         {
-            return new ConditionalJoinStatement<T, J>(stmt.QueryBuilder);
+            return new LeftOuterJoinStatement<T, J>(stmt.QueryBuilder);
         }
         public static UpdateConditionalJoinStatement<T, J> LeftJoin<T, J>(this UpdateFromStatement<T> stmt)
             where T : ITable, new()

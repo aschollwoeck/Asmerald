@@ -11,6 +11,7 @@ namespace TypeProofSql.Statements.SQLite
     public class SelectStatement : IStatement
     {
         public IQueryBuilder QueryBuilder { get; private set; }
+        public SelectStatement() { }
         public SelectStatement(IQueryBuilder queryBuilder)
         {
             this.QueryBuilder = queryBuilder;

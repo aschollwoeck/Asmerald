@@ -18,7 +18,7 @@ namespace TypeProofSql.SQLite
         {
             return new OnStatement<T, J>(stmt.QueryBuilder, left, right);
         }
-        public static OnMultiStatement<T, J> On<T, J>(this ConditionalJoinStatement<T, J> stmt, (ISelectColumn<T> left, ISelectColumn<J> right) on)
+        public static OnMultiStatement<T, J> On<T, J>(this ConditionalJoinStatement<T, J> stmt, params (ISelectColumn<T> left, ISelectColumn<J> right)[] on)
             where T : ITable, new()
             where J : ITable, new()
         {

@@ -1,6 +1,7 @@
 ﻿sqlDialect=SQLite
 ;Directory=C:\Users\Alexander\Source\Repos\TypeSafeSql\src\TypeProofSql
 Directory=..\..\..\..\TypeProofSql
+TestDirectory=..\..\..\..\TypeProofSql.Test
 
 [COMMON_CLASSES]
 SQLiteDSLContext = SQLiteDSLContext
@@ -55,19 +56,25 @@ JoinAs = JoinAs(string alias)
 ;InnerJoin<T, J> = InnerJoin<T, J>((ISelectColumn<T> col1, ISelectColumn<J> col2)[] on) : ConditionalJoin<T, J>(on)
 ;LeftOuterJoin<T, J> = LeftOuterJoin<T, J>((ISelectColumn<T> col1, ISelectColumn<J> col2)[] on) : ConditionalJoin<T, J>(on)
 ;RightOuterJoin<T, J> = RightOuterJoin<T, J>((ISelectColumn<T> col1, ISelectColumn<J> col2)[] on) : ConditionalJoin<T, J>(on)
+ConditionalJoin = ConditionalJoin(ITable t, ITable j) : Join(t, j)
 ConditionalJoin<T, J> = ConditionalJoin<T, J>() : Join<T, J>(new T(), new J())
-NonConditionalJoin = NonConditionalJoin(ITable left, ITable right) : Join(left, right)
+NonConditionalJoin = NonConditionalJoin(ITable left, ITable right) : ConditionalJoin(left, right)
 NonConditionalJoin<T, J> = NonConditionalJoin<T, J>() : NonConditionalJoin(new T(), new J())
-CrossJoin<T, J> = CrossJoin<T, J>() : NonConditionalJoin<T, J>()
-FullOuterJoin<T, J> = FullOuterJoin<T, J>() : ConditionalJoin<T, J>()
-InnerJoin<T, J> = InnerJoin<T, J>() : ConditionalJoin<T, J>()
-LeftOuterJoin<T, J> = LeftOuterJoin<T, J>() : ConditionalJoin<T, J>()
-RightOuterJoin<T, J> = RightOuterJoin<T, J>() : ConditionalJoin<T, J>()
+CrossJoin = CrossJoin(ITable t, ITable j) : NonConditionalJoin(t, j)
+CrossJoin<T, J> = CrossJoin<T, J>() : CrossJoin(new T(), new J())
+FullOuterJoin = FullOuterJoin(ITable t, ITable j) : ConditionalJoin(t, j)
+FullOuterJoin<T, J> = FullOuterJoin<T, J>() : FullOuterJoin(new T(), new J())
+InnerJoin = InnerJoin(ITable t, ITable j) : ConditionalJoin(t, j)
+InnerJoin<T, J> = InnerJoin<T, J>() : InnerJoin(new T(), new J())
+LeftOuterJoin = LeftOuterJoin(ITable t, ITable j) : ConditionalJoin(t, j)
+LeftOuterJoin<T, J> = LeftOuterJoin<T, J>() : LeftOuterJoin(new T(), new J())
+RightOuterJoin = RightOuterJoin(ITable t, ITable j) : ConditionalJoin(t, j)
+RightOuterJoin<T, J> = RightOuterJoin<T, J>() : RightOuterJoin(new T(), new J())
 
-On = On(ISelectColumn left, ISelectColumn right)
-OnMulti = OnMulti((ISelectColumn left, ISelectColumn right) on)
-On<T, J> = On<T, J>(ISelectColumn<T> left, ISelectColumn<J> right) : On(left, right)
-OnMulti<T, J> = OnMulti<T, J>((ISelectColumn<T> left, ISelectColumn<J> right) on)
+On = On(ITable tleft, ITable tright, ISelectColumn left, ISelectColumn right)
+OnMulti = OnMulti(ITable tLeft, ITable tRight, (ISelectColumn left, ISelectColumn right)[] on)
+On<T, J> = On<T, J>(ISelectColumn<T> left, ISelectColumn<J> right) : On(new T(), new J(), left, right)
+OnMulti<T, J> = OnMulti<T, J>((ISelectColumn<T> left, ISelectColumn<J> right)[] on) : OnMulti(new T(), new J(), on)
 
 WhereGroup = WhereGroup(ConditionalGroupStatement groupExpr)
 Where = Where(ConditionalExpression conditionalExpression) : ConditionalGroup
@@ -92,11 +99,16 @@ Offset = Offset(int offset)
 
 Insert = Insert
 Replace = Replace
+InsertReplace = InsertReplace() : Replace()
 InsertOr = InsertOr
 Abort = Abort
+InsertAbort = InsertAbort() : Abort()
 Fail = Fail
+InsertFail = InsertFail() : Fail()
 Ignore = Ignore
+InsertIgnore = InsertIgnore() : Ignore()
 Rollback = Rollback
+InsertRollback = InsertRollback() : Rollback()
 Into = Into(ITable table)
 Into<T> = Into<T>() : Into(new T())
 IntoAs = IntoAs(string alias)
@@ -116,16 +128,16 @@ UpdateSet<T> = UpdateSet<T>(ValueExpression[] valueExpressions) : UpdateSet(new 
 UpdateOr = UpdateOr(ITable table)
 UpdateOr<T> = UpdateOr<T>() : UpdateOr(new T())
 
-UpdateAbort = UpdateAbort(ITable table)
+UpdateAbort = UpdateAbort(ITable table) : Abort()
 UpdateAbort<T> = UpdateAbort<T>() : UpdateAbort(new T())
-UpdateFail = UpdateFail(ITable table)
+UpdateFail = UpdateFail(ITable table) : Fail()
 UpdateFail<T> = UpdateFail<T>() : UpdateAbort(new T())
-UpdateIgnore = UpdateIgnore(ITable table)
-UpdateIgnore<T> = UpdateIgnore<T>() : UpdateAbort(new T())
-UpdateReplace = UpdateReplace(ITable table)
-UpdateReplace<T> = UpdateReplace<T>() : UpdateAbort(new T())
-UpdateRollback = UpdateRollback(ITable table)
-UpdateRollback<T> = UpdateRollback<T>() : UpdateAbort(new T())
+UpdateIgnore = UpdateIgnore(ITable table) : Ignore()
+UpdateIgnore<T> = UpdateIgnore<T>() : UpdateIgnore(new T())
+UpdateReplace = UpdateReplace(ITable table) : Replace()
+UpdateReplace<T> = UpdateReplace<T>() : UpdateReplace(new T())
+UpdateRollback = UpdateRollback(ITable table) : Rollback()
+UpdateRollback<T> = UpdateRollback<T>() : UpdateRollback(new T())
 
 UpdateFrom = UpdateFrom(ITable table)
 UpdateFrom<T> = UpdateFrom<T>() : UpdateFrom(new T())
@@ -155,7 +167,6 @@ DeleteWhereGroup = DeleteWhereGroup
 
 Set = Set(ValueExpression[] valueExpressions)
 Value = Value(ValueExpression[] valueExpressions)
-
 
 Compound = Compound(IQueryBuilder subQueryBuilder)
 Union = Union(IQueryBuilder subQueryBuilder) : Compound(subQueryBuilder)

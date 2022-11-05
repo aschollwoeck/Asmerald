@@ -11,6 +11,7 @@ namespace TypeProofSql.Statements.SQLite
     public class ReturningSelectStatement<T> : InsertSelectStatement
         where T : ITable, new()
     {
+        public ReturningSelectStatement() { }
         public ReturningSelectStatement(IQueryBuilder queryBuilder, IEnumerable<ISelectColumn<T>> columns)
             : base(queryBuilder, columns)
         {

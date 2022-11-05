@@ -11,6 +11,7 @@ namespace TypeProofSql.Statements.SQLite
     public class DescStatement : IStatement
     {
         public IQueryBuilder QueryBuilder { get; private set; }
+        public DescStatement() { }
         public DescStatement(IQueryBuilder queryBuilder)
         {
             this.QueryBuilder = queryBuilder;

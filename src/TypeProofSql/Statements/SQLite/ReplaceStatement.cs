@@ -11,6 +11,7 @@ namespace TypeProofSql.Statements.SQLite
     public class ReplaceStatement : IStatement
     {
         public IQueryBuilder QueryBuilder { get; private set; }
+        public ReplaceStatement() { }
         public ReplaceStatement(IQueryBuilder queryBuilder)
         {
             this.QueryBuilder = queryBuilder;

@@ -11,6 +11,7 @@ namespace TypeProofSql.Statements.SQLite
     public class UpdateFromStatement<T> : UpdateFromStatement
         where T : ITable, new()
     {
+        public UpdateFromStatement() { }
         public UpdateFromStatement(IQueryBuilder queryBuilder)
             : base(queryBuilder, new T())
         {

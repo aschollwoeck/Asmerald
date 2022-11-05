@@ -8,14 +8,13 @@ using TypeProofSql.Expressions;
 
 namespace TypeProofSql.Statements.SQLite
 {
-    public class UpdateRollbackStatement : IStatement
+    public class UpdateRollbackStatement : RollbackStatement
     {
-        public IQueryBuilder QueryBuilder { get; private set; }
         public ITable Table { get; private set; }
+        public UpdateRollbackStatement() { }
         public UpdateRollbackStatement(IQueryBuilder queryBuilder, ITable table)
+            : base(queryBuilder)
         {
-            this.QueryBuilder = queryBuilder;
-            this.QueryBuilder.AddStatment(this);
             this.Table = table;
         }
     }

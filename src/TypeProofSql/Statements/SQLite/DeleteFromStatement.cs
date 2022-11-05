@@ -12,6 +12,7 @@ namespace TypeProofSql.Statements.SQLite
     {
         public IQueryBuilder QueryBuilder { get; private set; }
         public ITable Table { get; private set; }
+        public DeleteFromStatement() { }
         public DeleteFromStatement(IQueryBuilder queryBuilder, ITable table)
         {
             this.QueryBuilder = queryBuilder;

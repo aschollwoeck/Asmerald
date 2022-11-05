@@ -8,12 +8,13 @@ using TypeProofSql.Expressions;
 
 namespace TypeProofSql.Statements.SQLite
 {
-    public class RightOuterJoinStatement<T, J> : ConditionalJoinStatement<T, J>
+    public class RightOuterJoinStatement<T, J> : RightOuterJoinStatement
         where T : ITable, new()
         where J : ITable, new()
     {
+        public RightOuterJoinStatement() { }
         public RightOuterJoinStatement(IQueryBuilder queryBuilder)
-            : base(queryBuilder)
+            : base(queryBuilder, new T(), new J())
         {
         }
     }

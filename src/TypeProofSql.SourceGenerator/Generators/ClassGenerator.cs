@@ -72,6 +72,9 @@ namespace TypeProofSql.SourceGenerator.Generators
                 }
             }
 
+            // Default constructor
+            w.WriteLine($"public {classObj.class_name}() {{ }}");
+
             // Constructor
             w.Write($"public {classObj.class_name}(IQueryBuilder queryBuilder");
 

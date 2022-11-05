@@ -12,6 +12,7 @@ namespace TypeProofSql.Statements.SQLite
         where T : ITable, new()
         where J : ITable, new()
     {
+        public JoinStatement() { }
         public JoinStatement(IQueryBuilder queryBuilder, T left, J right)
             : base(queryBuilder, left, right)
         {

@@ -11,6 +11,7 @@ namespace TypeProofSql.Statements.SQLite
     public class DeleteWhereStatement : IStatement
     {
         public IQueryBuilder QueryBuilder { get; private set; }
+        public DeleteWhereStatement() { }
         public DeleteWhereStatement(IQueryBuilder queryBuilder)
         {
             this.QueryBuilder = queryBuilder;
