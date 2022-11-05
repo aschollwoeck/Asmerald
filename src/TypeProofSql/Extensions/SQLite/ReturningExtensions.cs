@@ -34,7 +34,15 @@ namespace TypeProofSql.SQLite
         {
             return new ReturningStatement(stmt.QueryBuilder);
         }
-        public static ReturningStatement Returning(this UpdateWhereStatement stmt)
+        public static ReturningStatement Returning(this WhereStatement stmt)
+        {
+            return new ReturningStatement(stmt.QueryBuilder);
+        }
+        public static ReturningStatement Returning(this WhereGroupStatement stmt)
+        {
+            return new ReturningStatement(stmt.QueryBuilder);
+        }
+        public static ReturningStatement Returning(this ConditionalGroupStatement stmt)
         {
             return new ReturningStatement(stmt.QueryBuilder);
         }
@@ -60,15 +68,19 @@ namespace TypeProofSql.SQLite
         {
             return new ReturningSelectStatement(stmt.QueryBuilder, columns);
         }
-        public static ReturningSelectStatement Returning(this UpdateWhereStatement stmt, params ISelectColumn[] columns)
+        public static ReturningSelectStatement Returning(this WhereStatement stmt, params ISelectColumn[] columns)
+        {
+            return new ReturningSelectStatement(stmt.QueryBuilder, columns);
+        }
+        public static ReturningSelectStatement Returning(this WhereGroupStatement stmt, params ISelectColumn[] columns)
+        {
+            return new ReturningSelectStatement(stmt.QueryBuilder, columns);
+        }
+        public static ReturningSelectStatement Returning(this ConditionalGroupStatement stmt, params ISelectColumn[] columns)
         {
             return new ReturningSelectStatement(stmt.QueryBuilder, columns);
         }
         public static ReturningStatement Returning(this DeleteWhereStatement stmt)
-        {
-            return new ReturningStatement(stmt.QueryBuilder);
-        }
-        public static ReturningStatement Returning(this DeleteWhereGroupStatement stmt)
         {
             return new ReturningStatement(stmt.QueryBuilder);
         }

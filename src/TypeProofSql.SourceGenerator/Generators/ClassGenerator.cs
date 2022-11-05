@@ -21,7 +21,6 @@ namespace TypeProofSql.SourceGenerator.Generators
             w.WriteLine("using TypeProofSql.Statements;");
             w.WriteLine("using TypeProofSql.QueryBuilders;");
             w.WriteLine("using TypeProofSql.Expressions;");
-            w.WriteLine("using TypeProofSql.Statements;");
             w.WriteLine();
             w.WriteLine($"namespace TypeProofSql.Statements.{classObj.nspace}");
             w.WriteLine("{");

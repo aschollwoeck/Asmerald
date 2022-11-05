@@ -43,6 +43,10 @@ namespace TypeProofSql.SQLite
         {
             return new UnionStatement(stmt.QueryBuilder, subQueryBuilder);
         }
+        public static UnionStatement Union(this ConditionalGroupStatement stmt, IQueryBuilder subQueryBuilder)
+        {
+            return new UnionStatement(stmt.QueryBuilder, subQueryBuilder);
+        }
         public static UnionStatement Union(this GroupByStatement stmt, IQueryBuilder subQueryBuilder)
         {
             return new UnionStatement(stmt.QueryBuilder, subQueryBuilder);

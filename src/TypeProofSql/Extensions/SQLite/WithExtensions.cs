@@ -26,6 +26,11 @@ namespace TypeProofSql.SQLite
         {
             return new WithTableAdditionalStatement<T>(stmt.QueryBuilder, selectColumns);
         }
+        public static WithTableStatement<T> With<T>(this WithAsSelectStatement<T> stmt, params ISelectColumn[] selectColumns)
+            where T : ITable, new()
+        {
+            return new WithTableStatement<T>(stmt.QueryBuilder, selectColumns);
+        }
         public static WithTableAdditionalStatement<T> With<T>(this MaterializedStatement stmt, params ISelectColumn[] selectColumns)
             where T : ITable, new()
         {

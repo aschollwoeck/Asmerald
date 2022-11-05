@@ -16,11 +16,12 @@ namespace TypeProofSql.Benchmark
         [Benchmark]
         public object MultipleWith()
         {
-            var sub = Query
+            var dslCtxt = new SQLiteDSLContext();
+            var sub = dslCtxt
+                .With<Tbl_With>(Tbl_With.Id(), Tbl_With.Name())
+                .AsSelect(dslCtxt.Select(Tbl_Cards.Id()).From<Tbl_Cards>().QueryBuilder)
                 .With(Tbl_With.Id(), Tbl_With.Name())
-                .As(Query.Select(Tbl_Cards.Id()).From<Tbl_Cards>())
-                .With(Tbl_With.Id(), Tbl_With.Name())
-                .As(Query.Select(Tbl_Cards.Id()).From<Tbl_Cards>())
+                .AsSelect(dslCtxt.Select(Tbl_Cards.Id()).From<Tbl_Cards>().QueryBuilder)
                 .Select(Tbl_With.Id())
                 .From<Tbl_With>()
                 .QueryBuilder
@@ -32,7 +33,8 @@ namespace TypeProofSql.Benchmark
         [Benchmark]
         public object Update()
         {
-            var et = TypeProofSql.Execute
+            var dslCtxt = new SQLiteDSLContext();
+            var et = dslCtxt
                 .Update<Tbl_Cards>()
                 .Set(Tbl_Cards.Name().Value("hi"))
                 .Where(Tbl_Cards.Name().Equal("test"))
@@ -45,7 +47,8 @@ namespace TypeProofSql.Benchmark
         [Benchmark]
         public object SelectWhereOrderLimit()
         {
-            var ts = Query
+            var dslCtxt = new SQLiteDSLContext();
+            var ts = dslCtxt
                 .Select(Tbl_Cards.Id(), Tbl_Cards.Name(), Tbl_Cards.Form().As("test"))
                 .From<Tbl_Cards>()
                 .Where(Tbl_Cards.Id().Greater(10))
@@ -60,17 +63,20 @@ namespace TypeProofSql.Benchmark
         [Benchmark]
         public object WithRecursive()
         {
-            var sub = Query
+            var dslCtxt = new SQLiteDSLContext();
+            var sub = dslCtxt
                 .With()
-                .Recursive(Tbl_With.Id(), Tbl_With.Name())
+                .Recursive<Tbl_With>(Tbl_With.Id(), Tbl_With.Name())
                 .As()
                 .Not()
-                .Materialized(Query
+                .Materialized(dslCtxt
                     .Select(Tbl_Cards.Id())
                     .From<Tbl_Cards>()
-                    .UnionAll(Query
+                    .UnionAll(dslCtxt
                         .Select(Tbl_Cards.Id())
-                        .From<Tbl_Cards>()))
+                        .From<Tbl_Cards>()
+                        .QueryBuilder)
+                    .QueryBuilder)
                 .QueryBuilder
                 .BuildPreparedStatement();
 
@@ -80,7 +86,8 @@ namespace TypeProofSql.Benchmark
         [Benchmark]
         public object SelectWhereAndGroupOrder()
         {
-            var sql = TypeProofSql.Query
+            var dslCtxt = new SQLiteDSLContext();
+            var sql = dslCtxt
                 .Select(Tbl_Cards.Id().As("hello"), Tbl_Cards.Name(), Tbl_Cards.Id().As("int"))
                 .From<Tbl_Cards>()
                 .Where(Tbl_Cards.Name().Equal("hello"))

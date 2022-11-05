@@ -13,6 +13,12 @@ namespace TypeProofSql.Statements
 
         public ConditionalExpression ConditionalExpression { get; private set; }
 
+        public ConditionalStatement(ConditionalGroupStatement groupStatement, ConditionalExpression conditionalExpression)
+            : this(null, groupStatement, conditionalExpression)
+        {
+
+        }
+
         public ConditionalStatement(IQueryBuilder queryBuilder, ConditionalGroupStatement groupStatement, ConditionalExpression conditionalExpression)
         {
             this.QueryBuilder = queryBuilder;

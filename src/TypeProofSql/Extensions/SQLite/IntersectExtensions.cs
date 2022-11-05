@@ -43,6 +43,10 @@ namespace TypeProofSql.SQLite
         {
             return new IntersectStatement(stmt.QueryBuilder, subQueryBuilder);
         }
+        public static IntersectStatement Intersect(this ConditionalGroupStatement stmt, IQueryBuilder subQueryBuilder)
+        {
+            return new IntersectStatement(stmt.QueryBuilder, subQueryBuilder);
+        }
         public static IntersectStatement Intersect(this GroupByStatement stmt, IQueryBuilder subQueryBuilder)
         {
             return new IntersectStatement(stmt.QueryBuilder, subQueryBuilder);

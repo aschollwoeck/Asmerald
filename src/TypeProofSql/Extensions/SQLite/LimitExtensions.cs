@@ -43,6 +43,10 @@ namespace TypeProofSql.SQLite
         {
             return new LimitStatement(stmt.QueryBuilder, limit);
         }
+        public static LimitStatement Limit(this ConditionalGroupStatement stmt, int limit)
+        {
+            return new LimitStatement(stmt.QueryBuilder, limit);
+        }
         public static LimitStatement Limit(this GroupByStatement stmt, int limit)
         {
             return new LimitStatement(stmt.QueryBuilder, limit);

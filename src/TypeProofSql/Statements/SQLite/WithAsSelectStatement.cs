@@ -5,7 +5,6 @@ using TypeProofSql.Columns;
 using TypeProofSql.Statements;
 using TypeProofSql.QueryBuilders;
 using TypeProofSql.Expressions;
-using TypeProofSql.Statements;
 
 namespace TypeProofSql.Statements.SQLite
 {
@@ -13,11 +12,13 @@ namespace TypeProofSql.Statements.SQLite
     {
         public IQueryBuilder QueryBuilder { get; private set; }
         public ITable Table { get; private set; }
-        public WithAsSelectStatement(IQueryBuilder queryBuilder, ITable table)
+        public IQueryBuilder SubQuery { get; private set; }
+        public WithAsSelectStatement(IQueryBuilder queryBuilder, ITable table, IQueryBuilder subQuery)
         {
             this.QueryBuilder = queryBuilder;
             this.QueryBuilder.AddStatment(this);
             this.Table = table;
+            this.SubQuery = subQuery;
         }
     }
 }

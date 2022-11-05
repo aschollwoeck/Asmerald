@@ -94,9 +94,9 @@ public class Program
         {
             sub = dslCtxt
                 .With<Tbl_With>(Tbl_With.Id(), Tbl_With.Name())
-                .As(dslCtxt.Select(Tbl_Cards.Id()).From<Tbl_Cards>().QueryBuilder)
+                .AsSelect(dslCtxt.Select(Tbl_Cards.Id()).From<Tbl_Cards>().QueryBuilder)
                 .With<Tbl_With>(Tbl_With.Id(), Tbl_With.Name())
-                .As(dslCtxt.Select(Tbl_Cards.Id()).From<Tbl_Cards>().QueryBuilder)
+                .AsSelect(dslCtxt.Select(Tbl_Cards.Id()).From<Tbl_Cards>().QueryBuilder)
                 .Select(Tbl_With.Id())
                 .From<Tbl_With>()
                 .QueryBuilder
@@ -149,20 +149,15 @@ public class Program
             .Select()
             .All()
             .From<Table1>()
-            .WhereGroup(s =>
-            {
-                var g = new ConditionalGroupStatement(s.QueryBuilder)
+            .Where(new ConditionalGroupStatement()
                 {
                     conditionalGroupStatements = new List<ConditionalGroupStatement>()
                     {
-                       new ConditionalGroupStatement(s.QueryBuilder, new Table1.Column2().Greater(2)).And(new Table1.Column2().LesserOrEqual(10)),
-                       new OrGroupStatement(s.QueryBuilder, new Table1.Column2().Greater(2)).Or(new Table1.Column2().LesserOrEqual(10)),
-                       new AndGroupStatement(s.QueryBuilder, new Table1.Column2().Greater(2)).Or(new Table1.Column2().LesserOrEqual(10)),
+                       new ConditionalGroupStatement(new Table1.Column2().Greater(2)).And(new Table1.Column2().LesserOrEqual(10)),
+                       new OrGroupStatement(dslCtxt.QueryBuilder, new Table1.Column2().Greater(2)).Or(new Table1.Column2().LesserOrEqual(10)),
+                       new AndGroupStatement(dslCtxt.QueryBuilder, new Table1.Column2().Greater(2)).Or(new Table1.Column2().LesserOrEqual(10)),
                     }
-                };
-
-                return g;
-            })
+                })
             .QueryBuilder
             .Build();
         Console.WriteLine(sql);

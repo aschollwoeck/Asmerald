@@ -38,5 +38,9 @@ namespace TypeProofSql.SQLite
         {
             return new GroupByStatement(stmt.QueryBuilder, groupByColumns);
         }
+        public static GroupByStatement GroupBy(this ConditionalGroupStatement stmt, params IColumn[] groupByColumns)
+        {
+            return new GroupByStatement(stmt.QueryBuilder, groupByColumns);
+        }
     }
 }

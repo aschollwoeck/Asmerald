@@ -25,8 +25,8 @@ WithNot = WithNot
 
 As = As
 AsSelect = AsSelect(IQueryBuilder subQuery)
-WithAsSelect = WithAsSelect(ITable table)
-WithAsSelect<T> = WithAsSelect<T>() : WithAsSelect(new T())
+WithAsSelect = WithAsSelect(ITable table, IQueryBuilder subQuery)
+WithAsSelect<T> = WithAsSelect<T>(IQueryBuilder subQuery) : WithAsSelect(new T(), subQuery)
 
 
 All = All
@@ -69,7 +69,7 @@ OnMulti = OnMulti((ISelectColumn left, ISelectColumn right) on)
 On<T, J> = On<T, J>(ISelectColumn<T> left, ISelectColumn<J> right) : On(left, right)
 OnMulti<T, J> = OnMulti<T, J>((ISelectColumn<T> left, ISelectColumn<J> right) on)
 
-WhereGroup = WhereGroup
+WhereGroup = WhereGroup(ConditionalGroupStatement groupExpr)
 Where = Where(ConditionalExpression conditionalExpression) : ConditionalGroup
 And = And(ConditionalGroupStatement groupStatement, ConditionalExpression conditionalExpression) : Conditional(groupStatement, conditionalExpression)
 AndGroup = AndGroup(ConditionalExpression conditionalExpression) : ConditionalGroup(conditionalExpression)

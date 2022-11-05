@@ -24,5 +24,9 @@ namespace TypeProofSql.SQLite
         {
             return new HavingStatement(stmt.QueryBuilder, conditionalExpression);
         }
+        public static HavingStatement Having(this ConditionalGroupStatement stmt, ConditionalExpression conditionalExpression)
+        {
+            return new HavingStatement(stmt.QueryBuilder, conditionalExpression);
+        }
     }
 }

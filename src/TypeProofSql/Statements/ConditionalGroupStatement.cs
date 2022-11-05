@@ -13,9 +13,19 @@ namespace TypeProofSql.Statements
         public List<ConditionalGroupStatement> conditionalGroupStatements { get; set; } = new List<ConditionalGroupStatement>();
         public List<ConditionalStatement> conditionalStatements { get; set; } = new List<ConditionalStatement>();
 
+        public ConditionalGroupStatement()
+        {
+        }
+
         public ConditionalGroupStatement(IQueryBuilder queryBuilder)
         {
             this.QueryBuilder = queryBuilder;
+        }
+
+        public ConditionalGroupStatement(ConditionalExpression conditionalExpression)
+            : this()
+        {
+            this.conditionalStatements.Add(new ConditionalStatement(this, conditionalExpression));
         }
 
         public ConditionalGroupStatement(IQueryBuilder queryBuilder, ConditionalExpression conditionalExpression)

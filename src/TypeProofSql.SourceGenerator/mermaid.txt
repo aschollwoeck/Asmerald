@@ -14,13 +14,15 @@ subgraph SGWith
     WithAs --> |Materialized| Materialized
 
     WithAs --> |With| WithTableAdditional[WithTableAdditional<T>]
+    WithAsSelect[WithAsSelect<T>] --> |With| WithTable[WithTable<T>] 
     Materialized -->|With| WithTableAdditional[WithTableAdditional<T>]
 
     WithAsSelect[WithAsSelect<T>] --> SGWithEnd
     Materialized --> SGWithEnd
 end
 
-
+SGWithEnd -->|Select| Select
+SGWithEnd -->|Select| SelectColumns
 Root -->|Select| Select
 Root -->|Select| SelectColumns
 
@@ -52,14 +54,19 @@ subgraph SGSelect
     From[From<T>] -->|CrossJoin| NonConditionalJoin[NonConditionalJoin<T, J>]
 
     subgraph SGWhere
-        Where
-        WhereGroup
+        Where --> SGWhereStart
+        WhereGroup --> SGWhereStart
+
 
         Where --> SGWhereEnd
         WhereGroup --> SGWhereEnd
+        ConditionalGroupStatement --> SGWhereEnd
     end
 
-    SGJoinEnd -->|Where| SGWhere
+    From[From<T>] -->|Where| SGWhereStart
+    SGJoinEnd -->|Where| SGWhereStart
+
+
     SGJoinEnd -->|GroupBy| GroupBy
     SGWhereEnd -->|GroupBy| GroupBy
     GroupBy -->|Having| Having
@@ -83,6 +90,7 @@ Intersect -->|Select| Select
 Except -->|Select| Select
 
 subgraph SGOrderBy
+    OrderBy --> SGOrderByStart
     OrderBy --> SGOrderByEnd
     OrderBy -->|Collate| Collate
     Collate --> SGOrderByEnd
@@ -159,7 +167,6 @@ subgraph SGUpdate
     UpdateRollback[UpdateRollback<T>] -->|Set| UpdateSet[UpdateSet<T>]
 
     UpdateSet[UpdateSet<T>] -->|From| UpdateFrom[UpdateFrom<T>]
-    UpdateSet[UpdateSet<T>] -->|Where| UpdateWhere
     UpdateSet[UpdateSet<T>] -->|Where| SGUpdateReturningStart
 
     subgraph SGUpdateJoin
@@ -169,13 +176,26 @@ subgraph SGUpdate
         UpdateFrom[UpdateFrom<T>] -->|FullJoin| UpdateConditionalJoin[UpdateConditionalJoin<T, J>]
     end
 
-    UpdateFrom[UpdateFrom<T>] --> |Where| UpdateWhere
+    
+    subgraph SGUpdateWhere
+        Where --> SGUpdateWhereStart
+        WhereGroup --> SGUpdateWhereStart
+
+
+        Where --> SGUpdateWhereEnd
+        WhereGroup --> SGUpdateWhereEnd
+        ConditionalGroupStatement --> SGUpdateWhereEnd
+    end
+
+    
+    UpdateSet[UpdateSet<T>] -->|Where| SGUpdateWhereStart
+    UpdateFrom[UpdateFrom<T>] --> |Where| SGUpdateWhereStart
     UpdateFrom[UpdateFrom<T>] --> |Returning| SGUpdateReturningStart
-    UpdateWhere --> |Returning| SGUpdateReturningStart
+    SGUpdateWhereEnd --> |Returning| SGUpdateReturningStart
 
     UpdateSet[UpdateSet<T>] --> SGUpdateEnd
     UpdateFrom[UpdateFrom<T>] --> SGUpdateEnd
-    UpdateWhere --> SGUpdateEnd
+    SGUpdateWhereEnd --> SGUpdateEnd
     SGUpdateReturningEnd --> SGUpdateEnd
 end
 
@@ -212,12 +232,9 @@ Root -->|Delete| Delete
 subgraph SGDelete
     Delete -->|From| DeleteFrom[DeleteFrom<T>]
     DeleteFrom[DeleteFrom<T>] -->|Where| DeleteWhere
-    DeleteFrom[DeleteFrom<T>] -->|Where| DeleteWhereGroup
 
     DeleteFrom[DeleteFrom<T>] --> SGDeleteEnd
     DeleteWhere --> SGDeleteEnd
-    DeleteWhereGroup --> SGDeleteEnd
 end
 
 DeleteWhere -->|Returning| Returning
-DeleteWhereGroup -->|Returning| Returning

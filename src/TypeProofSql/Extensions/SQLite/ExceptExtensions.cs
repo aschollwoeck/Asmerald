@@ -43,6 +43,10 @@ namespace TypeProofSql.SQLite
         {
             return new ExceptStatement(stmt.QueryBuilder, subQueryBuilder);
         }
+        public static ExceptStatement Except(this ConditionalGroupStatement stmt, IQueryBuilder subQueryBuilder)
+        {
+            return new ExceptStatement(stmt.QueryBuilder, subQueryBuilder);
+        }
         public static ExceptStatement Except(this GroupByStatement stmt, IQueryBuilder subQueryBuilder)
         {
             return new ExceptStatement(stmt.QueryBuilder, subQueryBuilder);
