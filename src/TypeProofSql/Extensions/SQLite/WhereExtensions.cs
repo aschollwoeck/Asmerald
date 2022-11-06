@@ -58,15 +58,15 @@ namespace TypeProofSql.SQLite
         {
             return new SelectWhereGroupStatement(stmt.QueryBuilder, groupExpr);
         }
-        public static WhereStatement Where<T>(this UpdateSetStatement<T> stmt, ConditionalExpression conditionalExpression)
+        public static UpdateWhereStatement Where<T>(this UpdateSetStatement<T> stmt, ConditionalExpression conditionalExpression)
             where T : ITable, new()
         {
-            return new WhereStatement(stmt.QueryBuilder, conditionalExpression);
+            return new UpdateWhereStatement(stmt.QueryBuilder, conditionalExpression);
         }
-        public static WhereGroupStatement Where<T>(this UpdateSetStatement<T> stmt, ConditionalGroupStatement groupExpr)
+        public static UpdateWhereGroupStatement Where<T>(this UpdateSetStatement<T> stmt, ConditionalGroupStatement groupExpr)
             where T : ITable, new()
         {
-            return new WhereGroupStatement(stmt.QueryBuilder, groupExpr);
+            return new UpdateWhereGroupStatement(stmt.QueryBuilder, groupExpr);
         }
         public static SelectWhereStatement Where(this UpsertConflictSelectColumnsStatement stmt, ConditionalExpression conditionalExpression)
         {

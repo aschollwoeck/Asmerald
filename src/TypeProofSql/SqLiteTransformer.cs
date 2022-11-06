@@ -15,14 +15,28 @@ namespace TypeProofSql
         {
             Dictionary<string, object> parameters = new Dictionary<string, object>();
 
-            if (statement is UnionAllStatement unionAllStatement)
+            if (statement is CompoundStatement compoundStatement)
             {
                 builder.AppendLine();
-                builder.Append("UNION ALL ");
-                builder.AppendLine();
+                if (statement is UnionAllStatement unionAllStatement)
+                {
+                    builder.Append("UNION ALL ");
+                }
+                else if (statement is UnionStatement unionStatement)
+                {
+                    builder.AppendLine("UNION ");
+                }
+                else if (statement is IntersectStatement intersectStatement)
+                {
+                    builder.AppendLine("INTERSECT ");
+                }
+                else if (statement is ExceptStatement exceptStatement)
+                {
+                    builder.AppendLine("EXCEPT ");
+                }
 
-                // TODO: Need to provide paraCount to build statement
-                var uPrepStmt = unionAllStatement.SubQueryBuilder.BuildPreparedStatement();
+                builder.AppendLine();
+                var uPrepStmt = compoundStatement.SubQueryBuilder.BuildPreparedStatement();
                 builder.Append(uPrepStmt.Statement);
 
                 paraCount += uPrepStmt.Parameters.Count;
@@ -174,36 +188,42 @@ namespace TypeProofSql
             }
             else if(statement is OnStatement onStatement)
             {
-                builder.Append($"ON {onStatement.Tleft} = {onStatement.Tright}");
+                builder.Append($"ON {onStatement.Left.Name} = {onStatement.Right.Name}");
             }
             else if(statement is OnMultiStatement onMultiStatement)
             {
                 builder.Append($"ON (");
-                builder.Append(String.Join(" AND ", onMultiStatement.On.Select(o => $"{o.left} = {o.right}")));
+                builder.Append(String.Join(" AND ", onMultiStatement.On.Select(o => $"{o.left.Name} = {o.right.Name}")));
                 builder.Append(")");
             }
             else if(statement is InnerJoinStatement innerJoinStatement)
             {
+                builder.AppendLine();
                 builder.Append($"INNER JOIN {innerJoinStatement.J.Name()} ");
             }
             else if(statement is CrossJoinStatement crossJoinStatement)
             {
+                builder.AppendLine();
                 builder.Append($"CROSS JOIN {crossJoinStatement.J.Name()} ");
             }
             else if (statement is FullOuterJoinStatement fullOuterJoinStatement)
             {
+                builder.AppendLine();
                 builder.Append($"FULL OUTER JOIN {fullOuterJoinStatement.J.Name()} ");
             }
             else if (statement is LeftOuterJoinStatement leftOuterJoinStatement)
             {
+                builder.AppendLine();
                 builder.Append($"LEFT OUTER JOIN {leftOuterJoinStatement.J.Name()} ");
             }
             else if (statement is RightOuterJoinStatement rightOuterJoinStatement)
             {
+                builder.AppendLine();
                 builder.Append($"RIGHT OUTER JOIN {rightOuterJoinStatement.J.Name()} ");
             }
             else if(statement is JoinAsStatement joinAsStatement)
             {
+                builder.AppendLine();
                 builder.Append($"AS {joinAsStatement.Alias} ");
             }
             else if(statement is JoinSubQueryStatement joinSubQueryStatement)
@@ -274,6 +294,14 @@ namespace TypeProofSql
             {
                 builder.AppendLine();
                 builder.Append("WHERE ");
+
+                if(whereStatement.ConditionalExpression != null)
+                {
+                    var res = BuildExpression(builder, whereStatement.ConditionalExpression, paraCount);
+                    paraCount = res.paraCount;
+                    parameters.AddRange(res.parameters);
+
+                }
 
                 foreach (var condStmt in whereStatement.conditionalStatements)
                 {
@@ -412,10 +440,6 @@ namespace TypeProofSql
             {
                 builder.Append("DESC ");
             }
-            else if(statement is ExceptStatement exceptStatement)
-            {
-                builder.AppendLine("EXCEPT ");
-            }
             else if(statement is FailStatement failStatement)
             {
                 builder.AppendLine("FAIL ");
@@ -427,10 +451,6 @@ namespace TypeProofSql
             else if(statement is IgnoreStatement ignoreStatement)
             {
                 builder.Append("IGNORE ");
-            }
-            else if(statement is IntersectStatement intersectStatement)
-            {
-                builder.AppendLine("INTERSECT ");
             }
             else if(statement is LastStatement lastStatement)
             {
@@ -455,14 +475,6 @@ namespace TypeProofSql
             else if(statement is RollbackStatement rollbackStatement)
             {
                 builder.Append("ROLLBACK ");
-            }
-            else if(statement is UnionAllStatement unionAllStatement1)
-            {
-                builder.AppendLine("UNION ALL ");
-            }
-            else if(statement is UnionStatement unionStatement)
-            {
-                builder.AppendLine("UNION ");
             }
             else if(statement is IntoAsStatement intoAsStatement)
             {
@@ -552,6 +564,82 @@ namespace TypeProofSql
             return (paraCount, parameters);
         }
 
+        private (int paraCount, Dictionary<string, object> parameters) BuildExpression(StringBuilder builder, ConditionalExpression condExpr, int paraCount)
+        {
+            Dictionary<string, object> parameters = new Dictionary<string, object>();
+
+            builder.Append(condExpr.Column.Name());
+
+            string chrIdent = "";
+
+            switch (condExpr.Column)
+            {
+                case StringColumn column:
+                    chrIdent = "'";
+                    break;
+                case IntegerColumn column:
+                    break;
+                default:
+                    throw new NotImplementedException($"Column of type '{condExpr.Column.GetType().Name}' is not yet implemented for where clauses!");
+            }
+
+            switch (condExpr)
+            {
+                case EqualConditionalExpression expr:
+                    builder.Append(" = @");
+                    builder.Append(paraCount);
+                    parameters.Add(paraCount.ToString(), condExpr.Value);
+                    paraCount++;
+                    //builder.Append($"{chrIdent}{condStmt.ConditionalExpression.Value}{chrIdent}");
+                    break;
+                case InConditionalExpression expr:
+                    builder.Append(" IN @");
+                    builder.Append(paraCount);
+                    parameters.Add(paraCount.ToString(), condExpr.Value);
+                    paraCount++;
+                    //builder.Append(" IN (");
+                    //var l = ((System.Collections.IEnumerable)condStmt.ConditionalExpression.Value);
+                    //builder.AppendJoin(", ", l.Cast<object>().Select(c => $"{chrIdent}{c}{chrIdent}"));
+                    //builder.Append(")");
+                    break;
+                case GreaterConditionalExpression expr:
+                    builder.Append(" > @");
+                    builder.Append(paraCount);
+                    parameters.Add(paraCount.ToString(), condExpr.Value);
+                    paraCount++;
+                    //builder.Append($"{chrIdent}{condStmt.ConditionalExpression.Value}{chrIdent}");
+                    break;
+                case GreaterOrEqualConditionalExpression expr:
+                    builder.Append(" >= @");
+                    builder.Append(paraCount);
+                    parameters.Add(paraCount.ToString(), condExpr.Value);
+                    paraCount++;
+                    //builder.Append($"{chrIdent}{condStmt.ConditionalExpression.Value}{chrIdent}");
+                    break;
+                case LesserConditionalExpression expr:
+                    builder.Append(" < @");
+                    builder.Append(paraCount);
+                    parameters.Add(paraCount.ToString(), condExpr.Value);
+                    paraCount++;
+                    //builder.Append($"{chrIdent}{condStmt.ConditionalExpression.Value}{chrIdent}");
+                    break;
+                case LesserOrEqualConditionalExpression expr:
+                    builder.Append(" <= @");
+                    builder.Append(paraCount);
+                    parameters.Add(paraCount.ToString(), condExpr.Value);
+                    paraCount++;
+                    //builder.Append($"{chrIdent}{condStmt.ConditionalExpression.Value}{chrIdent}");
+                    break;
+                case IsNullConditionalExpression expr:
+                    builder.Append(" IS NULL");
+                    break;
+                default:
+                    throw new NotImplementedException($"ConditionalExpression of type '{condExpr.GetType().Name}' is not yet implemented for where clauses!");
+            }
+
+            return (paraCount, parameters);
+        }
+
         private (int paraCount, Dictionary<string, object> parameters) BuildStatement(StringBuilder builder, ConditionalStatement condStmt, int paraCount)
         {
             Dictionary<string, object> parameters = new Dictionary<string, object>();
@@ -570,76 +658,7 @@ namespace TypeProofSql
                     break;
             }
 
-            builder.Append(condStmt.ConditionalExpression.Column.Name());
-
-            string chrIdent = "";
-
-            switch (condStmt.ConditionalExpression.Column)
-            {
-                case StringColumn column:
-                    chrIdent = "'";
-                    break;
-                case IntegerColumn column:
-                    break;
-                default:
-                    throw new NotImplementedException($"Column of type '{condStmt.ConditionalExpression.Column.GetType().Name}' is not yet implemented for where clauses!");
-            }
-
-            switch (condStmt.ConditionalExpression)
-            {
-                case EqualConditionalExpression expr:
-                    builder.Append(" = @");
-                    builder.Append(paraCount);
-                    parameters.Add(paraCount.ToString(), condStmt.ConditionalExpression.Value);
-                    paraCount++;
-                    //builder.Append($"{chrIdent}{condStmt.ConditionalExpression.Value}{chrIdent}");
-                    break;
-                case InConditionalExpression expr:
-                    builder.Append(" IN @");
-                    builder.Append(paraCount);
-                    parameters.Add(paraCount.ToString(), condStmt.ConditionalExpression.Value);
-                    paraCount++;
-                    //builder.Append(" IN (");
-                    //var l = ((System.Collections.IEnumerable)condStmt.ConditionalExpression.Value);
-                    //builder.AppendJoin(", ", l.Cast<object>().Select(c => $"{chrIdent}{c}{chrIdent}"));
-                    //builder.Append(")");
-                    break;
-                case GreaterConditionalExpression expr:
-                    builder.Append(" > @");
-                    builder.Append(paraCount);
-                    parameters.Add(paraCount.ToString(), condStmt.ConditionalExpression.Value);
-                    paraCount++;
-                    //builder.Append($"{chrIdent}{condStmt.ConditionalExpression.Value}{chrIdent}");
-                    break;
-                case GreaterOrEqualConditionalExpression expr:
-                    builder.Append(" >= @");
-                    builder.Append(paraCount);
-                    parameters.Add(paraCount.ToString(), condStmt.ConditionalExpression.Value);
-                    paraCount++;
-                    //builder.Append($"{chrIdent}{condStmt.ConditionalExpression.Value}{chrIdent}");
-                    break;
-                case LesserConditionalExpression expr:
-                    builder.Append(" < @");
-                    builder.Append(paraCount);
-                    parameters.Add(paraCount.ToString(), condStmt.ConditionalExpression.Value);
-                    paraCount++;
-                    //builder.Append($"{chrIdent}{condStmt.ConditionalExpression.Value}{chrIdent}");
-                    break;
-                case LesserOrEqualConditionalExpression expr:
-                    builder.Append(" <= @");
-                    builder.Append(paraCount);
-                    parameters.Add(paraCount.ToString(), condStmt.ConditionalExpression.Value);
-                    paraCount++;
-                    //builder.Append($"{chrIdent}{condStmt.ConditionalExpression.Value}{chrIdent}");
-                    break;
-                case IsNullConditionalExpression expr:
-                    builder.Append(" IS NULL");
-                    break;
-                default:
-                    throw new NotImplementedException($"ConditionalExpression of type '{condStmt.ConditionalExpression.GetType().Name}' is not yet implemented for where clauses!");
-            }
-
-            return (paraCount, parameters);
+            return BuildExpression(builder, condStmt.ConditionalExpression, paraCount);
         }
 
         public Dictionary<string, object> Transform(IEnumerable<IStatement> statement, StringBuilder builder)

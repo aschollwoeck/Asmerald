@@ -20,6 +20,7 @@ namespace TypeProofSql.Statements
         public ConditionalGroupStatement(IQueryBuilder queryBuilder)
         {
             this.QueryBuilder = queryBuilder;
+            this.QueryBuilder.AddStatment(this);
         }
 
         public ConditionalGroupStatement(ConditionalExpression conditionalExpression)

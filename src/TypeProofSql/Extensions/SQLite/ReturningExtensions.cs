@@ -33,11 +33,11 @@ namespace TypeProofSql.SQLite
         {
             return new ReturningStatement(stmt.QueryBuilder);
         }
-        public static ReturningStatement Returning(this WhereStatement stmt)
+        public static ReturningStatement Returning(this UpdateWhereStatement stmt)
         {
             return new ReturningStatement(stmt.QueryBuilder);
         }
-        public static ReturningStatement Returning(this WhereGroupStatement stmt)
+        public static ReturningStatement Returning(this UpdateWhereGroupStatement stmt)
         {
             return new ReturningStatement(stmt.QueryBuilder);
         }
@@ -62,11 +62,11 @@ namespace TypeProofSql.SQLite
         {
             return new ReturningSelectStatement(stmt.QueryBuilder, columns);
         }
-        public static ReturningSelectStatement Returning(this WhereStatement stmt, params ISelectColumn[] columns)
+        public static ReturningSelectStatement Returning(this UpdateWhereStatement stmt, params ISelectColumn[] columns)
         {
             return new ReturningSelectStatement(stmt.QueryBuilder, columns);
         }
-        public static ReturningSelectStatement Returning(this WhereGroupStatement stmt, params ISelectColumn[] columns)
+        public static ReturningSelectStatement Returning(this UpdateWhereGroupStatement stmt, params ISelectColumn[] columns)
         {
             return new ReturningSelectStatement(stmt.QueryBuilder, columns);
         }

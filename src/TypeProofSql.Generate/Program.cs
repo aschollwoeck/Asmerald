@@ -63,10 +63,12 @@ public class Program
             .As()
             .Not()
             .Materialized(dslCtxt
+                .SubQuery()
                 .Select()
                 .Distinct(Tbl_Cards.Id())
                 .From<Tbl_Cards>()
                 .UnionAll(dslCtxt
+                    .SubQuery()
                     .Select(Tbl_Cards.Id())
                     .From<Tbl_Cards>()
                     .QueryBuilder)
@@ -80,10 +82,12 @@ public class Program
             .As()
             .Not()
             .Materialized(dslCtxt
+                .SubQuery()
                 .Select()
                 .Distinct(Tbl_Cards.Id())
                 .From<Tbl_Cards>()
                 .UnionAll(dslCtxt
+                    .SubQuery()
                     .Select(Tbl_Cards.Id())
                     .From<Tbl_Cards>()
                     .QueryBuilder)
@@ -96,9 +100,9 @@ public class Program
         {
             sub = dslCtxt
                 .With<Tbl_With>(Tbl_With.Id(), Tbl_With.Name())
-                .AsSelect(dslCtxt.Select(Tbl_Cards.Id()).From<Tbl_Cards>().QueryBuilder)
+                .AsSelect(dslCtxt.SubQuery().Select(Tbl_Cards.Id()).From<Tbl_Cards>().QueryBuilder)
                 .With<Tbl_With>(Tbl_With.Id(), Tbl_With.Name())
-                .AsSelect(dslCtxt.Select(Tbl_Cards.Id()).From<Tbl_Cards>().QueryBuilder)
+                .AsSelect(dslCtxt.SubQuery().Select(Tbl_Cards.Id()).From<Tbl_Cards>().QueryBuilder)
                 .Select(Tbl_With.Id())
                 .From<Tbl_With>()
                 .QueryBuilder
@@ -151,7 +155,7 @@ public class Program
             .Select()
             .All()
             .From<Table1>()
-            .Where(new ConditionalGroupStatement()
+            .Where(new WhereStatement()
                 {
                     conditionalGroupStatements = new List<ConditionalGroupStatement>()
                     {

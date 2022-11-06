@@ -26,6 +26,7 @@ namespace TypeProofSql.QueryBuilders
             {
                 this.sqlTransformer.Transform(stmt, builder, ref paraCount);
             }
+            this._statements = new List<IStatement>();
 
             return builder.ToString();
         }

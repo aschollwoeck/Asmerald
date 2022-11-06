@@ -13,5 +13,10 @@ namespace TypeProofSql
         {
             this.QueryBuilder = new SQLiteQueryBuilder();
         }
+
+        public SQLiteDSLContext SubQuery()
+        {
+            return new SQLiteDSLContext();
+        }
     }
 }

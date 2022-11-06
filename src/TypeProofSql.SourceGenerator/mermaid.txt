@@ -169,7 +169,7 @@ subgraph SGUpdate
     UpdateRollback[UpdateRollback<T>] -->|Set| UpdateSet[UpdateSet<T>]
 
     UpdateSet[UpdateSet<T>] -->|From| SGUpdateFromStart
-    UpdateSet[UpdateSet<T>] -->|Where| SGUpdateReturningStart
+    UpdateSet[UpdateSet<T>] -->|Returning| SGUpdateReturningStart
 
     subgraph SGUpdateFrom
 
@@ -189,12 +189,12 @@ subgraph SGUpdate
 
     
     subgraph SGUpdateWhere
-        Where --> SGUpdateWhereStart
-        WhereGroup --> SGUpdateWhereStart
+        UpdateWhere --> SGUpdateWhereStart
+        UpdateWhereGroup --> SGUpdateWhereStart
 
 
-        Where --> SGUpdateWhereEnd
-        WhereGroup --> SGUpdateWhereEnd
+        UpdateWhere --> SGUpdateWhereEnd
+        UpdateWhereGroup --> SGUpdateWhereEnd
     end
 
     

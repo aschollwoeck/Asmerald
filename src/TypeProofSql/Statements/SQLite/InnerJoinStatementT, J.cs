@@ -8,13 +8,13 @@ using TypeProofSql.Expressions;
 
 namespace TypeProofSql.Statements.SQLite
 {
-    public class InnerJoinStatement<T, J> : ConditionalJoinStatement<T, J>
+    public class InnerJoinStatement<T, J> : InnerJoinStatement
         where T : ITable, new()
         where J : ITable, new()
     {
         public InnerJoinStatement() { }
         public InnerJoinStatement(IQueryBuilder queryBuilder)
-            : base(queryBuilder)
+            : base(queryBuilder, new T(), new J())
         {
         }
     }
