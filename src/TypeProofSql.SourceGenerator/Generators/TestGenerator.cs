@@ -40,7 +40,7 @@ namespace TypeProofSql.SourceGenerator.Generators
                     w.Indent++;
                     w.WriteLine("var qb = new SQLiteDSLContext().QueryBuilder;");
                     w.WriteLine($"qb.AddStatment(new {classObj.class_name}());");
-                    w.WriteLine("qb.Build();");
+                    w.WriteLine("AssertEx.DoesNotThrow<NotImplementedException>(() => qb.Build());");
                     w.Indent--;
                     w.WriteLine("}");
                 }

@@ -8,11 +8,11 @@ using TypeProofSql.Expressions;
 
 namespace TypeProofSql.Statements.SQLite
 {
-    public class DeleteWhereGroupStatement : WhereGroupStatement
+    public class UpsertConflictStatement : ConflictStatement
     {
-        public DeleteWhereGroupStatement() { }
-        public DeleteWhereGroupStatement(IQueryBuilder queryBuilder, ConditionalGroupStatement groupExpr)
-            : base(queryBuilder, groupExpr)
+        public UpsertConflictStatement() { }
+        public UpsertConflictStatement(IQueryBuilder queryBuilder)
+            : base(queryBuilder)
         {
         }
     }

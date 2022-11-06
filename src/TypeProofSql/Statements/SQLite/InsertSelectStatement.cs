@@ -8,16 +8,12 @@ using TypeProofSql.Expressions;
 
 namespace TypeProofSql.Statements.SQLite
 {
-    public class InsertSelectStatement : IStatement
+    public class InsertSelectStatement : SelectColumnsStatement
     {
-        public IQueryBuilder QueryBuilder { get; private set; }
-        public List<ISelectColumn> Columns { get; private set; } = new List<ISelectColumn>();
         public InsertSelectStatement() { }
         public InsertSelectStatement(IQueryBuilder queryBuilder, IEnumerable<ISelectColumn> columns)
+            : base(queryBuilder, columns)
         {
-            this.QueryBuilder = queryBuilder;
-            this.QueryBuilder.AddStatment(this);
-            this.Columns.AddRange(columns);
         }
     }
 }

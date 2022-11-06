@@ -12,7 +12,7 @@ namespace TypeProofSql.SQLite
 {
     public static partial class TypeProofSqlUnionExtensions
     {
-        public static UnionStatement Union<T>(this FromStatement<T> stmt, IQueryBuilder subQueryBuilder)
+        public static UnionStatement Union<T>(this SelectFromStatement<T> stmt, IQueryBuilder subQueryBuilder)
             where T : ITable, new()
         {
             return new UnionStatement(stmt.QueryBuilder, subQueryBuilder);
@@ -35,11 +35,11 @@ namespace TypeProofSql.SQLite
         {
             return new UnionStatement(stmt.QueryBuilder, subQueryBuilder);
         }
-        public static UnionStatement Union(this WhereStatement stmt, IQueryBuilder subQueryBuilder)
+        public static UnionStatement Union(this SelectWhereStatement stmt, IQueryBuilder subQueryBuilder)
         {
             return new UnionStatement(stmt.QueryBuilder, subQueryBuilder);
         }
-        public static UnionStatement Union(this WhereGroupStatement stmt, IQueryBuilder subQueryBuilder)
+        public static UnionStatement Union(this SelectWhereGroupStatement stmt, IQueryBuilder subQueryBuilder)
         {
             return new UnionStatement(stmt.QueryBuilder, subQueryBuilder);
         }

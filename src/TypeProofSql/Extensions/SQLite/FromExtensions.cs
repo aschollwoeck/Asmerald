@@ -12,25 +12,20 @@ namespace TypeProofSql.SQLite
 {
     public static partial class TypeProofSqlFromExtensions
     {
-        public static FromStatement<T> From<T>(this SelectColumnsStatement stmt)
+        public static SelectFromStatement<T> From<T>(this SelectColumnsStatement stmt)
             where T : ITable, new()
         {
-            return new FromStatement<T>(stmt.QueryBuilder);
+            return new SelectFromStatement<T>(stmt.QueryBuilder);
         }
-        public static FromStatement<T> From<T>(this AllStatement stmt)
+        public static SelectFromStatement<T> From<T>(this AllStatement stmt)
             where T : ITable, new()
         {
-            return new FromStatement<T>(stmt.QueryBuilder);
+            return new SelectFromStatement<T>(stmt.QueryBuilder);
         }
-        public static FromStatement<T> From<T>(this DistinctColumnsStatement stmt)
+        public static SelectFromStatement<T> From<T>(this DistinctColumnsStatement stmt)
             where T : ITable, new()
         {
-            return new FromStatement<T>(stmt.QueryBuilder);
-        }
-        public static UpdateFromStatement<T> From<T>(this UpdateSetStatement<T> stmt)
-            where T : ITable, new()
-        {
-            return new UpdateFromStatement<T>(stmt.QueryBuilder);
+            return new SelectFromStatement<T>(stmt.QueryBuilder);
         }
         public static DeleteFromStatement<T> From<T>(this DeleteStatement stmt)
             where T : ITable, new()

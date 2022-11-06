@@ -8,16 +8,12 @@ using TypeProofSql.Expressions;
 
 namespace TypeProofSql.Statements.SQLite
 {
-    public class DeleteFromStatement : IStatement
+    public class DeleteFromStatement : FromStatement
     {
-        public IQueryBuilder QueryBuilder { get; private set; }
-        public ITable Table { get; private set; }
         public DeleteFromStatement() { }
         public DeleteFromStatement(IQueryBuilder queryBuilder, ITable table)
+            : base(queryBuilder, table)
         {
-            this.QueryBuilder = queryBuilder;
-            this.QueryBuilder.AddStatment(this);
-            this.Table = table;
         }
     }
 }

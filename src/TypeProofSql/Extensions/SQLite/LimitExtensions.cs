@@ -12,7 +12,7 @@ namespace TypeProofSql.SQLite
 {
     public static partial class TypeProofSqlLimitExtensions
     {
-        public static LimitStatement Limit<T>(this FromStatement<T> stmt, int limit)
+        public static LimitStatement Limit<T>(this SelectFromStatement<T> stmt, int limit)
             where T : ITable, new()
         {
             return new LimitStatement(stmt.QueryBuilder, limit);
@@ -35,11 +35,11 @@ namespace TypeProofSql.SQLite
         {
             return new LimitStatement(stmt.QueryBuilder, limit);
         }
-        public static LimitStatement Limit(this WhereStatement stmt, int limit)
+        public static LimitStatement Limit(this SelectWhereStatement stmt, int limit)
         {
             return new LimitStatement(stmt.QueryBuilder, limit);
         }
-        public static LimitStatement Limit(this WhereGroupStatement stmt, int limit)
+        public static LimitStatement Limit(this SelectWhereGroupStatement stmt, int limit)
         {
             return new LimitStatement(stmt.QueryBuilder, limit);
         }

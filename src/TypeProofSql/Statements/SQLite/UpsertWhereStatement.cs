@@ -8,14 +8,12 @@ using TypeProofSql.Expressions;
 
 namespace TypeProofSql.Statements.SQLite
 {
-    public class UpsertWhereStatement : IStatement
+    public class UpsertWhereStatement : WhereStatement
     {
-        public IQueryBuilder QueryBuilder { get; private set; }
         public UpsertWhereStatement() { }
-        public UpsertWhereStatement(IQueryBuilder queryBuilder)
+        public UpsertWhereStatement(IQueryBuilder queryBuilder, ConditionalExpression conditionalExpression)
+            : base(queryBuilder, conditionalExpression)
         {
-            this.QueryBuilder = queryBuilder;
-            this.QueryBuilder.AddStatment(this);
         }
     }
 }

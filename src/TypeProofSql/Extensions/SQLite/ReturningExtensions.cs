@@ -20,16 +20,15 @@ namespace TypeProofSql.SQLite
         {
             return new ReturningStatement(stmt.QueryBuilder);
         }
-        public static ReturningStatement Returning(this UpsertWhereStatement stmt)
+        public static ReturningStatement Returning(this SelectWhereStatement stmt)
+        {
+            return new ReturningStatement(stmt.QueryBuilder);
+        }
+        public static ReturningStatement Returning(this SelectWhereGroupStatement stmt)
         {
             return new ReturningStatement(stmt.QueryBuilder);
         }
         public static ReturningStatement Returning<T>(this UpdateSetStatement<T> stmt)
-            where T : ITable, new()
-        {
-            return new ReturningStatement(stmt.QueryBuilder);
-        }
-        public static ReturningStatement Returning<T>(this UpdateFromStatement<T> stmt)
             where T : ITable, new()
         {
             return new ReturningStatement(stmt.QueryBuilder);
@@ -42,10 +41,6 @@ namespace TypeProofSql.SQLite
         {
             return new ReturningStatement(stmt.QueryBuilder);
         }
-        public static ReturningStatement Returning(this ConditionalGroupStatement stmt)
-        {
-            return new ReturningStatement(stmt.QueryBuilder);
-        }
         public static ReturningSelectStatement Returning(this UpsertNothingStatement stmt, params ISelectColumn[] columns)
         {
             return new ReturningSelectStatement(stmt.QueryBuilder, columns);
@@ -54,16 +49,15 @@ namespace TypeProofSql.SQLite
         {
             return new ReturningSelectStatement(stmt.QueryBuilder, columns);
         }
-        public static ReturningSelectStatement Returning(this UpsertWhereStatement stmt, params ISelectColumn[] columns)
+        public static ReturningSelectStatement Returning(this SelectWhereStatement stmt, params ISelectColumn[] columns)
+        {
+            return new ReturningSelectStatement(stmt.QueryBuilder, columns);
+        }
+        public static ReturningSelectStatement Returning(this SelectWhereGroupStatement stmt, params ISelectColumn[] columns)
         {
             return new ReturningSelectStatement(stmt.QueryBuilder, columns);
         }
         public static ReturningSelectStatement Returning<T>(this UpdateSetStatement<T> stmt, params ISelectColumn[] columns)
-            where T : ITable, new()
-        {
-            return new ReturningSelectStatement(stmt.QueryBuilder, columns);
-        }
-        public static ReturningSelectStatement Returning<T>(this UpdateFromStatement<T> stmt, params ISelectColumn[] columns)
             where T : ITable, new()
         {
             return new ReturningSelectStatement(stmt.QueryBuilder, columns);
@@ -73,10 +67,6 @@ namespace TypeProofSql.SQLite
             return new ReturningSelectStatement(stmt.QueryBuilder, columns);
         }
         public static ReturningSelectStatement Returning(this WhereGroupStatement stmt, params ISelectColumn[] columns)
-        {
-            return new ReturningSelectStatement(stmt.QueryBuilder, columns);
-        }
-        public static ReturningSelectStatement Returning(this ConditionalGroupStatement stmt, params ISelectColumn[] columns)
         {
             return new ReturningSelectStatement(stmt.QueryBuilder, columns);
         }

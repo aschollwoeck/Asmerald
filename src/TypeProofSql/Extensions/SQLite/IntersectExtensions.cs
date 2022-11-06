@@ -12,7 +12,7 @@ namespace TypeProofSql.SQLite
 {
     public static partial class TypeProofSqlIntersectExtensions
     {
-        public static IntersectStatement Intersect<T>(this FromStatement<T> stmt, IQueryBuilder subQueryBuilder)
+        public static IntersectStatement Intersect<T>(this SelectFromStatement<T> stmt, IQueryBuilder subQueryBuilder)
             where T : ITable, new()
         {
             return new IntersectStatement(stmt.QueryBuilder, subQueryBuilder);
@@ -35,11 +35,11 @@ namespace TypeProofSql.SQLite
         {
             return new IntersectStatement(stmt.QueryBuilder, subQueryBuilder);
         }
-        public static IntersectStatement Intersect(this WhereStatement stmt, IQueryBuilder subQueryBuilder)
+        public static IntersectStatement Intersect(this SelectWhereStatement stmt, IQueryBuilder subQueryBuilder)
         {
             return new IntersectStatement(stmt.QueryBuilder, subQueryBuilder);
         }
-        public static IntersectStatement Intersect(this WhereGroupStatement stmt, IQueryBuilder subQueryBuilder)
+        public static IntersectStatement Intersect(this SelectWhereGroupStatement stmt, IQueryBuilder subQueryBuilder)
         {
             return new IntersectStatement(stmt.QueryBuilder, subQueryBuilder);
         }

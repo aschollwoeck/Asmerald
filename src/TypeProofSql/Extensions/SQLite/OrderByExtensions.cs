@@ -12,7 +12,7 @@ namespace TypeProofSql.SQLite
 {
     public static partial class TypeProofSqlOrderByExtensions
     {
-        public static OrderByStatement OrderBy<T>(this FromStatement<T> stmt, params IOrderByColumn[] orderByColumns)
+        public static OrderByStatement OrderBy<T>(this SelectFromStatement<T> stmt, params IOrderByColumn[] orderByColumns)
             where T : ITable, new()
         {
             return new OrderByStatement(stmt.QueryBuilder, orderByColumns);
@@ -35,11 +35,11 @@ namespace TypeProofSql.SQLite
         {
             return new OrderByStatement(stmt.QueryBuilder, orderByColumns);
         }
-        public static OrderByStatement OrderBy(this WhereStatement stmt, params IOrderByColumn[] orderByColumns)
+        public static OrderByStatement OrderBy(this SelectWhereStatement stmt, params IOrderByColumn[] orderByColumns)
         {
             return new OrderByStatement(stmt.QueryBuilder, orderByColumns);
         }
-        public static OrderByStatement OrderBy(this WhereGroupStatement stmt, params IOrderByColumn[] orderByColumns)
+        public static OrderByStatement OrderBy(this SelectWhereGroupStatement stmt, params IOrderByColumn[] orderByColumns)
         {
             return new OrderByStatement(stmt.QueryBuilder, orderByColumns);
         }

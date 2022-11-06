@@ -8,10 +8,10 @@ using TypeProofSql.Expressions;
 
 namespace TypeProofSql.Statements.SQLite
 {
-    public class ReturningSelectStatement : SelectColumnsStatement
+    public class UpsertConflictSelectColumnsStatement : SelectColumnsStatement
     {
-        public ReturningSelectStatement() { }
-        public ReturningSelectStatement(IQueryBuilder queryBuilder, IEnumerable<ISelectColumn> columns)
+        public UpsertConflictSelectColumnsStatement() { }
+        public UpsertConflictSelectColumnsStatement(IQueryBuilder queryBuilder, IEnumerable<ISelectColumn> columns)
             : base(queryBuilder, columns)
         {
         }

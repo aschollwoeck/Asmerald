@@ -8,16 +8,14 @@ using TypeProofSql.Expressions;
 
 namespace TypeProofSql.Statements.SQLite
 {
-    public class UpdateSetStatement : IStatement
+    public class UpdateSetStatement : SetStatement
     {
-        public IQueryBuilder QueryBuilder { get; private set; }
         public ITable Table { get; private set; }
         public List<ValueExpression> ValueExpressions { get; private set; } = new List<ValueExpression>();
         public UpdateSetStatement() { }
         public UpdateSetStatement(IQueryBuilder queryBuilder, ITable table, IEnumerable<ValueExpression> valueExpressions)
+            : base(queryBuilder, valueExpressions)
         {
-            this.QueryBuilder = queryBuilder;
-            this.QueryBuilder.AddStatment(this);
             this.Table = table;
             this.ValueExpressions.AddRange(valueExpressions);
         }

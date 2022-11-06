@@ -8,14 +8,12 @@ using TypeProofSql.Expressions;
 
 namespace TypeProofSql.Statements.SQLite
 {
-    public class WithAsStatement : IStatement
+    public class WithAsStatement : AsStatement
     {
-        public IQueryBuilder QueryBuilder { get; private set; }
         public WithAsStatement() { }
         public WithAsStatement(IQueryBuilder queryBuilder)
+            : base(queryBuilder)
         {
-            this.QueryBuilder = queryBuilder;
-            this.QueryBuilder.AddStatment(this);
         }
     }
 }

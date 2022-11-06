@@ -12,7 +12,7 @@ namespace TypeProofSql.SQLite
 {
     public static partial class TypeProofSqlExceptExtensions
     {
-        public static ExceptStatement Except<T>(this FromStatement<T> stmt, IQueryBuilder subQueryBuilder)
+        public static ExceptStatement Except<T>(this SelectFromStatement<T> stmt, IQueryBuilder subQueryBuilder)
             where T : ITable, new()
         {
             return new ExceptStatement(stmt.QueryBuilder, subQueryBuilder);
@@ -35,11 +35,11 @@ namespace TypeProofSql.SQLite
         {
             return new ExceptStatement(stmt.QueryBuilder, subQueryBuilder);
         }
-        public static ExceptStatement Except(this WhereStatement stmt, IQueryBuilder subQueryBuilder)
+        public static ExceptStatement Except(this SelectWhereStatement stmt, IQueryBuilder subQueryBuilder)
         {
             return new ExceptStatement(stmt.QueryBuilder, subQueryBuilder);
         }
-        public static ExceptStatement Except(this WhereGroupStatement stmt, IQueryBuilder subQueryBuilder)
+        public static ExceptStatement Except(this SelectWhereGroupStatement stmt, IQueryBuilder subQueryBuilder)
         {
             return new ExceptStatement(stmt.QueryBuilder, subQueryBuilder);
         }

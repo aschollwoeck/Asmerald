@@ -8,10 +8,10 @@ using TypeProofSql.Expressions;
 
 namespace TypeProofSql.Statements.SQLite
 {
-    public class DeleteWhereGroupStatement : WhereGroupStatement
+    public class UpsertWhereGroupStatement : WhereGroupStatement
     {
-        public DeleteWhereGroupStatement() { }
-        public DeleteWhereGroupStatement(IQueryBuilder queryBuilder, ConditionalGroupStatement groupExpr)
+        public UpsertWhereGroupStatement() { }
+        public UpsertWhereGroupStatement(IQueryBuilder queryBuilder, ConditionalGroupStatement groupExpr)
             : base(queryBuilder, groupExpr)
         {
         }

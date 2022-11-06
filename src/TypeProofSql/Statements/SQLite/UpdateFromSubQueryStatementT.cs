@@ -8,12 +8,12 @@ using TypeProofSql.Expressions;
 
 namespace TypeProofSql.Statements.SQLite
 {
-    public class UpdateFromStatement<T> : FromStatement
+    public class UpdateFromSubQueryStatement<T> : FromSubQueryStatement
         where T : ITable, new()
     {
-        public UpdateFromStatement() { }
-        public UpdateFromStatement(IQueryBuilder queryBuilder)
-            : base(queryBuilder, new T())
+        public UpdateFromSubQueryStatement() { }
+        public UpdateFromSubQueryStatement(IQueryBuilder queryBuilder, IQueryBuilder subQueryBuilder)
+            : base(queryBuilder, subQueryBuilder, new T())
         {
         }
     }

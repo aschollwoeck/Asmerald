@@ -34,36 +34,38 @@ subgraph SGSelect
     Select -->|Distinct| Distinct
     Select -->|Distinct| DistinctColumns
 
-    SelectColumns -->|From| From[From<T>]
-    All --> |From| From[From<T>]
-    DistinctColumns --> |From| From[From<T>]
+    SelectColumns -->|From| SelectFrom[SelectFrom<T>]
+    All --> |From| SelectFrom[SelectFrom<T>]
+    DistinctColumns --> |From| SelectFrom[SelectFrom<T>]
 
     subgraph SGJoin
         ConditionalJoin[ConditionalJoin<T, J>] -->|On| On[On<T, J>]
         ConditionalJoin[ConditionalJoin<T, J>] -->|On| OnMulti[OnMulti<T, J>]
+        ConditionalJoin -->|On| On[On<T, J>]
+        ConditionalJoin -->|On| OnMulti[OnMulti<T, J>]
 
         NonConditionalJoin[NonConditionalJoin<T, J>] --> SGJoinEnd
         On[On<T, J>] --> SGJoinEnd
         OnMulti[OnMulti<T, J>] --> SGJoinEnd
     end
     
-    From[From<T>] -->|InnerJoin| InnerJoin[InnerJoin<T, J>]
-    From[From<T>] -->|LeftJoin| LeftOuterJoin[LeftOuterJoin<T, J>]
-    From[From<T>] -->|RightJoin| RightOuterJoin[RightOuterJoin<T, J>]
-    From[From<T>] -->|FullJoin| FullOuterJoin[FullOuterJoin<T, J>]
-    From[From<T>] -->|CrossJoin| CrossJoin[CrossJoin<T, J>]
+    SelectFrom[SelectFrom<T>] -->|InnerJoin| InnerJoin[InnerJoin<T, J>]
+    SelectFrom[SelectFrom<T>] -->|LeftJoin| LeftOuterJoin[LeftOuterJoin<T, J>]
+    SelectFrom[SelectFrom<T>] -->|RightJoin| RightOuterJoin[RightOuterJoin<T, J>]
+    SelectFrom[SelectFrom<T>] -->|FullJoin| FullOuterJoin[FullOuterJoin<T, J>]
+    SelectFrom[SelectFrom<T>] -->|CrossJoin| CrossJoin[CrossJoin<T, J>]
 
     subgraph SGWhere
-        Where --> SGWhereStart
-        WhereGroup --> SGWhereStart
+        SelectWhere --> SGWhereStart
+        SelectWhereGroup --> SGWhereStart
 
 
-        Where --> SGWhereEnd
-        WhereGroup --> SGWhereEnd
+        SelectWhere --> SGWhereEnd
+        SelectWhereGroup --> SGWhereEnd
         ConditionalGroupStatement --> SGWhereEnd
     end
 
-    From[From<T>] -->|Where| SGWhereStart
+    SelectFrom[SelectFrom<T>] -->|Where| SGWhereStart
     SGJoinEnd -->|Where| SGWhereStart
 
 
@@ -72,7 +74,7 @@ subgraph SGSelect
     GroupBy -->|Having| Having
     SGWhereEnd -->|Having| Having
 
-    From[From<T>] --> SGSelectEnd
+    SelectFrom[SelectFrom<T>] --> SGSelectEnd
     SGJoinEnd --> SGSelectEnd
     SGWhereEnd --> SGSelectEnd
     GroupBy --> SGSelectEnd
@@ -166,14 +168,23 @@ subgraph SGUpdate
     UpdateReplace[UpdateReplace<T>] -->|Set| UpdateSet[UpdateSet<T>]
     UpdateRollback[UpdateRollback<T>] -->|Set| UpdateSet[UpdateSet<T>]
 
-    UpdateSet[UpdateSet<T>] -->|From| UpdateFrom[UpdateFrom<T>]
+    UpdateSet[UpdateSet<T>] -->|From| SGUpdateFromStart
     UpdateSet[UpdateSet<T>] -->|Where| SGUpdateReturningStart
 
+    subgraph SGUpdateFrom
+
+        UpdateFrom[UpdateFrom<T>] --> SGUpdateStart
+        UpdateFromSubQuery[UpdateFromSubQuery<T>] --> SGUpdateStart
+
+        UpdateFrom[UpdateFrom<T>] --> SGUpdateFromEnd
+        UpdateFromSubQuery[UpdateFromSubQuery<T>] --> SGUpdateFromEnd
+    end
+
     subgraph SGUpdateJoin
-        UpdateFrom[UpdateFrom<T>] -->|InnerJoin| UpdateConditionalJoin[UpdateConditionalJoin<T, J>]
-        UpdateFrom[UpdateFrom<T>] -->|LeftJoin| UpdateConditionalJoin[UpdateConditionalJoin<T, J>]
-        UpdateFrom[UpdateFrom<T>] -->|RightJoin| UpdateConditionalJoin[UpdateConditionalJoin<T, J>]
-        UpdateFrom[UpdateFrom<T>] -->|FullJoin| UpdateConditionalJoin[UpdateConditionalJoin<T, J>]
+        SGUpdateFromEnd -->|InnerJoin| UpdateConditionalJoin[UpdateConditionalJoin<T, J>]
+        SGUpdateFromEnd -->|LeftJoin| UpdateConditionalJoin[UpdateConditionalJoin<T, J>]
+        SGUpdateFromEnd -->|RightJoin| UpdateConditionalJoin[UpdateConditionalJoin<T, J>]
+        SGUpdateFromEnd -->|FullJoin| UpdateConditionalJoin[UpdateConditionalJoin<T, J>]
     end
 
     
@@ -184,17 +195,16 @@ subgraph SGUpdate
 
         Where --> SGUpdateWhereEnd
         WhereGroup --> SGUpdateWhereEnd
-        ConditionalGroupStatement --> SGUpdateWhereEnd
     end
 
     
     UpdateSet[UpdateSet<T>] -->|Where| SGUpdateWhereStart
-    UpdateFrom[UpdateFrom<T>] --> |Where| SGUpdateWhereStart
-    UpdateFrom[UpdateFrom<T>] --> |Returning| SGUpdateReturningStart
+    SGUpdateFromStart --> |Where| SGUpdateWhereStart
+    SGUpdateFromStart --> |Returning| SGUpdateReturningStart
     SGUpdateWhereEnd --> |Returning| SGUpdateReturningStart
 
     UpdateSet[UpdateSet<T>] --> SGUpdateEnd
-    UpdateFrom[UpdateFrom<T>] --> SGUpdateEnd
+    SGUpdateFromStart --> SGUpdateEnd
     SGUpdateWhereEnd --> SGUpdateEnd
     SGUpdateReturningEnd --> SGUpdateEnd
 end
@@ -204,18 +214,31 @@ InsertValues -->|On| UpsertOn
 
 subgraph SGUpsert
     UpsertOn -->|Conflict| Conflict
+    UpsertOn -->|Conflict| UpsertConflictSelect
+
+    subgraph SGUpsertConflictWhere
+        SelectWhere --> SGUpsertConflictWhereStart
+        SelectWhereGroup --> SGUpsertConflictWhereStart
+
+
+        SelectWhere --> SGUpsertConflictWhereEnd
+        SelectWhereGroup --> SGUpsertConflictWhereEnd
+    end
+
+    UpsertConflictSelect --> |Where| SGUpsertConflictWhereStart
+    
     Conflict -->|Do| UpsertDo
+    SGUpsertConflictWhereEnd -->|Do|UpsertDo
     UpsertDo -->|Nothing| UpsertNothing
     UpsertDo -->|Update| UpsertUpdate
     UpsertUpdate -->|Set| UpsertSet
     UpsertSet -->|Where| UpsertWhere
     UpsertNothing -->|On|UpsertOn
     UpsertSet -->|On|UpsertOn
-    UpsertWhere -->|On|UpsertOn
 
     UpsertNothing --> SGUpsertEnd
     UpsertSet --> SGUpsertEnd
-    UpsertWhere --> SGUpsertEnd
+    SGUpsertConflictWhereEnd --> SGUpsertEnd
 end
 
 

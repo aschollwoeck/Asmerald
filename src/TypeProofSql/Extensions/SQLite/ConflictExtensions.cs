@@ -16,5 +16,9 @@ namespace TypeProofSql.SQLite
         {
             return new ConflictStatement(stmt.QueryBuilder);
         }
+        public static UpsertConflictSelectColumnsStatement Conflict(this UpsertOnStatement stmt, params ISelectColumn[] columns)
+        {
+            return new UpsertConflictSelectColumnsStatement(stmt.QueryBuilder, columns);
+        }
     }
 }

@@ -29,11 +29,14 @@ extDir.GetFiles().ToList().ForEach(f => f.Delete());
 var testDir = new System.IO.DirectoryInfo(tDir);
 
 Dictionary<string, GenerateCodeStatement> classNames = new();
+Dictionary<string, GenerateCodeStatement> commonClassNames = new();
 
 // Prepare DSL
 foreach (var item in iniSqlite.Sections["COMMON_CLASSES"])
 {
-    classNames.Add(item.KeyName, new GenerateCodeStatement() { class_name = item.KeyName, class_name_short = item.KeyName, full_class_name = item.KeyName });
+    var gen = new GenerateCodeStatement() { class_name = item.KeyName, class_name_short = item.KeyName, full_class_name = item.KeyName };
+    classNames.Add(item.KeyName, gen);
+    commonClassNames.Add(item.KeyName, gen);
 }
 
 //var classTemplate = ReadResource("classGeneration.txt");
@@ -46,7 +49,11 @@ foreach (var item in iniSqlite.Sections["CLASSES"])
     classNames.Add(item.KeyName, code);
 }
 
-var genImplTest = new TestGenerator().Generate("NotImplementedTest", classNames.Values);
+var genImplTest = new TestGenerator().Generate(
+    "NotImplementedTest",
+    classNames
+        .Where(c => commonClassNames.ContainsKey(c.Key) == false)
+        .Select(c => c.Value));
 
 //Write test to file
 File.WriteAllText(System.IO.Path.Combine(testDir.FullName, "NotImplementedTest") + ".cs", genImplTest);
@@ -59,8 +66,8 @@ File.WriteAllText(System.IO.Path.Combine(testDir.FullName, "NotImplementedTest")
 
 
 // Now chain classes together with extension methods
-foreach (var item in iniSqlite.Sections["CHAINING"])
-{
+//foreach (var item in iniSqlite.Sections["CHAINING"])
+//{
     // Now do create extension methods for chaining
     //var ext = BuildExtensions(item.KeyName, item.Value.Split(';').Select(s => s.Trim()));
 
@@ -70,7 +77,7 @@ foreach (var item in iniSqlite.Sections["CHAINING"])
 
     // Write code to file
     //File.WriteAllText(System.IO.Path.Combine(extDir.FullName, extension_name + "Extensions") + ".cs", generatedCode);
-}
+//}
 
 //Now do create extension methods for chaining
 var ext = GetExtensions();

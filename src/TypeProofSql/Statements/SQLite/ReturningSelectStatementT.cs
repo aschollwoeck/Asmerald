@@ -8,7 +8,7 @@ using TypeProofSql.Expressions;
 
 namespace TypeProofSql.Statements.SQLite
 {
-    public class ReturningSelectStatement<T> : InsertSelectStatement
+    public class ReturningSelectStatement<T> : SelectColumnsStatement
         where T : ITable, new()
     {
         public ReturningSelectStatement() { }

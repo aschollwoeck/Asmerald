@@ -93,6 +93,20 @@ namespace TypeProofSql
 
                 builder.Append(")");
             }
+            else if (statement is WithAsSelectStatement withAsSelectStatement)
+            {
+                builder.Append(" AS (");
+                builder.AppendLine();
+
+                // TODO: Need to provide paraCount to build statement
+                var mPrepStmt = withAsSelectStatement.SubQuery.BuildPreparedStatement();
+                builder.Append(mPrepStmt.Statement);
+
+                paraCount += mPrepStmt.Parameters.Count;
+                parameters.AddRange(mPrepStmt.Parameters);
+
+                builder.Append(")");
+            }
             else if(statement is SelectStatement selectStatement)
             {
                 builder.Append("SELECT ");
@@ -144,6 +158,20 @@ namespace TypeProofSql
                 builder.Append("FROM ");
                 builder.Append(fromStatement.Table.Name());
             }
+            else if (statement is FromSubQueryStatement fromSubQueryStatement)
+            {
+                builder.Append("FROM (");
+                builder.AppendLine();
+
+                // TODO: Need to provide paraCount to build statement
+                var mPrepStmt = fromSubQueryStatement.SubQueryBuilder.BuildPreparedStatement();
+                builder.Append(mPrepStmt.Statement);
+
+                paraCount += mPrepStmt.Parameters.Count;
+                parameters.AddRange(mPrepStmt.Parameters);
+
+                builder.Append(")");
+            }
             else if(statement is OnStatement onStatement)
             {
                 builder.Append($"ON {onStatement.Tleft} = {onStatement.Tright}");
@@ -186,6 +214,10 @@ namespace TypeProofSql
             {
                 builder.Append("INSERT ");
             }
+            else if(statement is InsertOrStatement insertOrStatement)
+            {
+                builder.Append("OR ");
+            }
             else if(statement is IntoStatement intoStatement)
             {
                 builder.Append(" INTO ");
@@ -216,6 +248,10 @@ namespace TypeProofSql
             {
                 builder.Append("UPDATE ");
                 builder.Append(updateStatement.Table.Name());
+            }
+            else if(statement is UpdateOrStatement updateOrStatement)
+            {
+                builder.Append("OR ");
             }
             else if(statement is SetStatement setStatement)
             {
@@ -252,6 +288,38 @@ namespace TypeProofSql
                     paraCount = res.paraCount;
                     parameters.AddRange(res.parameters);
                 }
+            }
+            else if (statement is WhereGroupStatement whereGroupStatement)
+            {
+                builder.AppendLine();
+                builder.Append("WHERE ");
+
+                var res = BuildStatementGroup(builder, whereGroupStatement.GroupExpr, paraCount);
+                paraCount = res.paraCount;
+                parameters.AddRange(res.parameters);
+            }
+            else if (statement is ConditionalGroupStatement conditionalGroupStatement)
+            {
+                builder.AppendLine();
+                foreach (var condStmt in conditionalGroupStatement.conditionalStatements)
+                {
+                    var res = BuildStatement(builder, condStmt, paraCount);
+                    paraCount = res.paraCount;
+                    parameters.AddRange(res.parameters);
+                }
+
+                foreach (var condGroup in conditionalGroupStatement.conditionalGroupStatements)
+                {
+                    var res = BuildStatementGroup(builder, condGroup, paraCount);
+                    paraCount = res.paraCount;
+                    parameters.AddRange(res.parameters);
+                }
+            }
+            else if (statement is ConditionalStatement conditionalStatement)
+            {
+                var res = BuildStatement(builder, conditionalStatement, paraCount);
+                paraCount = res.paraCount;
+                parameters.AddRange(res.parameters);
             }
             else if(statement is GroupByStatement groupByStatement)
             {
@@ -416,6 +484,27 @@ namespace TypeProofSql
                     }
                 }
                 builder.AppendLine(")");
+            }
+            else if(statement is UpsertDoStatement upsertDoStatement)
+            {
+                builder.Append("DO ");
+            }
+            else if(statement is UpsertNothingStatement upsertNothingStatement)
+            {
+                builder.Append("NOTHING ");
+            }
+            else if(statement is UpsertOnStatement upsertOnStatement)
+            {
+                builder.Append("ON ");
+            }
+            else if(statement is UpsertSetStatement upsertSetStatement)
+            {
+                // TODO
+                //builder.Append(upsertSetStatement.)
+            }
+            else if(statement is UpsertUpdateStatement upsertUpdateStatement)
+            {
+                builder.Append("UPDATE ");
             }
             else
             {

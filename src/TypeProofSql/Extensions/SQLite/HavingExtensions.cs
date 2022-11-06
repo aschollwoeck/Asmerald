@@ -16,11 +16,11 @@ namespace TypeProofSql.SQLite
         {
             return new HavingStatement(stmt.QueryBuilder, conditionalExpression);
         }
-        public static HavingStatement Having(this WhereStatement stmt, ConditionalExpression conditionalExpression)
+        public static HavingStatement Having(this SelectWhereStatement stmt, ConditionalExpression conditionalExpression)
         {
             return new HavingStatement(stmt.QueryBuilder, conditionalExpression);
         }
-        public static HavingStatement Having(this WhereGroupStatement stmt, ConditionalExpression conditionalExpression)
+        public static HavingStatement Having(this SelectWhereGroupStatement stmt, ConditionalExpression conditionalExpression)
         {
             return new HavingStatement(stmt.QueryBuilder, conditionalExpression);
         }

@@ -21,10 +21,9 @@ Recursive<T> = Recursive<T>(ISelectColumn[] selectColumns) : Recursive(new T(), 
 
 Materialized = Materialized(IQueryBuilder subQuery)
 
-WithAs = WithAs
-WithNot = WithNot
-
 As = As
+WithAs = WithAs : As
+WithNot = WithNot() : Not()
 AsSelect = AsSelect(IQueryBuilder subQuery)
 WithAsSelect = WithAsSelect(ITable table, IQueryBuilder subQuery)
 WithAsSelect<T> = WithAsSelect<T>(IQueryBuilder subQuery) : WithAsSelect(new T(), subQuery)
@@ -42,7 +41,10 @@ FromSubQuery = FromSubQuery(IQueryBuilder subQueryBuilder, ITable table)
 From<T> = From<T>() : From(new T())
 FromSubQuery<T> = FromSubQuery<T>(IQueryBuilder subQueryBuilder) : FromSubQuery(subQueryBuilder, new T())
 
-TableAs = TableAs(string alias)
+SelectFrom<T> = SelectFrom<T>() : From<T>()
+SelectFromSubQuery<T> = SelectFromSubQuery<T>(IQueryBuilder subQueryBuilder) : FromSubQuery<T>(subQueryBuilder)
+
+;TableAs = TableAs(string alias)
 
 Join = Join(ITable left, ITable right)
 Join<T, J> = Join<T, J>(T left, J right) : Join(left, right)
@@ -78,6 +80,10 @@ OnMulti<T, J> = OnMulti<T, J>((ISelectColumn<T> left, ISelectColumn<J> right)[] 
 
 WhereGroup = WhereGroup(ConditionalGroupStatement groupExpr)
 Where = Where(ConditionalExpression conditionalExpression) : ConditionalGroup
+
+SelectWhereGroup = SelectWhereGroup(ConditionalGroupStatement groupExpr) : WhereGroup(groupExpr)
+SelectWhere = SelectWhere(ConditionalExpression conditionalExpression) : Where(conditionalExpression)
+
 And = And(ConditionalGroupStatement groupStatement, ConditionalExpression conditionalExpression) : Conditional(groupStatement, conditionalExpression)
 AndGroup = AndGroup(ConditionalExpression conditionalExpression) : ConditionalGroup(conditionalExpression)
 Or = Or(ConditionalGroupStatement groupStatement, ConditionalExpression conditionalExpression) : Conditional(groupStatement, conditionalExpression)
@@ -113,7 +119,7 @@ Into = Into(ITable table)
 Into<T> = Into<T>() : Into(new T())
 IntoAs = IntoAs(string alias)
 
-InsertSelect = InsertSelect(ISelectColumn[] columns)
+InsertSelect = InsertSelect(ISelectColumn[] columns) : SelectColumns(columns)
 InsertSelect<T> = InsertSelect<T>(ISelectColumn<T>[] columns) : InsertSelect(columns)
 InsertValues = InsertValues(ValueExpression[] valueExpressions)
 
@@ -123,7 +129,7 @@ DefaultValues = DefaultValues
 Update = Update(ITable table)
 Update<T> = Update<T>() : Update(new T())
 
-UpdateSet = UpdateSet(ITable table, ValueExpression[] valueExpressions)
+UpdateSet = UpdateSet(ITable table, ValueExpression[] valueExpressions) : Set(valueExpressions)
 UpdateSet<T> = UpdateSet<T>(ValueExpression[] valueExpressions) : UpdateSet(new T(), valueExpressions)
 UpdateOr = UpdateOr(ITable table)
 UpdateOr<T> = UpdateOr<T>() : UpdateOr(new T())
@@ -139,31 +145,38 @@ UpdateReplace<T> = UpdateReplace<T>() : UpdateReplace(new T())
 UpdateRollback = UpdateRollback(ITable table) : Rollback()
 UpdateRollback<T> = UpdateRollback<T>() : UpdateRollback(new T())
 
-UpdateFrom = UpdateFrom(ITable table)
-UpdateFrom<T> = UpdateFrom<T>() : UpdateFrom(new T())
-UpdateWhere = UpdateWhere
+;UpdateFrom = UpdateFrom(ITable table) : From(table)
+UpdateFrom<T> = UpdateFrom<T>() : From(new T())
+UpdateFromSubQuery<T> = UpdateFromSubQuery<T>(IQueryBuilder subQueryBuilder) : FromSubQuery(subQueryBuilder, new T())
+
+UpdateWhere = UpdateWhere(ConditionalExpression conditionalExpression) : Where(conditionalExpression)
+UpdateWhereGroup = UpdateWhereGroup(ConditionalGroupStatement groupExpr) : WhereGroup(groupExpr)
 
 UpdateConditionalJoin<T, J> = UpdateConditionalJoin<T, J>() : ConditionalJoin<T, J>()
 
-UpsertOn = UpsertOn
 Conflict = Conflict
+
+UpsertOn = UpsertOn
+UpsertConflict = UpsertConflict() : Conflict()
+UpsertConflictSelect = UpsertConflictSelectColumns(ISelectColumn[] columns) : SelectColumns(columns)
 UpsertDo = UpsertDo
 UpsertNothing = UpsertNothing
 UpsertUpdate = UpsertUpdate
-UpsertSet = UpsertSet
-UpsertWhere = UpsertWhere
+UpsertSet = UpsertSet(ValueExpression[] valueExpressions) : Set(valueExpressions)
+UpsertWhere = UpsertWhere(ConditionalExpression conditionalExpression) : Where(conditionalExpression)
+UpsertWhereGroup = UpsertWhereGroup(ConditionalGroupStatement groupExpr) : WhereGroup(groupExpr)
 UpsertOn = UpsertOn
 
 Returning = Returning
-ReturningSelect = ReturningSelect(ISelectColumn[] columns)
-ReturningSelect<T> = ReturningSelect<T>(ISelectColumn<T>[] columns) : InsertSelect(columns)
+ReturningSelect = ReturningSelect(ISelectColumn[] columns) : SelectColumns(columns)
+ReturningSelect<T> = ReturningSelect<T>(ISelectColumn<T>[] columns) : SelectColumns(columns)
 ReturningAll = ReturningAll
 
 Delete = Delete
-DeleteFrom = DeleteFrom(ITable table)
-DeleteFrom<T> = DeleteFrom<T>() : DeleteFrom(new T())
-DeleteWhere = DeleteWhere
-DeleteWhereGroup = DeleteWhereGroup
+DeleteFrom = DeleteFrom(ITable table) : From(table)
+DeleteFrom<T> = DeleteFrom<T>() : From<T>()
+DeleteWhere = DeleteWhere(ConditionalExpression conditionalExpression) : Where(conditionalExpression)
+DeleteWhereGroup = DeleteWhereGroup(ConditionalGroupStatement groupExpr) : WhereGroup(groupExpr)
 
 Set = Set(ValueExpression[] valueExpressions)
 Value = Value(ValueExpression[] valueExpressions)
@@ -173,54 +186,3 @@ Union = Union(IQueryBuilder subQueryBuilder) : Compound(subQueryBuilder)
 UnionAll = UnionAll(IQueryBuilder subQueryBuilder) : Compound(subQueryBuilder)
 Intersect = Intersect(IQueryBuilder subQueryBuilder) : Compound(subQueryBuilder)
 Except = Except(IQueryBuilder subQueryBuilder) : Compound(subQueryBuilder)
-
-[CHAINING]
-;With = _COMMON_TBL_EXPR_
-;With<T>
-With = SQLiteDSLContext : With; SQLiteDSLContext : WithTable<T>; AsSelect : WithTableAdditional<T>; Materialized : WithTableAdditional<T>
-Recursive = With : Recursive<T>
-;Recursive = _COMMON_TBL_EXPR_
-
-Materialized = As : Materialized; Not : Materialized; WithTable : Materialized; WithTableAdditional : Materialized
-
-Not = As : Not; AsSelect : Not
-
-Select = SQLiteDSLContext : Select; SQLiteDSLContext : SelectColumns; AsSelect : Select; AsSelect : SelectColumns; Materialized : Select; Materialized : SelectColumns; Compound : Select; Compound : SelectColumns
-All = Select : All; Distinct : All
-Distinct = SelectColumns : Distinct; Select : DistinctColumns; Select : Distinct
-From = Select : From<T>; SelectColumns : From<T>; DistinctColumns : From<T>; All : From<T>; Delete : From<T>
-As = From : TableAs; Join : JoinAs; Recursive : AsSelect; WithTable : AsSelect; WithTableAdditional : AsSelect; Recursive : As; WithTable : As
-
-InnerJoin = From : InnerJoin<T, J>; NonConditionalJoin : InnerJoin<T, J>
-LeftJoin = From : LeftOuterJoin<T, J>; NonConditionalJoin : LeftOuterJoin<T, J>
-RightJoin = From : RightOuterJoin<T, J>; NonConditionalJoin : RightOuterJoin<T, J>
-FullJoin = From : FullOuterJoin<T, J>; NonConditionalJoin : FullOuterJoin<T, J>
-CrossJoin = From : CrossJoin<T, J>; NonConditionalJoin : CrossJoin<T, J>
-
-On = Join : On<T, J>; Join : OnMulti<T, J>; JoinAs : On<T, J>; JoinAs : OnMulti<T, J>; ConditionalJoin<T, J> : On<T, J>; ConditionalJoin<T, J> : OnMulti<T, J>
-
-;Where
-WhereGroup = From : ConditionalGroupStatement; On : ConditionalGroupStatement; OnMulti : ConditionalGroupStatement; NonConditionalJoin : ConditionalGroupStatement
-
-
-GroupBy = From : GroupBy; ConditionalGroupStatement : GroupBy
-
-Having = GroupBy : Having; Where : Having
-
-Limit = From : Limit; GroupBy : Limit; OrderBy : Limit; Where : Limit
-;Conditional : Limit; ConditionalGroup : Limit
-Offset = Limit : Offset
-
-OrderBy = From : OrderBy; GroupBy : OrderBy; Where : OrderBy
-;Conditional : OrderBy; ConditionalGroup : OrderBy
-
-Insert = SQLiteDSLContext : Insert
-Into = Insert : Into<T>
-Values = Into : Value
-
-Update = SQLiteDSLContext : Update<T>
-Set = Update : Set
-
-Delete = SQLiteDSLContext : Delete
-
-UnionAll = From : UnionAll

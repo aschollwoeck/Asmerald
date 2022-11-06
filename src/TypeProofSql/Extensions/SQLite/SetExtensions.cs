@@ -42,9 +42,9 @@ namespace TypeProofSql.SQLite
         {
             return new UpdateSetStatement<T>(stmt.QueryBuilder, valueExpressions);
         }
-        public static UpsertSetStatement Set(this UpsertUpdateStatement stmt)
+        public static UpsertSetStatement Set(this UpsertUpdateStatement stmt, params ValueExpression[] valueExpressions)
         {
-            return new UpsertSetStatement(stmt.QueryBuilder);
+            return new UpsertSetStatement(stmt.QueryBuilder, valueExpressions);
         }
     }
 }
