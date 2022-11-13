@@ -26,13 +26,13 @@ namespace TypeProofSql.Statements
         public ConditionalGroupStatement(ConditionalExpression conditionalExpression)
             : this()
         {
-            this.conditionalStatements.Add(new ConditionalStatement(this, conditionalExpression));
+            this.conditionalStatements.Add(new ConditionalStatement(conditionalExpression));
         }
 
         public ConditionalGroupStatement(IQueryBuilder queryBuilder, ConditionalExpression conditionalExpression)
             : this(queryBuilder)
         {
-            this.conditionalStatements.Add(new ConditionalStatement(queryBuilder, this, conditionalExpression));
+            this.conditionalStatements.Add(new ConditionalStatement(queryBuilder, conditionalExpression));
         }
 
         public void AddGroup(ConditionalGroupStatement conditionalGroupStatement)

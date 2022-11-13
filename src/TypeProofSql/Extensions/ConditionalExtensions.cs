@@ -6,6 +6,7 @@ using TypeProofSql.QueryBuilders;
 using TypeProofSql.Statements;
 using System.Linq;
 using TypeProofSql.Statements.SQLite;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace TypeProofSql.SQLite
 {
@@ -71,16 +72,89 @@ namespace TypeProofSql.SQLite
         //    return new WhereStatement(stmt.QueryBuilder, conditionalExpression);
         //}
 
-        public static ConditionalGroupStatement And(this ConditionalGroupStatement condStmt, ConditionalExpression conditionalExpression)
+
+        // Expression --> List<Statement>
+        public static List<ConditionalStatement> And(this ConditionalStatement condStmt, ConditionalExpression expression)
         {
-            var stmt = new AndStatement(condStmt.QueryBuilder, condStmt, conditionalExpression);
-            return condStmt;
+            List<ConditionalStatement> res = new List<ConditionalStatement>();
+            res.Add(condStmt);
+            res.Add(new AndStatement(null, expression));
+
+            return res;
+        }
+        public static List<ConditionalStatement> Or(this ConditionalStatement condStmt, ConditionalExpression expression)
+        {
+            List<ConditionalStatement> res = new List<ConditionalStatement>();
+            res.Add(condStmt);
+            res.Add(new OrStatement(null, expression));
+
+            return res;
         }
 
-        public static ConditionalGroupStatement Or(this ConditionalGroupStatement condStmt, ConditionalExpression conditionalExpression)
+        // Expression --> List<Statement>
+        public static List<ConditionalStatement> And(this IEnumerable<ConditionalStatement> statements, ConditionalExpression expression)
         {
-            var stmt = new OrStatement(condStmt.QueryBuilder, condStmt, conditionalExpression);
-            return condStmt;
+            List<ConditionalStatement> res = new List<ConditionalStatement>(statements);
+            res.Add(new AndStatement(null, expression));
+
+            return res;
+        }
+        public static List<ConditionalStatement> Or(this IEnumerable<ConditionalStatement> statements, ConditionalExpression expression)
+        {
+            List<ConditionalStatement> res = new List<ConditionalStatement>(statements);
+            res.Add(new OrStatement(null, expression));
+
+            return res;
+        }
+
+        // Statement --> Group
+        public static ConditionalGroupStatement And(this ConditionalStatement statement, ConditionalGroupStatement groupStatement)
+        {
+            var g = new AndGroupStatement(statement.QueryBuilder);
+            g.AddGroup(groupStatement);
+            return g;
+        }
+        public static ConditionalGroupStatement Or(this ConditionalStatement statement, ConditionalGroupStatement groupStatement)
+        {
+            var g = new OrGroupStatement(statement.QueryBuilder);
+            g.AddGroup(groupStatement);
+            return g;
+        }
+        public static ConditionalGroupStatement And(this IEnumerable<ConditionalStatement> statements, ConditionalGroupStatement groupStatement)
+        {
+            var g = new AndGroupStatement();
+            g.AddGroup(groupStatement);
+            return g;
+        }
+        public static ConditionalGroupStatement Or(this IEnumerable<ConditionalStatement> statements, ConditionalGroupStatement groupStatement)
+        {
+            var g = new OrGroupStatement();
+            g.AddGroup(groupStatement);
+            return g;
+        }
+
+
+        // Group --> Statement
+        public static ConditionalStatement And(this ConditionalGroupStatement condStmt, ConditionalExpression expression)
+        {
+            return new AndStatement(condStmt.QueryBuilder, expression);
+
+            //var g = new AndGroupStatement(condStmt.QueryBuilder);
+            //foreach (var statement in statements)
+            //{
+            //    g.AddStatement(statement);
+            //}
+            //return g;
+        }
+        public static ConditionalStatement Or(this ConditionalGroupStatement condStmt, ConditionalExpression expression)
+        {
+            return new OrStatement(condStmt.QueryBuilder, expression);
+            //var g = new OrGroupStatement(condStmt.QueryBuilder);
+            //foreach (var statement in statements)
+            //{
+            //    g.AddStatement(statement);
+            //}
+            //return g;
         }
     }
 }

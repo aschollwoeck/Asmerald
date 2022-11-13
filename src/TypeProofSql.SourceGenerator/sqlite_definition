@@ -84,9 +84,9 @@ Where = Where(ConditionalExpression conditionalExpression) : ConditionalGroup
 SelectWhereGroup = SelectWhereGroup(ConditionalGroupStatement groupExpr) : WhereGroup(groupExpr)
 SelectWhere = SelectWhere(ConditionalExpression conditionalExpression) : Where(conditionalExpression)
 
-And = And(ConditionalGroupStatement groupStatement, ConditionalExpression conditionalExpression) : Conditional(groupStatement, conditionalExpression)
+And = And(ConditionalExpression conditionalExpression) : Conditional(conditionalExpression)
 AndGroup = AndGroup(ConditionalExpression conditionalExpression) : ConditionalGroup(conditionalExpression)
-Or = Or(ConditionalGroupStatement groupStatement, ConditionalExpression conditionalExpression) : Conditional(groupStatement, conditionalExpression)
+Or = Or(ConditionalExpression conditionalExpression) : Conditional(conditionalExpression)
 OrGroup = OrGroup(ConditionalExpression conditionalExpression) : ConditionalGroup(conditionalExpression)
 
 Having = Having(ConditionalExpression conditionalExpression) : ConditionalGroup(conditionalExpression)

@@ -16,6 +16,9 @@ public class Program
     {
 
 
+
+
+
         //var appSett = new AppSettings()
         //{
 
@@ -32,6 +35,24 @@ public class Program
         catch (Exception ex) { }
 
         TypeProofSql.SQLiteDSLContext dslCtxt = new SQLiteDSLContext();
+
+        var sdfsdf = dslCtxt.Group(
+            dslCtxt.Stmt(Tbl_Cards.Id().Greater(1))
+            .And(Tbl_Cards.Name().Equal("hi"))
+            );
+
+        var sql2 = dslCtxt
+            .Select()
+            .All()
+            .From<Tbl_Cards>()
+            .Where(
+                dslCtxt.Group(
+                    dslCtxt.Stmt(Tbl_Cards.Id().Greater(1))
+                    .And(Tbl_Cards.Id().Greater(10)))
+                .And(Tbl_Cards.Name().Equal("hi")))
+            .QueryBuilder
+            .Build();
+        Console.WriteLine(sql2);
 
         var qall = dslCtxt
             .Select()
@@ -151,22 +172,41 @@ public class Program
             .Build();
         Console.WriteLine(sql);
 
-        sql = dslCtxt
-            .Select()
-            .All()
-            .From<Table1>()
-            .Where(new WhereStatement()
-                {
-                    conditionalGroupStatements = new List<ConditionalGroupStatement>()
-                    {
-                       new ConditionalGroupStatement(new Table1.Column2().Greater(2)).And(new Table1.Column2().LesserOrEqual(10)),
-                       new OrGroupStatement(dslCtxt.QueryBuilder, new Table1.Column2().Greater(2)).Or(new Table1.Column2().LesserOrEqual(10)),
-                       new AndGroupStatement(dslCtxt.QueryBuilder, new Table1.Column2().Greater(2)).Or(new Table1.Column2().LesserOrEqual(10)),
-                    }
-                })
-            .QueryBuilder
-            .Build();
-        Console.WriteLine(sql);
+
+        //sql = dslCtxt
+        //    .Select()
+        //    .All()
+        //    .From<Table1>()
+        //    .Where(new WhereStatement()
+        //        {
+        //            conditionalGroupStatements = new List<ConditionalGroupStatement>()
+        //            {
+        //               new ConditionalGroupStatement(new Table1.Column2().Greater(2)).And(new Table1.Column2().LesserOrEqual(10)),
+        //               new OrGroupStatement(dslCtxt.QueryBuilder, new Table1.Column2().Greater(2)).Or(new Table1.Column2().LesserOrEqual(10)),
+        //               new AndGroupStatement(dslCtxt.QueryBuilder, new Table1.Column2().Greater(2)).Or(new Table1.Column2().LesserOrEqual(10)),
+        //            }
+        //        })
+        //    .QueryBuilder
+        //    .Build();
+        //Console.WriteLine(sql);
+
+        // WHERE
+        //  (1 = 1 AND 0 = 0)
+        // AND
+        //  (a = a OR b = b)
+        // AND
+        //  1 = b
+        // OR
+
+        // .Where(
+        //          Group(
+        //                  Col1().Eq(1).And(col0().Eq(0)))
+        //          .And(Group(Cola().Eq(a).Or(Colb().Eq(b)))
+        //          .And(Col1().Eq(b))
+        //          .Or(
+        var g = dslCtxt.Group(Tbl_Cards.Attribute().Equal("s").And(Tbl_Cards.Form().Equal("c")))
+            .And(Tbl_Cards.Id().Equal(1).And(Tbl_Cards.Id().Equal(2)));
+
 
         sql = dslCtxt
             .Delete()
@@ -196,7 +236,7 @@ public class Program
 
         stopwatch.Restart();
         var val = 2;
-        var sql2 = "SELECT column1 as hello, column1, column2 as int FROM Table1 WHERE column1 = 'hello'" + val;
+        var sql3 = "SELECT column1 as hello, column1, column2 as int FROM Table1 WHERE column1 = 'hello'" + val;
 
         stopwatch.Stop();
         Console.WriteLine(stopwatch.ElapsedMilliseconds);

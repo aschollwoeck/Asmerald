@@ -18,17 +18,19 @@ namespace TypeProofSql.Statements
 
         }
 
-        public ConditionalStatement(ConditionalGroupStatement groupStatement, ConditionalExpression conditionalExpression)
-            : this(null, groupStatement, conditionalExpression)
+        public ConditionalStatement(ConditionalExpression conditionalExpression)
         {
-
+            this.ConditionalExpression = conditionalExpression;
         }
 
-        public ConditionalStatement(IQueryBuilder queryBuilder, ConditionalGroupStatement groupStatement, ConditionalExpression conditionalExpression)
+        public ConditionalStatement(IQueryBuilder queryBuilder, ConditionalExpression conditionalExpression)
+            : this(conditionalExpression)
         {
             this.QueryBuilder = queryBuilder;
-            this.ConditionalExpression = conditionalExpression;
-            groupStatement.AddStatement(this);
+            if(this.QueryBuilder != null)
+            {
+                this.QueryBuilder.AddStatment(this);
+            }
         }
     }
 }
