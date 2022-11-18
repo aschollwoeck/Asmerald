@@ -20,7 +20,10 @@ namespace TypeProofSql.SQLite
         public static SelectWhereStatement Where<T>(this SelectFromStatement<T> stmt, ConditionalStatement groupExpr)
             where T : ITable, new()
         {
-            return new SelectWhereStatement(stmt.QueryBuilder, groupExpr);
+            var g = new SelectWhereStatement();
+            g.AddStatement(groupExpr);
+            return g;
+            //return new SelectWhereStatement(stmt.QueryBuilder, groupExpr);
         }
         public static SelectWhereGroupStatement Where<T>(this SelectFromStatement<T> stmt, ConditionalGroupStatement groupExpr)
             where T : ITable, new()
