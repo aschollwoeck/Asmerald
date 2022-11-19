@@ -62,5 +62,10 @@ namespace TypeProofSql.Columns
         public abstract ISelectColumn<D> Count();
 
         public ValueExpression Value(int value) => new ValueExpression(this, value);
+
+        public BetweenConditionalExpression Between(int minValue, int maxValue)
+        {
+            return new BetweenConditionalExpression((IColumn)this, minValue, maxValue);
+        }
     }
 }

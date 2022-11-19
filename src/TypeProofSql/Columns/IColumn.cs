@@ -20,6 +20,7 @@ namespace TypeProofSql.Columns
         LesserConditionalExpression Lesser(T condition);
         LesserOrEqualConditionalExpression LesserOrEqual(T condition);
         IsNullConditionalExpression IsNull();
+        BetweenConditionalExpression Between(T minValue, T maxValue);
 
         ValueExpression Value(T value);
 

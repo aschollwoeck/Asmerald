@@ -663,6 +663,15 @@ namespace TypeProofSql
                 case IsNullConditionalExpression expr:
                     builder.Append(" IS NULL");
                     break;
+                case BetweenConditionalExpression expr:
+                    builder.Append(" BETWEEN @");
+                    builder.Append(paraCount);
+                    parameters.Add(paraCount.ToString(), expr.MinValue);
+                    builder.Append(" AND @");
+                    builder.Append(paraCount);
+                    parameters.Add(paraCount.ToString(), expr.MaxValue);
+                    paraCount++;
+                    break;
                 default:
                     throw new NotImplementedException($"ConditionalExpression of type '{condExpr.GetType().Name}' is not yet implemented for where clauses!");
             }

@@ -62,5 +62,10 @@ namespace TypeProofSql.Columns
         public abstract ISelectColumn<D> Count();
 
         public ValueExpression Value(DateTime value) => new ValueExpression(this, value);
+
+        public BetweenConditionalExpression Between(DateTime minValue, DateTime maxValue)
+        {
+            return new BetweenConditionalExpression(this, minValue, maxValue);
+        }
     }
 }
