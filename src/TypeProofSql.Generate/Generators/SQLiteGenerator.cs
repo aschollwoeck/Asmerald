@@ -11,7 +11,7 @@ namespace TypeProofSql.Generate.Generators
 {
     public class SQLiteGenerator : IGenerator
     {
-        internal class DatabaseSchema
+        public class DatabaseSchema
         {
             internal string type { get; set; }
             internal string name { get; set; }
@@ -20,7 +20,7 @@ namespace TypeProofSql.Generate.Generators
             internal string sql { get; set; }
         }
 
-        internal class TableSchema
+        public class TableSchema
         {
             public int cid { get; set; }
             public string name { get; set; }
@@ -45,11 +45,11 @@ namespace TypeProofSql.Generate.Generators
             public IEnumerable<ColumnGenerate> columns { get; set; } = new List<ColumnGenerate>();
         }
 
-        private readonly string _connectionString;
+        private readonly GenerateConfiguration _generateConfiguration;
 
-        public SQLiteGenerator(string connectionString)
+        public SQLiteGenerator(GenerateConfiguration config)
         {
-            this._connectionString = connectionString;
+            this._generateConfiguration = config;
         }
 
         public async Task<Dictionary<string, string>> Generate()
@@ -59,7 +59,7 @@ namespace TypeProofSql.Generate.Generators
 
         public async Task<Dictionary<string, string>> Generate(string nspace)
         {
-            using (Microsoft.Data.Sqlite.SqliteConnection sqliteConnection = new Microsoft.Data.Sqlite.SqliteConnection(this._connectionString))
+            using (Microsoft.Data.Sqlite.SqliteConnection sqliteConnection = new Microsoft.Data.Sqlite.SqliteConnection(this._generateConfiguration.ConnectionString))
             {
                 var codeProvider = CodeDomProvider.CreateProvider("c#");
 
@@ -69,14 +69,20 @@ namespace TypeProofSql.Generate.Generators
 
                 List<TableGenerate> templateTables = new List<TableGenerate>();
 
+                Func<string, Type> getColumnType = this._generateConfiguration.ColumnTypeFunc;
+                if(getColumnType == null)
+                {
+                    getColumnType = GetColumnType;
+                }
+
                 foreach (var t in tables)
                 {
                     if (t.tbl_name == "sqlite_sequence") continue;
 
                     var columns = await sqliteConnection.QueryAsync<TableSchema>("pragma table_info(" + t.tbl_name + ")");
 
-                    var ctxtColumns = columns.Select(c => new TableGenerate.ColumnGenerate { name_class = "Col_" + codeProvider.CreateValidIdentifier(c.name.FirstCharToUpper()), name = c.name, name_method = c.name.FirstCharToUpper(), type = GetColumnType(c.type).Name });
-                    var ctxtTable = new TableGenerate { name_class = GetPrefix(t) + codeProvider.CreateValidIdentifier(t.tbl_name.FirstCharToUpper()), name = t.tbl_name, columns = ctxtColumns };
+                    var ctxtColumns = columns.Select(c => new TableGenerate.ColumnGenerate { name_class = this._generateConfiguration.ColPrefixFunc() + codeProvider.CreateValidIdentifier(c.name.FirstCharToUpper()), name = c.name, name_method = c.name.FirstCharToUpper(), type = getColumnType(c.type).Name });
+                    var ctxtTable = new TableGenerate { name_class = this._generateConfiguration.PrefixFunc(t) + codeProvider.CreateValidIdentifier(t.tbl_name.FirstCharToUpper()), name = t.tbl_name, columns = ctxtColumns };
 
                     templateTables.Add(ctxtTable);
                 }
@@ -100,6 +106,7 @@ namespace TypeProofSql.Generate.Generators
             var sw = new StringWriter();
             IndentedTextWriter w = new IndentedTextWriter(sw);
 
+            w.WriteLine("using System;");
             w.WriteLine("using TypeProofSql;");
             w.WriteLine("using TypeProofSql.Columns;");
             w.WriteLine();
@@ -153,16 +160,6 @@ namespace TypeProofSql.Generate.Generators
 
             w.Flush();
             return sw.ToString();
-        }
-
-        private string GetPrefix(DatabaseSchema schema)
-        {
-            if (schema.type == "view")
-            {
-                return "Vw";
-            }
-
-            return "Tbl";
         }
 
         private Type GetColumnType(string columnDataType)

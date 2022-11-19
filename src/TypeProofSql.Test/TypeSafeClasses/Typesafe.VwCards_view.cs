@@ -1,3 +1,4 @@
+using System;
 using TypeProofSql;
 using TypeProofSql.Columns;
 

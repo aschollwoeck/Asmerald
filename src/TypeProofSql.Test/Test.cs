@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using TypeProofSql.Columns;
 
-namespace TypeProofSql.Generate
+namespace TypeProofSql.Test
 {
     public class Table1 : ITable
     {
