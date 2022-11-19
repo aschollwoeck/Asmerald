@@ -8,16 +8,16 @@ using TypeProofSql.Expressions;
 
 namespace TypeProofSql.Statements.SQLite
 {
-    public class WhereStatement : IStatement
+    public class WhereMultiStatement : IStatement
     {
         public IQueryBuilder QueryBuilder { get; private set; }
-        public ConditionalExpression ConditionalExpression { get; private set; }
-        public WhereStatement() { }
-        public WhereStatement(IQueryBuilder queryBuilder, ConditionalExpression conditionalExpression)
+        public List<ConditionalStatement> ConditionalStatements { get; private set; }
+        public WhereMultiStatement() { }
+        public WhereMultiStatement(IQueryBuilder queryBuilder, List<ConditionalStatement> conditionalStatements)
         {
             this.QueryBuilder = queryBuilder;
             this.QueryBuilder.AddStatment(this);
-            this.ConditionalExpression = conditionalExpression;
+            this.ConditionalStatements = conditionalStatements;
         }
     }
 }

@@ -20,11 +20,19 @@ namespace TypeProofSql.SQLite
         {
             return new ReturningStatement(stmt.QueryBuilder);
         }
-        public static ReturningStatement Returning(this SelectWhereStatement stmt)
+        public static ReturningStatement Returning(this UpsertWhereStatement stmt)
         {
             return new ReturningStatement(stmt.QueryBuilder);
         }
-        public static ReturningStatement Returning(this SelectWhereGroupStatement stmt)
+        public static ReturningStatement Returning(this UpsertWhereMultiStatement stmt)
+        {
+            return new ReturningStatement(stmt.QueryBuilder);
+        }
+        public static ReturningStatement Returning(this UpsertWhereGroupStatement stmt)
+        {
+            return new ReturningStatement(stmt.QueryBuilder);
+        }
+        public static ReturningStatement Returning(this UpsertWhereGroupMultiStatement stmt)
         {
             return new ReturningStatement(stmt.QueryBuilder);
         }
@@ -37,7 +45,15 @@ namespace TypeProofSql.SQLite
         {
             return new ReturningStatement(stmt.QueryBuilder);
         }
+        public static ReturningStatement Returning(this UpdateWhereMultiStatement stmt)
+        {
+            return new ReturningStatement(stmt.QueryBuilder);
+        }
         public static ReturningStatement Returning(this UpdateWhereGroupStatement stmt)
+        {
+            return new ReturningStatement(stmt.QueryBuilder);
+        }
+        public static ReturningStatement Returning(this UpdateWhereGroupMultiStatement stmt)
         {
             return new ReturningStatement(stmt.QueryBuilder);
         }
@@ -49,11 +65,19 @@ namespace TypeProofSql.SQLite
         {
             return new ReturningSelectStatement(stmt.QueryBuilder, columns);
         }
-        public static ReturningSelectStatement Returning(this SelectWhereStatement stmt, params ISelectColumn[] columns)
+        public static ReturningSelectStatement Returning(this UpsertWhereStatement stmt, params ISelectColumn[] columns)
         {
             return new ReturningSelectStatement(stmt.QueryBuilder, columns);
         }
-        public static ReturningSelectStatement Returning(this SelectWhereGroupStatement stmt, params ISelectColumn[] columns)
+        public static ReturningSelectStatement Returning(this UpsertWhereMultiStatement stmt, params ISelectColumn[] columns)
+        {
+            return new ReturningSelectStatement(stmt.QueryBuilder, columns);
+        }
+        public static ReturningSelectStatement Returning(this UpsertWhereGroupStatement stmt, params ISelectColumn[] columns)
+        {
+            return new ReturningSelectStatement(stmt.QueryBuilder, columns);
+        }
+        public static ReturningSelectStatement Returning(this UpsertWhereGroupMultiStatement stmt, params ISelectColumn[] columns)
         {
             return new ReturningSelectStatement(stmt.QueryBuilder, columns);
         }
@@ -66,7 +90,15 @@ namespace TypeProofSql.SQLite
         {
             return new ReturningSelectStatement(stmt.QueryBuilder, columns);
         }
+        public static ReturningSelectStatement Returning(this UpdateWhereMultiStatement stmt, params ISelectColumn[] columns)
+        {
+            return new ReturningSelectStatement(stmt.QueryBuilder, columns);
+        }
         public static ReturningSelectStatement Returning(this UpdateWhereGroupStatement stmt, params ISelectColumn[] columns)
+        {
+            return new ReturningSelectStatement(stmt.QueryBuilder, columns);
+        }
+        public static ReturningSelectStatement Returning(this UpdateWhereGroupMultiStatement stmt, params ISelectColumn[] columns)
         {
             return new ReturningSelectStatement(stmt.QueryBuilder, columns);
         }

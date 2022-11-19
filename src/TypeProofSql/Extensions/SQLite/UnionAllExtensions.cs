@@ -39,11 +39,15 @@ namespace TypeProofSql.SQLite
         {
             return new UnionAllStatement(stmt.QueryBuilder, subQueryBuilder);
         }
+        public static UnionAllStatement UnionAll(this SelectWhereMultiStatement stmt, IQueryBuilder subQueryBuilder)
+        {
+            return new UnionAllStatement(stmt.QueryBuilder, subQueryBuilder);
+        }
         public static UnionAllStatement UnionAll(this SelectWhereGroupStatement stmt, IQueryBuilder subQueryBuilder)
         {
             return new UnionAllStatement(stmt.QueryBuilder, subQueryBuilder);
         }
-        public static UnionAllStatement UnionAll(this ConditionalGroupStatement stmt, IQueryBuilder subQueryBuilder)
+        public static UnionAllStatement UnionAll(this SelectWhereGroupMultiStatement stmt, IQueryBuilder subQueryBuilder)
         {
             return new UnionAllStatement(stmt.QueryBuilder, subQueryBuilder);
         }
@@ -51,7 +55,19 @@ namespace TypeProofSql.SQLite
         {
             return new UnionAllStatement(stmt.QueryBuilder, subQueryBuilder);
         }
-        public static UnionAllStatement UnionAll(this HavingStatement stmt, IQueryBuilder subQueryBuilder)
+        public static UnionAllStatement UnionAll(this SelectHavingStatement stmt, IQueryBuilder subQueryBuilder)
+        {
+            return new UnionAllStatement(stmt.QueryBuilder, subQueryBuilder);
+        }
+        public static UnionAllStatement UnionAll(this SelectHavingMultiStatement stmt, IQueryBuilder subQueryBuilder)
+        {
+            return new UnionAllStatement(stmt.QueryBuilder, subQueryBuilder);
+        }
+        public static UnionAllStatement UnionAll(this SelectHavingGroupStatement stmt, IQueryBuilder subQueryBuilder)
+        {
+            return new UnionAllStatement(stmt.QueryBuilder, subQueryBuilder);
+        }
+        public static UnionAllStatement UnionAll(this SelectHavingGroupMultiStatement stmt, IQueryBuilder subQueryBuilder)
         {
             return new UnionAllStatement(stmt.QueryBuilder, subQueryBuilder);
         }

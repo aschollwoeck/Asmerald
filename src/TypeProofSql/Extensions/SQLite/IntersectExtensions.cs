@@ -39,11 +39,15 @@ namespace TypeProofSql.SQLite
         {
             return new IntersectStatement(stmt.QueryBuilder, subQueryBuilder);
         }
+        public static IntersectStatement Intersect(this SelectWhereMultiStatement stmt, IQueryBuilder subQueryBuilder)
+        {
+            return new IntersectStatement(stmt.QueryBuilder, subQueryBuilder);
+        }
         public static IntersectStatement Intersect(this SelectWhereGroupStatement stmt, IQueryBuilder subQueryBuilder)
         {
             return new IntersectStatement(stmt.QueryBuilder, subQueryBuilder);
         }
-        public static IntersectStatement Intersect(this ConditionalGroupStatement stmt, IQueryBuilder subQueryBuilder)
+        public static IntersectStatement Intersect(this SelectWhereGroupMultiStatement stmt, IQueryBuilder subQueryBuilder)
         {
             return new IntersectStatement(stmt.QueryBuilder, subQueryBuilder);
         }
@@ -51,7 +55,19 @@ namespace TypeProofSql.SQLite
         {
             return new IntersectStatement(stmt.QueryBuilder, subQueryBuilder);
         }
-        public static IntersectStatement Intersect(this HavingStatement stmt, IQueryBuilder subQueryBuilder)
+        public static IntersectStatement Intersect(this SelectHavingStatement stmt, IQueryBuilder subQueryBuilder)
+        {
+            return new IntersectStatement(stmt.QueryBuilder, subQueryBuilder);
+        }
+        public static IntersectStatement Intersect(this SelectHavingMultiStatement stmt, IQueryBuilder subQueryBuilder)
+        {
+            return new IntersectStatement(stmt.QueryBuilder, subQueryBuilder);
+        }
+        public static IntersectStatement Intersect(this SelectHavingGroupStatement stmt, IQueryBuilder subQueryBuilder)
+        {
+            return new IntersectStatement(stmt.QueryBuilder, subQueryBuilder);
+        }
+        public static IntersectStatement Intersect(this SelectHavingGroupMultiStatement stmt, IQueryBuilder subQueryBuilder)
         {
             return new IntersectStatement(stmt.QueryBuilder, subQueryBuilder);
         }

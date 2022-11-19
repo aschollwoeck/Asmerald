@@ -39,11 +39,15 @@ namespace TypeProofSql.SQLite
         {
             return new UnionStatement(stmt.QueryBuilder, subQueryBuilder);
         }
+        public static UnionStatement Union(this SelectWhereMultiStatement stmt, IQueryBuilder subQueryBuilder)
+        {
+            return new UnionStatement(stmt.QueryBuilder, subQueryBuilder);
+        }
         public static UnionStatement Union(this SelectWhereGroupStatement stmt, IQueryBuilder subQueryBuilder)
         {
             return new UnionStatement(stmt.QueryBuilder, subQueryBuilder);
         }
-        public static UnionStatement Union(this ConditionalGroupStatement stmt, IQueryBuilder subQueryBuilder)
+        public static UnionStatement Union(this SelectWhereGroupMultiStatement stmt, IQueryBuilder subQueryBuilder)
         {
             return new UnionStatement(stmt.QueryBuilder, subQueryBuilder);
         }
@@ -51,7 +55,19 @@ namespace TypeProofSql.SQLite
         {
             return new UnionStatement(stmt.QueryBuilder, subQueryBuilder);
         }
-        public static UnionStatement Union(this HavingStatement stmt, IQueryBuilder subQueryBuilder)
+        public static UnionStatement Union(this SelectHavingStatement stmt, IQueryBuilder subQueryBuilder)
+        {
+            return new UnionStatement(stmt.QueryBuilder, subQueryBuilder);
+        }
+        public static UnionStatement Union(this SelectHavingMultiStatement stmt, IQueryBuilder subQueryBuilder)
+        {
+            return new UnionStatement(stmt.QueryBuilder, subQueryBuilder);
+        }
+        public static UnionStatement Union(this SelectHavingGroupStatement stmt, IQueryBuilder subQueryBuilder)
+        {
+            return new UnionStatement(stmt.QueryBuilder, subQueryBuilder);
+        }
+        public static UnionStatement Union(this SelectHavingGroupMultiStatement stmt, IQueryBuilder subQueryBuilder)
         {
             return new UnionStatement(stmt.QueryBuilder, subQueryBuilder);
         }

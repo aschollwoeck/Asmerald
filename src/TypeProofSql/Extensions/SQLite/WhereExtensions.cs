@@ -17,24 +17,32 @@ namespace TypeProofSql.SQLite
         {
             return new SelectWhereStatement(stmt.QueryBuilder, conditionalExpression);
         }
-        public static SelectWhereStatement Where<T>(this SelectFromStatement<T> stmt, ConditionalStatement groupExpr)
+        public static SelectWhereMultiStatement Where<T>(this SelectFromStatement<T> stmt, List<ConditionalStatement> conditionalStatements)
             where T : ITable, new()
         {
-            var g = new SelectWhereStatement();
-            g.AddStatement(groupExpr);
-            return g;
-            //return new SelectWhereStatement(stmt.QueryBuilder, groupExpr);
+            return new SelectWhereMultiStatement(stmt.QueryBuilder, conditionalStatements);
         }
         public static SelectWhereGroupStatement Where<T>(this SelectFromStatement<T> stmt, ConditionalGroupStatement groupExpr)
             where T : ITable, new()
         {
             return new SelectWhereGroupStatement(stmt.QueryBuilder, groupExpr);
         }
+        public static SelectWhereGroupMultiStatement Where<T>(this SelectFromStatement<T> stmt, List<ConditionalGroupStatement> groupExpr)
+    where T : ITable, new()
+        {
+            return new SelectWhereGroupMultiStatement(stmt.QueryBuilder, groupExpr);
+        }
         public static SelectWhereStatement Where<T, J>(this NonConditionalJoinStatement<T, J> stmt, ConditionalExpression conditionalExpression)
             where T : ITable, new()
             where J : ITable, new()
         {
             return new SelectWhereStatement(stmt.QueryBuilder, conditionalExpression);
+        }
+        public static SelectWhereMultiStatement Where<T, J>(this NonConditionalJoinStatement<T, J> stmt, List<ConditionalStatement> conditionalStatements)
+            where T : ITable, new()
+            where J : ITable, new()
+        {
+            return new SelectWhereMultiStatement(stmt.QueryBuilder, conditionalStatements);
         }
         public static SelectWhereGroupStatement Where<T, J>(this NonConditionalJoinStatement<T, J> stmt, ConditionalGroupStatement groupExpr)
             where T : ITable, new()
@@ -48,6 +56,12 @@ namespace TypeProofSql.SQLite
         {
             return new SelectWhereStatement(stmt.QueryBuilder, conditionalExpression);
         }
+        public static SelectWhereMultiStatement Where<T, J>(this OnStatement<T, J> stmt, List<ConditionalStatement> conditionalStatements)
+            where T : ITable, new()
+            where J : ITable, new()
+        {
+            return new SelectWhereMultiStatement(stmt.QueryBuilder, conditionalStatements);
+        }
         public static SelectWhereGroupStatement Where<T, J>(this OnStatement<T, J> stmt, ConditionalGroupStatement groupExpr)
             where T : ITable, new()
             where J : ITable, new()
@@ -60,6 +74,12 @@ namespace TypeProofSql.SQLite
         {
             return new SelectWhereStatement(stmt.QueryBuilder, conditionalExpression);
         }
+        public static SelectWhereMultiStatement Where<T, J>(this OnMultiStatement<T, J> stmt, List<ConditionalStatement> conditionalStatements)
+            where T : ITable, new()
+            where J : ITable, new()
+        {
+            return new SelectWhereMultiStatement(stmt.QueryBuilder, conditionalStatements);
+        }
         public static SelectWhereGroupStatement Where<T, J>(this OnMultiStatement<T, J> stmt, ConditionalGroupStatement groupExpr)
             where T : ITable, new()
             where J : ITable, new()
@@ -71,27 +91,45 @@ namespace TypeProofSql.SQLite
         {
             return new UpdateWhereStatement(stmt.QueryBuilder, conditionalExpression);
         }
+        public static UpdateWhereMultiStatement Where<T>(this UpdateSetStatement<T> stmt, List<ConditionalStatement> conditionalStatements)
+            where T : ITable, new()
+        {
+            return new UpdateWhereMultiStatement(stmt.QueryBuilder, conditionalStatements);
+        }
         public static UpdateWhereGroupStatement Where<T>(this UpdateSetStatement<T> stmt, ConditionalGroupStatement groupExpr)
             where T : ITable, new()
         {
             return new UpdateWhereGroupStatement(stmt.QueryBuilder, groupExpr);
         }
-        public static SelectWhereStatement Where(this UpsertConflictSelectColumnsStatement stmt, ConditionalExpression conditionalExpression)
+        public static UpsertConflictWhereStatement Where(this UpsertConflictSelectColumnsStatement stmt, ConditionalExpression conditionalExpression)
         {
-            return new SelectWhereStatement(stmt.QueryBuilder, conditionalExpression);
+            return new UpsertConflictWhereStatement(stmt.QueryBuilder, conditionalExpression);
         }
-        public static SelectWhereGroupStatement Where(this UpsertConflictSelectColumnsStatement stmt, ConditionalGroupStatement groupExpr)
+        public static UpsertConflictWhereGroupStatement Where(this UpsertConflictSelectColumnsStatement stmt, ConditionalGroupStatement groupExpr)
         {
-            return new SelectWhereGroupStatement(stmt.QueryBuilder, groupExpr);
+            return new UpsertConflictWhereGroupStatement(stmt.QueryBuilder, groupExpr);
         }
         public static UpsertWhereStatement Where(this UpsertSetStatement stmt, ConditionalExpression conditionalExpression)
         {
             return new UpsertWhereStatement(stmt.QueryBuilder, conditionalExpression);
         }
+        public static UpsertWhereMultiStatement Where(this UpsertSetStatement stmt, List<ConditionalStatement> conditionalStatements)
+        {
+            return new UpsertWhereMultiStatement(stmt.QueryBuilder, conditionalStatements);
+        }
+        public static UpsertWhereGroupStatement Where(this UpsertSetStatement stmt, ConditionalGroupStatement groupExpr)
+        {
+            return new UpsertWhereGroupStatement(stmt.QueryBuilder, groupExpr);
+        }
         public static DeleteWhereStatement Where<T>(this DeleteFromStatement<T> stmt, ConditionalExpression conditionalExpression)
             where T : ITable, new()
         {
             return new DeleteWhereStatement(stmt.QueryBuilder, conditionalExpression);
+        }
+        public static DeleteWhereMultiStatement Where<T>(this DeleteFromStatement<T> stmt, List<ConditionalStatement> conditionalStatements)
+            where T : ITable, new()
+        {
+            return new DeleteWhereMultiStatement(stmt.QueryBuilder, conditionalStatements);
         }
     }
 }

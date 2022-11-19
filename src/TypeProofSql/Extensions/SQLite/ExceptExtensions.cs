@@ -39,11 +39,15 @@ namespace TypeProofSql.SQLite
         {
             return new ExceptStatement(stmt.QueryBuilder, subQueryBuilder);
         }
+        public static ExceptStatement Except(this SelectWhereMultiStatement stmt, IQueryBuilder subQueryBuilder)
+        {
+            return new ExceptStatement(stmt.QueryBuilder, subQueryBuilder);
+        }
         public static ExceptStatement Except(this SelectWhereGroupStatement stmt, IQueryBuilder subQueryBuilder)
         {
             return new ExceptStatement(stmt.QueryBuilder, subQueryBuilder);
         }
-        public static ExceptStatement Except(this ConditionalGroupStatement stmt, IQueryBuilder subQueryBuilder)
+        public static ExceptStatement Except(this SelectWhereGroupMultiStatement stmt, IQueryBuilder subQueryBuilder)
         {
             return new ExceptStatement(stmt.QueryBuilder, subQueryBuilder);
         }
@@ -51,7 +55,19 @@ namespace TypeProofSql.SQLite
         {
             return new ExceptStatement(stmt.QueryBuilder, subQueryBuilder);
         }
-        public static ExceptStatement Except(this HavingStatement stmt, IQueryBuilder subQueryBuilder)
+        public static ExceptStatement Except(this SelectHavingStatement stmt, IQueryBuilder subQueryBuilder)
+        {
+            return new ExceptStatement(stmt.QueryBuilder, subQueryBuilder);
+        }
+        public static ExceptStatement Except(this SelectHavingMultiStatement stmt, IQueryBuilder subQueryBuilder)
+        {
+            return new ExceptStatement(stmt.QueryBuilder, subQueryBuilder);
+        }
+        public static ExceptStatement Except(this SelectHavingGroupStatement stmt, IQueryBuilder subQueryBuilder)
+        {
+            return new ExceptStatement(stmt.QueryBuilder, subQueryBuilder);
+        }
+        public static ExceptStatement Except(this SelectHavingGroupMultiStatement stmt, IQueryBuilder subQueryBuilder)
         {
             return new ExceptStatement(stmt.QueryBuilder, subQueryBuilder);
         }

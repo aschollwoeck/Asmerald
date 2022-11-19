@@ -16,11 +16,19 @@ namespace TypeProofSql.SQLite
         {
             return new UpsertDoStatement(stmt.QueryBuilder);
         }
-        public static UpsertDoStatement Do(this SelectWhereStatement stmt)
+        public static UpsertDoStatement Do(this UpsertConflictWhereStatement stmt)
         {
             return new UpsertDoStatement(stmt.QueryBuilder);
         }
-        public static UpsertDoStatement Do(this SelectWhereGroupStatement stmt)
+        public static UpsertDoStatement Do(this UpsertConflictWhereMultiStatement stmt)
+        {
+            return new UpsertDoStatement(stmt.QueryBuilder);
+        }
+        public static UpsertDoStatement Do(this UpsertConflictWhereGroupStatement stmt)
+        {
+            return new UpsertDoStatement(stmt.QueryBuilder);
+        }
+        public static UpsertDoStatement Do(this UpsertConflictWhereGroupMultiStatement stmt)
         {
             return new UpsertDoStatement(stmt.QueryBuilder);
         }

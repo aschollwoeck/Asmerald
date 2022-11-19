@@ -79,19 +79,20 @@ On<T, J> = On<T, J>(ISelectColumn<T> left, ISelectColumn<J> right) : On(new T(),
 OnMulti<T, J> = OnMulti<T, J>((ISelectColumn<T> left, ISelectColumn<J> right)[] on) : OnMulti(new T(), new J(), on)
 
 WhereGroup = WhereGroup(ConditionalGroupStatement groupExpr)
+WhereGroupMulti = WhereGroupMulti(List<ConditionalGroupStatement> conditionalGroupStatements)
 Where = Where(ConditionalExpression conditionalExpression)
-WhereMulti = WhereMulti(List<ConditionalStatements> conditionalStatements)
+WhereMulti = WhereMulti(List<ConditionalStatement> conditionalStatements)
 
 SelectWhereGroup = SelectWhereGroup(ConditionalGroupStatement groupExpr) : WhereGroup(groupExpr)
+SelectWhereGroupMulti = SelectWhereGroupMulti(List<ConditionalGroupStatement> conditionalGroupStatements) : WhereGroupMulti(conditionalGroupStatements)
 SelectWhere = SelectWhere(ConditionalExpression conditionalExpression) : Where(conditionalExpression)
-SelectWhereMulti = SelectWhereMulti(List<ConditionalStatements> conditionalStatements) : WhereMulti(conditionalStatements)
+SelectWhereMulti = SelectWhereMulti(List<ConditionalStatement> conditionalStatements) : WhereMulti(conditionalStatements)
 
-And = And(ConditionalExpression conditionalExpression) : Conditional(conditionalExpression)
-AndGroup = AndGroup(ConditionalExpression conditionalExpression) : ConditionalGroup(conditionalExpression)
-Or = Or(ConditionalExpression conditionalExpression) : Conditional(conditionalExpression)
-OrGroup = OrGroup(ConditionalExpression conditionalExpression) : ConditionalGroup(conditionalExpression)
 
-Having = Having(ConditionalExpression conditionalExpression) : ConditionalGroup(conditionalExpression)
+SelectHavingGroup = SelectHavingGroup(ConditionalGroupStatement groupExpr)
+SelectHavingGroupMulti = SelectHavingGroupMulti(List<ConditionalGroupStatement> conditionalGroupStatements) : WhereGroupMulti(conditionalGroupStatements)
+SelectHaving = SelectHaving(ConditionalExpression conditionalExpression)
+SelectHavingMulti = SelectHavingMulti(List<ConditionalStatement> conditionalStatements)
 
 GroupBy = GroupBy(IColumn[] groupByColumns)
 OrderBy = OrderBy(IOrderByColumn[] orderByColumns)
@@ -153,7 +154,8 @@ UpdateFromSubQuery<T> = UpdateFromSubQuery<T>(IQueryBuilder subQueryBuilder) : F
 
 UpdateWhere = UpdateWhere(ConditionalExpression conditionalExpression) : Where(conditionalExpression)
 UpdateWhereGroup = UpdateWhereGroup(ConditionalGroupStatement groupExpr) : WhereGroup(groupExpr)
-UpdateWhereMulti = UpdateWhereMulti(List<ConditionalStatements> conditionalStatements) : WhereMulti(conditionalStatements)
+UpdateWhereMulti = UpdateWhereMulti(List<ConditionalStatement> conditionalStatements) : WhereMulti(conditionalStatements)
+UpdateWhereGroupMulti = UpdateWhereGroupMulti(List<ConditionalGroupStatement> conditionalGroupStatements) : WhereGroupMulti(conditionalGroupStatements)
 
 UpdateConditionalJoin<T, J> = UpdateConditionalJoin<T, J>() : ConditionalJoin<T, J>()
 
@@ -168,7 +170,12 @@ UpsertUpdate = UpsertUpdate
 UpsertSet = UpsertSet(ValueExpression[] valueExpressions) : Set(valueExpressions)
 UpsertWhere = UpsertWhere(ConditionalExpression conditionalExpression) : Where(conditionalExpression)
 UpsertWhereGroup = UpsertWhereGroup(ConditionalGroupStatement groupExpr) : WhereGroup(groupExpr)
-UpsertWhereMulti = UpsertWhereMulti(List<ConditionalStatements> conditionalStatements) : WhereMulti(conditionalStatements)
+UpsertWhereGroupMulti = UpsertWhereGroupMulti(List<ConditionalGroupStatement> conditionalGroupStatements) : WhereGroupMulti(conditionalGroupStatements)
+UpsertWhereMulti = UpsertWhereMulti(List<ConditionalStatement> conditionalStatements) : WhereMulti(conditionalStatements)
+UpsertConflictWhere = UpsertConflictWhere(ConditionalExpression conditionalExpression) : Where(conditionalExpression)
+UpsertConflictWhereGroup = UpsertConflictWhereGroup(ConditionalGroupStatement groupExpr) : WhereGroup(groupExpr)
+UpsertConflictWhereGroupMulti = UpsertConflictWhereGroupMulti(List<ConditionalGroupStatement> conditionalGroupStatements) : WhereGroupMulti(conditionalGroupStatements)
+UpsertConflictWhereMulti = UpsertConflictWhereMulti(List<ConditionalStatement> conditionalStatements) : WhereMulti(conditionalStatements)
 UpsertOn = UpsertOn
 
 Returning = Returning
@@ -181,7 +188,8 @@ DeleteFrom = DeleteFrom(ITable table) : From(table)
 DeleteFrom<T> = DeleteFrom<T>() : From<T>()
 DeleteWhere = DeleteWhere(ConditionalExpression conditionalExpression) : Where(conditionalExpression)
 DeleteWhereGroup = DeleteWhereGroup(ConditionalGroupStatement groupExpr) : WhereGroup(groupExpr)
-DeleteWhereMulti = DeleteWhereMulti(List<ConditionalStatements> conditionalStatements) : WhereMulti(conditionalStatements)
+DeleteWhereGroupMulti = DeleteWhereGroupMulti(List<ConditionalGroupStatement> conditionalGroupStatements) : WhereGroupMulti(conditionalGroupStatements)
+DeleteWhereMulti = DeleteWhereMulti(List<ConditionalStatement> conditionalStatements) : WhereMulti(conditionalStatements)
 
 Set = Set(ValueExpression[] valueExpressions)
 Value = Value(ValueExpression[] valueExpressions)

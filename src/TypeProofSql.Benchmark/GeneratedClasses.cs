@@ -121,6 +121,7 @@ public class Tbl_Cards : ITable
     public static Col_Id Id() => new Col_Id();
 
     public static Col_Name Name() => new Col_Name();
+    public static Col_Name Name(string tableAlias) => new Col_Name(tableAlias);
 
     public static Col_Number Number() => new Col_Number();
 
@@ -179,11 +180,17 @@ public class Tbl_Cards : ITable
     {
         private readonly string _name = "name";
 
-        string ISelectColumn.Name => _name;
+        string ISelectColumn.Name => String.IsNullOrEmpty(TableAlias) ? _name : $"{TableAlias}.{_name}";
+        string TableAlias;
 
         public Col_Name() { }
 
-        public override string Name() => _name;
+        public Col_Name(string tableAlias)
+        {
+            this.TableAlias = tableAlias;
+        }
+
+        public override string Name() => String.IsNullOrEmpty(TableAlias) ? _name : $"{TableAlias}.{_name}";
 
         public override ISelectColumnAlias<Tbl_Cards> As(string name) => new AliasColumn<Tbl_Cards>(this, name);
 

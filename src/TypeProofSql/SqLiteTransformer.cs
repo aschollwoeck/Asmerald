@@ -303,16 +303,27 @@ namespace TypeProofSql
 
                 }
 
-                foreach (var condStmt in whereStatement.conditionalStatements)
+                //foreach (var condStmt in whereStatement.conditionalStatements)
+                //{
+                //    var res = BuildStatement(builder, condStmt, paraCount);
+                //    paraCount = res.paraCount;
+                //    parameters.AddRange(res.parameters);
+                //}
+
+                //foreach (var condGroup in whereStatement.conditionalGroupStatements)
+                //{
+                //    var res = BuildStatementGroup(builder, condGroup, paraCount);
+                //    paraCount = res.paraCount;
+                //    parameters.AddRange(res.parameters);
+                //}
+            }
+            else if(statement is WhereMultiStatement whereMultiStatement)
+            {
+                builder.AppendLine();
+                builder.AppendLine("WHERE ");
+                foreach (var condStmt in whereMultiStatement.ConditionalStatements)
                 {
                     var res = BuildStatement(builder, condStmt, paraCount);
-                    paraCount = res.paraCount;
-                    parameters.AddRange(res.parameters);
-                }
-
-                foreach (var condGroup in whereStatement.conditionalGroupStatements)
-                {
-                    var res = BuildStatementGroup(builder, condGroup, paraCount);
                     paraCount = res.paraCount;
                     parameters.AddRange(res.parameters);
                 }
@@ -321,10 +332,21 @@ namespace TypeProofSql
             {
                 builder.AppendLine();
                 builder.Append("WHERE ");
-
                 var res = BuildStatementGroup(builder, whereGroupStatement.GroupExpr, paraCount);
                 paraCount = res.paraCount;
                 parameters.AddRange(res.parameters);
+            }
+            else if (statement is WhereGroupMultiStatement whereGroupMultiStatement)
+            {
+                builder.AppendLine();
+                builder.Append("WHERE ");
+
+                foreach (var condGroup in whereGroupMultiStatement.ConditionalGroupStatements)
+                {
+                    var res = BuildStatementGroup(builder, condGroup, paraCount);
+                    paraCount = res.paraCount;
+                    parameters.AddRange(res.parameters);
+                }
             }
             else if (statement is ConditionalGroupStatement conditionalGroupStatement)
             {
@@ -355,24 +377,32 @@ namespace TypeProofSql
                 builder.Append("GROUP BY ");
                 builder.AppendJoin(", ", groupByStatement.GroupByColumns.Select(col => col.Name()));
             }
-            else if(statement is HavingStatement havingStatement)
+            else if(statement is SelectHavingStatement selectHavingStatement)
             {
                 builder.AppendLine();
                 builder.Append("HAVING ");
 
-                foreach (var condStmt in havingStatement.conditionalStatements)
+                if (selectHavingStatement.ConditionalExpression != null)
                 {
-                    var res = BuildStatement(builder, condStmt, paraCount);
+                    var res = BuildExpression(builder, selectHavingStatement.ConditionalExpression, paraCount);
                     paraCount = res.paraCount;
                     parameters.AddRange(res.parameters);
+
                 }
 
-                foreach (var condGroup in havingStatement.conditionalGroupStatements)
-                {
-                    var res = BuildStatementGroup(builder, condGroup, paraCount);
-                    paraCount = res.paraCount;
-                    parameters.AddRange(res.parameters);
-                }
+                //foreach (var condStmt in selectHavingStatement.conditionalStatements)
+                //{
+                //    var res = BuildStatement(builder, condStmt, paraCount);
+                //    paraCount = res.paraCount;
+                //    parameters.AddRange(res.parameters);
+                //}
+
+                //foreach (var condGroup in selectHavingStatement.conditionalGroupStatements)
+                //{
+                //    var res = BuildStatementGroup(builder, condGroup, paraCount);
+                //    paraCount = res.paraCount;
+                //    parameters.AddRange(res.parameters);
+                //}
             }
             else if(statement is OrderByStatement orderByStatement) 
             {
@@ -529,7 +559,7 @@ namespace TypeProofSql
         private (int paraCount, Dictionary<string, object> parameters) BuildStatementGroup(StringBuilder builder, ConditionalGroupStatement condGroupStmt, int paraCount)
         {
             Dictionary<string, object> parameters = new Dictionary<string, object>();
-
+            
             switch (condGroupStmt)
             {
                 case AndGroupStatement stmt:

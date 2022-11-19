@@ -12,12 +12,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Include="Generators\classGeneration.txt">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </EmbeddedResource>
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="CommandDotNet" Version="7.0.1" />
     <PackageReference Include="ConsoleTables" Version="2.4.2" />
     <PackageReference Include="Dapper" Version="2.0.123" />

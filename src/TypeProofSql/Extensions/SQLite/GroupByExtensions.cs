@@ -34,11 +34,15 @@ namespace TypeProofSql.SQLite
         {
             return new GroupByStatement(stmt.QueryBuilder, groupByColumns);
         }
+        public static GroupByStatement GroupBy(this SelectWhereMultiStatement stmt, params IColumn[] groupByColumns)
+        {
+            return new GroupByStatement(stmt.QueryBuilder, groupByColumns);
+        }
         public static GroupByStatement GroupBy(this SelectWhereGroupStatement stmt, params IColumn[] groupByColumns)
         {
             return new GroupByStatement(stmt.QueryBuilder, groupByColumns);
         }
-        public static GroupByStatement GroupBy(this ConditionalGroupStatement stmt, params IColumn[] groupByColumns)
+        public static GroupByStatement GroupBy(this SelectWhereGroupMultiStatement stmt, params IColumn[] groupByColumns)
         {
             return new GroupByStatement(stmt.QueryBuilder, groupByColumns);
         }

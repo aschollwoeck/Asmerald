@@ -30,6 +30,21 @@ namespace TypeProofSql.Generate.Generators
             public int pk { get; set; }
         }
 
+        internal class TableGenerate
+        {
+            internal class ColumnGenerate
+            {
+                public string name_class { get; set; }
+                public string name { get; set; }
+                public string name_method { get; set; }
+                public string type { get; set; }
+            }
+
+            public string name_class { get; set; }
+            public string name { get; set; }
+            public IEnumerable<ColumnGenerate> columns { get; set; } = new List<ColumnGenerate>();
+        }
+
         private readonly string _connectionString;
 
         public SQLiteGenerator(string connectionString)
@@ -52,7 +67,7 @@ namespace TypeProofSql.Generate.Generators
 
                 var tables = await sqliteConnection.QueryAsync<DatabaseSchema>("select * from sqlite_master");
 
-                List<dynamic> templateTables = new List<dynamic>();
+                List<TableGenerate> templateTables = new List<TableGenerate>();
 
                 foreach (var t in tables)
                 {
@@ -60,26 +75,84 @@ namespace TypeProofSql.Generate.Generators
 
                     var columns = await sqliteConnection.QueryAsync<TableSchema>("pragma table_info(" + t.tbl_name + ")");
 
-                    var ctxtColumns = columns.Select(c => new { name_class = "Col_" + codeProvider.CreateValidIdentifier(c.name.FirstCharToUpper()), name = c.name, name_method = c.name.FirstCharToUpper(), type = GetColumnType(c.type).Name });
-                    var ctxtTable = new { name_class = GetPrefix(t) + codeProvider.CreateValidIdentifier(t.tbl_name.FirstCharToUpper()), name = t.tbl_name, columns = ctxtColumns };
+                    var ctxtColumns = columns.Select(c => new TableGenerate.ColumnGenerate { name_class = "Col_" + codeProvider.CreateValidIdentifier(c.name.FirstCharToUpper()), name = c.name, name_method = c.name.FirstCharToUpper(), type = GetColumnType(c.type).Name });
+                    var ctxtTable = new TableGenerate { name_class = GetPrefix(t) + codeProvider.CreateValidIdentifier(t.tbl_name.FirstCharToUpper()), name = t.tbl_name, columns = ctxtColumns };
 
                     templateTables.Add(ctxtTable);
                 }
 
                 sqliteConnection.Close();
 
-                var template = this.ReadResource("classGeneration.txt");
-                var templateParsed = Scriban.Template.ParseLiquid(template);
 
                 Dictionary<string, string> dicRes = new Dictionary<string, string>();
                 foreach (var tbl in templateTables)
                 {
-                    var generatedCode = await templateParsed.RenderAsync(new { nspace = nspace, tables = templateTables });
+                    var generatedCode = BuildCode(nspace, tbl);
                     dicRes.Add(tbl.name_class, generatedCode);
                 }
 
                 return dicRes;
             }
+        }
+
+        private string BuildCode(string nspace, TableGenerate table)
+        {
+            var sw = new StringWriter();
+            IndentedTextWriter w = new IndentedTextWriter(sw);
+
+            w.WriteLine("using TypeProofSql;");
+            w.WriteLine("using TypeProofSql.Columns;");
+            w.WriteLine();
+
+            if(String.IsNullOrEmpty(nspace) == false)
+            {
+                w.WriteLine($"namespace {nspace}");
+                w.WriteLine("{");
+                w.Indent++;
+            }
+
+            w.Write($"public class {table.name_class} : ITable");
+            w.WriteLine("{");
+            w.Indent++;
+
+            w.WriteLine($"string ITable.Name() => \"{table.name}\";");
+
+            foreach (var column in table.columns)
+            {
+                w.WriteLine($"public static {column.name_class} {column.name_method}() => new {column.name_class}();");
+                w.WriteLine($"public static {column.name_class} {column.name_method}(string tableAlias) => new {column.name_class}(tableAlias);");
+            }
+
+            foreach (var column in table.columns)
+            {
+                w.WriteLine($"public class {column.name_class} : {column.type}<{table.name_class}>, ISelectColumn<{table.name_class}>, ISelectColumnAlias<{table.name_class}>");
+                w.WriteLine("{");
+                w.Indent++;
+
+                w.WriteLine($"private readonly string _name = \"{column.name}\";");
+                w.WriteLine($"string ISelectColumn.Name => String.IsNullOrEmpty(TableAlias) ? _name : $\"{{TableAlias}}.{{_name}}\";");
+                w.WriteLine($"readonly string? TableAlias;");
+                w.WriteLine($"public {column.name_class}() {{ }}");
+                w.WriteLine($"public {column.name_class}(string tableAlias) {{ this.TableAlias = tableAlias; }}");
+                w.WriteLine($"public override string Name() => String.IsNullOrEmpty(TableAlias) ? _name : $\"{{TableAlias}}.{{_name}}\";");
+                w.WriteLine($"public override ISelectColumnAlias<{table.name_class}> As(string name) => new AliasColumn<{table.name_class}>(this, name);");
+                w.WriteLine($"public override ISelectColumn<{table.name_class}> Count() => new CountColumn<{table.name_class}>(this);");
+
+                w.Indent--;
+                w.WriteLine("}");
+            }
+
+            w.Indent--;
+            w.WriteLine("}");
+
+            if (String.IsNullOrEmpty(nspace) == false)
+            {
+                w.Indent--;
+                w.WriteLine("}");
+            }
+
+            w.Flush();
+            return sw.ToString();
         }
 
         private string GetPrefix(DatabaseSchema schema)
@@ -102,25 +175,6 @@ namespace TypeProofSql.Generate.Generators
             if (columnDataType.ContainsOneOf(new[] { "REAL", "FLOA", "DOUB" })) return typeof(TypeProofSql.Columns.DecimalColumn);
 
             return typeof(TypeProofSql.Columns.DecimalColumn);
-        }
-
-        public string ReadResource(string name)
-        {
-            // Determine path
-            var assembly = Assembly.GetExecutingAssembly();
-            string resourcePath = name;
-            // Format: "{Namespace}.{Folder}.{filename}.{Extension}"
-            if (!name.StartsWith(nameof(TypeProofSql)))
-            {
-                resourcePath = assembly.GetManifestResourceNames()
-                    .Single(str => str.EndsWith(name));
-            }
-
-            using (Stream stream = assembly.GetManifestResourceStream(resourcePath))
-            using (StreamReader reader = new StreamReader(stream))
-            {
-                return reader.ReadToEnd();
-            }
         }
     }
 }

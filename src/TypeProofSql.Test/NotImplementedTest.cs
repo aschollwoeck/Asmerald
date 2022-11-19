@@ -228,10 +228,24 @@ namespace TypeProofSql.Test
             AssertEx.DoesNotThrow<NotImplementedException>(() => qb.Build());
         }
         [TestMethod]
+        public void WhereGroupMultiStatementImplementTest()
+        {
+            var qb = new SQLiteDSLContext().QueryBuilder;
+            qb.AddStatment(new WhereGroupMultiStatement());
+            AssertEx.DoesNotThrow<NotImplementedException>(() => qb.Build());
+        }
+        [TestMethod]
         public void WhereStatementImplementTest()
         {
             var qb = new SQLiteDSLContext().QueryBuilder;
             qb.AddStatment(new WhereStatement());
+            AssertEx.DoesNotThrow<NotImplementedException>(() => qb.Build());
+        }
+        [TestMethod]
+        public void WhereMultiStatementImplementTest()
+        {
+            var qb = new SQLiteDSLContext().QueryBuilder;
+            qb.AddStatment(new WhereMultiStatement());
             AssertEx.DoesNotThrow<NotImplementedException>(() => qb.Build());
         }
         [TestMethod]
@@ -242,6 +256,13 @@ namespace TypeProofSql.Test
             AssertEx.DoesNotThrow<NotImplementedException>(() => qb.Build());
         }
         [TestMethod]
+        public void SelectWhereGroupMultiStatementImplementTest()
+        {
+            var qb = new SQLiteDSLContext().QueryBuilder;
+            qb.AddStatment(new SelectWhereGroupMultiStatement());
+            AssertEx.DoesNotThrow<NotImplementedException>(() => qb.Build());
+        }
+        [TestMethod]
         public void SelectWhereStatementImplementTest()
         {
             var qb = new SQLiteDSLContext().QueryBuilder;
@@ -249,38 +270,38 @@ namespace TypeProofSql.Test
             AssertEx.DoesNotThrow<NotImplementedException>(() => qb.Build());
         }
         [TestMethod]
-        public void AndStatementImplementTest()
+        public void SelectWhereMultiStatementImplementTest()
         {
             var qb = new SQLiteDSLContext().QueryBuilder;
-            qb.AddStatment(new AndStatement());
+            qb.AddStatment(new SelectWhereMultiStatement());
             AssertEx.DoesNotThrow<NotImplementedException>(() => qb.Build());
         }
         [TestMethod]
-        public void AndGroupStatementImplementTest()
+        public void SelectHavingGroupStatementImplementTest()
         {
             var qb = new SQLiteDSLContext().QueryBuilder;
-            qb.AddStatment(new AndGroupStatement());
+            qb.AddStatment(new SelectHavingGroupStatement());
             AssertEx.DoesNotThrow<NotImplementedException>(() => qb.Build());
         }
         [TestMethod]
-        public void OrStatementImplementTest()
+        public void SelectHavingGroupMultiStatementImplementTest()
         {
             var qb = new SQLiteDSLContext().QueryBuilder;
-            qb.AddStatment(new OrStatement());
+            qb.AddStatment(new SelectHavingGroupMultiStatement());
             AssertEx.DoesNotThrow<NotImplementedException>(() => qb.Build());
         }
         [TestMethod]
-        public void OrGroupStatementImplementTest()
+        public void SelectHavingStatementImplementTest()
         {
             var qb = new SQLiteDSLContext().QueryBuilder;
-            qb.AddStatment(new OrGroupStatement());
+            qb.AddStatment(new SelectHavingStatement());
             AssertEx.DoesNotThrow<NotImplementedException>(() => qb.Build());
         }
         [TestMethod]
-        public void HavingStatementImplementTest()
+        public void SelectHavingMultiStatementImplementTest()
         {
             var qb = new SQLiteDSLContext().QueryBuilder;
-            qb.AddStatment(new HavingStatement());
+            qb.AddStatment(new SelectHavingMultiStatement());
             AssertEx.DoesNotThrow<NotImplementedException>(() => qb.Build());
         }
         [TestMethod]
@@ -550,6 +571,20 @@ namespace TypeProofSql.Test
             AssertEx.DoesNotThrow<NotImplementedException>(() => qb.Build());
         }
         [TestMethod]
+        public void UpdateWhereMultiStatementImplementTest()
+        {
+            var qb = new SQLiteDSLContext().QueryBuilder;
+            qb.AddStatment(new UpdateWhereMultiStatement());
+            AssertEx.DoesNotThrow<NotImplementedException>(() => qb.Build());
+        }
+        [TestMethod]
+        public void UpdateWhereGroupMultiStatementImplementTest()
+        {
+            var qb = new SQLiteDSLContext().QueryBuilder;
+            qb.AddStatment(new UpdateWhereGroupMultiStatement());
+            AssertEx.DoesNotThrow<NotImplementedException>(() => qb.Build());
+        }
+        [TestMethod]
         public void ConflictStatementImplementTest()
         {
             var qb = new SQLiteDSLContext().QueryBuilder;
@@ -620,6 +655,48 @@ namespace TypeProofSql.Test
             AssertEx.DoesNotThrow<NotImplementedException>(() => qb.Build());
         }
         [TestMethod]
+        public void UpsertWhereGroupMultiStatementImplementTest()
+        {
+            var qb = new SQLiteDSLContext().QueryBuilder;
+            qb.AddStatment(new UpsertWhereGroupMultiStatement());
+            AssertEx.DoesNotThrow<NotImplementedException>(() => qb.Build());
+        }
+        [TestMethod]
+        public void UpsertWhereMultiStatementImplementTest()
+        {
+            var qb = new SQLiteDSLContext().QueryBuilder;
+            qb.AddStatment(new UpsertWhereMultiStatement());
+            AssertEx.DoesNotThrow<NotImplementedException>(() => qb.Build());
+        }
+        [TestMethod]
+        public void UpsertConflictWhereStatementImplementTest()
+        {
+            var qb = new SQLiteDSLContext().QueryBuilder;
+            qb.AddStatment(new UpsertConflictWhereStatement());
+            AssertEx.DoesNotThrow<NotImplementedException>(() => qb.Build());
+        }
+        [TestMethod]
+        public void UpsertConflictWhereGroupStatementImplementTest()
+        {
+            var qb = new SQLiteDSLContext().QueryBuilder;
+            qb.AddStatment(new UpsertConflictWhereGroupStatement());
+            AssertEx.DoesNotThrow<NotImplementedException>(() => qb.Build());
+        }
+        [TestMethod]
+        public void UpsertConflictWhereGroupMultiStatementImplementTest()
+        {
+            var qb = new SQLiteDSLContext().QueryBuilder;
+            qb.AddStatment(new UpsertConflictWhereGroupMultiStatement());
+            AssertEx.DoesNotThrow<NotImplementedException>(() => qb.Build());
+        }
+        [TestMethod]
+        public void UpsertConflictWhereMultiStatementImplementTest()
+        {
+            var qb = new SQLiteDSLContext().QueryBuilder;
+            qb.AddStatment(new UpsertConflictWhereMultiStatement());
+            AssertEx.DoesNotThrow<NotImplementedException>(() => qb.Build());
+        }
+        [TestMethod]
         public void ReturningStatementImplementTest()
         {
             var qb = new SQLiteDSLContext().QueryBuilder;
@@ -666,6 +743,20 @@ namespace TypeProofSql.Test
         {
             var qb = new SQLiteDSLContext().QueryBuilder;
             qb.AddStatment(new DeleteWhereGroupStatement());
+            AssertEx.DoesNotThrow<NotImplementedException>(() => qb.Build());
+        }
+        [TestMethod]
+        public void DeleteWhereGroupMultiStatementImplementTest()
+        {
+            var qb = new SQLiteDSLContext().QueryBuilder;
+            qb.AddStatment(new DeleteWhereGroupMultiStatement());
+            AssertEx.DoesNotThrow<NotImplementedException>(() => qb.Build());
+        }
+        [TestMethod]
+        public void DeleteWhereMultiStatementImplementTest()
+        {
+            var qb = new SQLiteDSLContext().QueryBuilder;
+            qb.AddStatment(new DeleteWhereMultiStatement());
             AssertEx.DoesNotThrow<NotImplementedException>(() => qb.Build());
         }
         [TestMethod]

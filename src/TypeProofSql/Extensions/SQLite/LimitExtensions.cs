@@ -39,11 +39,15 @@ namespace TypeProofSql.SQLite
         {
             return new LimitStatement(stmt.QueryBuilder, limit);
         }
+        public static LimitStatement Limit(this SelectWhereMultiStatement stmt, int limit)
+        {
+            return new LimitStatement(stmt.QueryBuilder, limit);
+        }
         public static LimitStatement Limit(this SelectWhereGroupStatement stmt, int limit)
         {
             return new LimitStatement(stmt.QueryBuilder, limit);
         }
-        public static LimitStatement Limit(this ConditionalGroupStatement stmt, int limit)
+        public static LimitStatement Limit(this SelectWhereGroupMultiStatement stmt, int limit)
         {
             return new LimitStatement(stmt.QueryBuilder, limit);
         }
@@ -51,7 +55,19 @@ namespace TypeProofSql.SQLite
         {
             return new LimitStatement(stmt.QueryBuilder, limit);
         }
-        public static LimitStatement Limit(this HavingStatement stmt, int limit)
+        public static LimitStatement Limit(this SelectHavingStatement stmt, int limit)
+        {
+            return new LimitStatement(stmt.QueryBuilder, limit);
+        }
+        public static LimitStatement Limit(this SelectHavingMultiStatement stmt, int limit)
+        {
+            return new LimitStatement(stmt.QueryBuilder, limit);
+        }
+        public static LimitStatement Limit(this SelectHavingGroupStatement stmt, int limit)
+        {
+            return new LimitStatement(stmt.QueryBuilder, limit);
+        }
+        public static LimitStatement Limit(this SelectHavingGroupMultiStatement stmt, int limit)
         {
             return new LimitStatement(stmt.QueryBuilder, limit);
         }

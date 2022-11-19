@@ -9,21 +9,17 @@ using TypeProofSql.Generate.Generators;
 using CommandDotNet;
 using TypeProofSql.Columns;
 using TypeProofSql.Statements.SQLite;
+using test.testna;
 
 public class Program
 {
     public static int Main(string[] args)
     {
+        var appSett = new AppSettings()
+        {
 
-
-
-
-
-        //var appSett = new AppSettings()
-        //{
-
-        //};
-        //return new AppRunner<Program>(appSett).Run(args);
+        };
+        return new AppRunner<Program>(appSett).Run(args);
 
         Console.WriteLine("Hello, World!");
 
@@ -40,12 +36,11 @@ public class Program
         var sql2 = dslCtxt
             .Select()
             .All()
-            .From<Tbl_Cards>()
+            .From<TblCards>()
             .Where(
-                dslCtxt.Group(
-                    Tbl_Cards.Id().Greater(1)
-                    .And(Tbl_Cards.Id().Greater(10)))
-                .And(Tbl_Cards.Name().Equal("hi")))
+                    TblCards.Id("c").Greater(1)
+                    .And(TblCards.Id("c").Greater(10)).Group()
+                .And(TblCards.Name("c").Equal("hi")))
             .QueryBuilder
             .Build();
         Console.WriteLine(sql2);
@@ -54,22 +49,22 @@ public class Program
             .Select()
             .Distinct()
             .All()
-            .From<Tbl_Cards>()
+            .From<TblCards>()
             .QueryBuilder
             .BuildPreparedStatement();
 
         var et = dslCtxt
-            .Update<Tbl_Cards>()
-            .Set<Tbl_Cards>(new[] { Tbl_Cards.Name().Value("hi") })
-            .Where(Tbl_Cards.Name().Equal("test"))
+            .Update<TblCards>()
+            .Set<TblCards>(new[] { TblCards.Name().Value("hi") })
+            .Where(TblCards.Name().Equal("test"))
             .QueryBuilder
             .BuildPreparedStatement();
 
         var ts = dslCtxt
-            .Select(Tbl_Cards.Id(), Tbl_Cards.Name(), Tbl_Cards.Form().As("test"))
-            .From<Tbl_Cards>()
-            .Where(Tbl_Cards.Id().Greater(10))
-            .OrderBy(Tbl_Cards.Id())
+            .Select(TblCards.Id(), TblCards.Name(), TblCards.Form().As("test"))
+            .From<TblCards>()
+            .Where(TblCards.Id().Greater(10))
+            .OrderBy(TblCards.Id())
             .Limit(50)
             .QueryBuilder
             .BuildPreparedStatement();
@@ -82,12 +77,12 @@ public class Program
             .Materialized(dslCtxt
                 .SubQuery()
                 .Select()
-                .Distinct(Tbl_Cards.Id())
-                .From<Tbl_Cards>()
+                .Distinct(TblCards.Id())
+                .From<TblCards>()
                 .UnionAll(dslCtxt
                     .SubQuery()
-                    .Select(Tbl_Cards.Id())
-                    .From<Tbl_Cards>()
+                    .Select(TblCards.Id())
+                    .From<TblCards>()
                     .QueryBuilder)
                 .QueryBuilder)
             .QueryBuilder
@@ -101,12 +96,12 @@ public class Program
             .Materialized(dslCtxt
                 .SubQuery()
                 .Select()
-                .Distinct(Tbl_Cards.Id())
-                .From<Tbl_Cards>()
+                .Distinct(TblCards.Id())
+                .From<TblCards>()
                 .UnionAll(dslCtxt
                     .SubQuery()
-                    .Select(Tbl_Cards.Id())
-                    .From<Tbl_Cards>()
+                    .Select(TblCards.Id())
+                    .From<TblCards>()
                     .QueryBuilder)
                 .QueryBuilder)
             .QueryBuilder
@@ -117,9 +112,9 @@ public class Program
         {
             sub = dslCtxt
                 .With<Tbl_With>(Tbl_With.Id(), Tbl_With.Name())
-                .AsSelect(dslCtxt.SubQuery().Select(Tbl_Cards.Id()).From<Tbl_Cards>().QueryBuilder)
+                .AsSelect(dslCtxt.SubQuery().Select(TblCards.Id()).From<TblCards>().QueryBuilder)
                 .With<Tbl_With>(Tbl_With.Id(), Tbl_With.Name())
-                .AsSelect(dslCtxt.SubQuery().Select(Tbl_Cards.Id()).From<Tbl_Cards>().QueryBuilder)
+                .AsSelect(dslCtxt.SubQuery().Select(TblCards.Id()).From<TblCards>().QueryBuilder)
                 .Select(Tbl_With.Id())
                 .From<Tbl_With>()
                 .QueryBuilder
@@ -168,63 +163,53 @@ public class Program
             .Build();
         Console.WriteLine(sql);
 
+        var g1 = dslCtxt.Select().All().From<TblCards>().Where(
+        TblCards.Attribute().Equal("s").Group()).QueryBuilder.Build();
 
-        //sql = dslCtxt
-        //    .Select()
-        //    .All()
-        //    .From<Table1>()
-        //    .Where(new WhereStatement()
-        //        {
-        //            conditionalGroupStatements = new List<ConditionalGroupStatement>()
-        //            {
-        //               new ConditionalGroupStatement(new Table1.Column2().Greater(2)).And(new Table1.Column2().LesserOrEqual(10)),
-        //               new OrGroupStatement(dslCtxt.QueryBuilder, new Table1.Column2().Greater(2)).Or(new Table1.Column2().LesserOrEqual(10)),
-        //               new AndGroupStatement(dslCtxt.QueryBuilder, new Table1.Column2().Greater(2)).Or(new Table1.Column2().LesserOrEqual(10)),
-        //            }
-        //        })
-        //    .QueryBuilder
-        //    .Build();
-        //Console.WriteLine(sql);
+        var g2 = dslCtxt.Select().All().From<TblCards>().Where(
+        TblCards.Attribute().Equal("s").And(TblCards.Attribute().Equal("b"))).QueryBuilder.Build();
 
-        // WHERE
-        //  (1 = 1 AND 0 = 0)
-        // AND
-        //  (a = a OR b = b)
-        // AND
-        //  1 = b
-        // OR
+        var g3 = dslCtxt.Select().All().From<TblCards>().Where(
+        TblCards.Attribute().Equal("s").Or(TblCards.Attribute().Equal("b"))).QueryBuilder.Build();
 
-        // .Where(
-        //          Group(
-        //                  Col1().Eq(1).And(col0().Eq(0)))
-        //          .And(Group(Cola().Eq(a).Or(Colb().Eq(b)))
-        //          .And(Col1().Eq(b))
-        //          .Or(
+        var g4 = dslCtxt.Select().All().From<TblCards>().Where(
+        TblCards.Attribute().Equal("s").And(TblCards.Attribute().Equal("b")).And(TblCards.Attribute().Equal("c"))).QueryBuilder.Build();
 
-        Tbl_Cards.Attribute().Equal("s").Group();
-        Tbl_Cards.Attribute().Equal("s").And(Tbl_Cards.Attribute().Equal("b"));
-        Tbl_Cards.Attribute().Equal("s").Or(Tbl_Cards.Attribute().Equal("b"));
-        Tbl_Cards.Attribute().Equal("s").And(Tbl_Cards.Attribute().Equal("b")).And(Tbl_Cards.Attribute().Equal("c"));
-        Tbl_Cards.Attribute().Equal("s").And(Tbl_Cards.Attribute().Equal("b")).Or(Tbl_Cards.Attribute().Equal("c"));
-        Tbl_Cards.Attribute().Equal("s").Or(Tbl_Cards.Attribute().Equal("b")).And(Tbl_Cards.Attribute().Equal("c"));
-        Tbl_Cards.Attribute().Equal("s").Or(Tbl_Cards.Attribute().Equal("b")).Or(Tbl_Cards.Attribute().Equal("c"));
+        var g0 = dslCtxt.Select().All().From<TblCards>().Where(
+        TblCards.Attribute().Equal("s").And(TblCards.Attribute().Equal("b")).Or(TblCards.Attribute().Equal("c"))).QueryBuilder.Build();
 
-        Tbl_Cards.Attribute().Equal("s").And(Tbl_Cards.Attribute().Equal("b")).Group()
-            .Or(Tbl_Cards.Attribute().Equal("s"));
-        Tbl_Cards.Attribute().Equal("s").And(Tbl_Cards.Attribute().Equal("b")).Group()
-            .Or(Tbl_Cards.Attribute().Equal("s").Or(Tbl_Cards.Attribute().Equal("c")));
-        Tbl_Cards.Attribute().Equal("s").And(Tbl_Cards.Attribute().Equal("b")).Group()
-            .Or(Tbl_Cards.Attribute().Equal("s").Or(Tbl_Cards.Attribute().Equal("c")).Group()
-                .And(Tbl_Cards.Attribute().Equal("s")));
-        Tbl_Cards.Attribute().Equal("s").And(Tbl_Cards.Attribute().Equal("b")).Group()
-            .Or(Tbl_Cards.Attribute().Equal("s").Or(Tbl_Cards.Attribute().Equal("c")).Group()
-                .And(Tbl_Cards.Attribute().Equal("s").Or(Tbl_Cards.Attribute().Equal("s"))));
-        Tbl_Cards.Attribute().Equal("s").And(Tbl_Cards.Attribute().Equal("b")).Group()
-            .Or(Tbl_Cards.Attribute().Equal("s").Or(Tbl_Cards.Attribute().Equal("c")).Group()
-                .And(Tbl_Cards.Attribute().Equal("s").Or(Tbl_Cards.Attribute().Equal("s")).Group()));
+        var g5 = dslCtxt.Select().All().From<TblCards>().Where(
+        TblCards.Attribute().Equal("s").Or(TblCards.Attribute().Equal("b")).And(TblCards.Attribute().Equal("c"))).QueryBuilder.Build();
 
-        var g = dslCtxt.Group(Tbl_Cards.Attribute().Equal("s").And(Tbl_Cards.Form().Equal("c")))
-            .And(Tbl_Cards.Id().Equal(1).And(Tbl_Cards.Id().Equal(2)));
+        var g6 = dslCtxt.Select().All().From<TblCards>().Where(
+        TblCards.Attribute().Equal("s").Or(TblCards.Attribute().Equal("b")).Or(TblCards.Attribute().Equal("c"))).QueryBuilder.Build();
+
+        var g7 = dslCtxt.Select().All().From<TblCards>().Where(
+        TblCards.Attribute().Equal("s").And(TblCards.Attribute().Equal("b")).Group()
+            .Or(TblCards.Attribute().Equal("s"))).QueryBuilder.Build();
+
+        var g8 = dslCtxt.Select().All().From<TblCards>().Where(
+        TblCards.Attribute().Equal("s").And(TblCards.Attribute().Equal("b")).Group()
+            .Or(TblCards.Attribute().Equal("s").Or(TblCards.Attribute().Equal("c")))).QueryBuilder.Build();
+
+        var g9 = dslCtxt.Select().All().From<TblCards>().Where(
+        TblCards.Attribute().Equal("s").And(TblCards.Attribute().Equal("b")).Group()
+            .Or(TblCards.Attribute().Equal("s").Or(TblCards.Attribute().Equal("c")).Group()
+                .And(TblCards.Attribute().Equal("s")))).QueryBuilder.Build();
+
+        var g10 = dslCtxt.Select().All().From<TblCards>().Where(
+        TblCards.Attribute().Equal("s").And(TblCards.Attribute().Equal("b")).Group()
+            .Or(TblCards.Attribute().Equal("s").Or(TblCards.Attribute().Equal("c")).Group()
+                .And(TblCards.Attribute().Equal("s").Or(TblCards.Attribute().Equal("s"))))).QueryBuilder.Build();
+
+        var g11 = dslCtxt.Select().All().From<TblCards>().Where(
+        TblCards.Attribute().Equal("s").And(TblCards.Attribute().Equal("b")).Group()
+            .Or(TblCards.Attribute().Equal("s").Or(TblCards.Attribute().Equal("c")).Group()
+                .And(TblCards.Attribute().Equal("s").Or(TblCards.Attribute().Equal("s")).Group()))).QueryBuilder.Build();
+
+        var g = dslCtxt.Select().All().From<TblCards>().Where(
+            TblCards.Attribute().Equal("s").And(TblCards.Form().Equal("c")).Group()
+            .And(TblCards.Id().Equal(1).And(TblCards.Id().Equal(2)))).QueryBuilder.Build();
 
 
         sql = dslCtxt

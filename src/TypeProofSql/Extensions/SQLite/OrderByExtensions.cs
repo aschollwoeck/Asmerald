@@ -39,11 +39,15 @@ namespace TypeProofSql.SQLite
         {
             return new OrderByStatement(stmt.QueryBuilder, orderByColumns);
         }
+        public static OrderByStatement OrderBy(this SelectWhereMultiStatement stmt, params IOrderByColumn[] orderByColumns)
+        {
+            return new OrderByStatement(stmt.QueryBuilder, orderByColumns);
+        }
         public static OrderByStatement OrderBy(this SelectWhereGroupStatement stmt, params IOrderByColumn[] orderByColumns)
         {
             return new OrderByStatement(stmt.QueryBuilder, orderByColumns);
         }
-        public static OrderByStatement OrderBy(this ConditionalGroupStatement stmt, params IOrderByColumn[] orderByColumns)
+        public static OrderByStatement OrderBy(this SelectWhereGroupMultiStatement stmt, params IOrderByColumn[] orderByColumns)
         {
             return new OrderByStatement(stmt.QueryBuilder, orderByColumns);
         }
@@ -51,7 +55,19 @@ namespace TypeProofSql.SQLite
         {
             return new OrderByStatement(stmt.QueryBuilder, orderByColumns);
         }
-        public static OrderByStatement OrderBy(this HavingStatement stmt, params IOrderByColumn[] orderByColumns)
+        public static OrderByStatement OrderBy(this SelectHavingStatement stmt, params IOrderByColumn[] orderByColumns)
+        {
+            return new OrderByStatement(stmt.QueryBuilder, orderByColumns);
+        }
+        public static OrderByStatement OrderBy(this SelectHavingMultiStatement stmt, params IOrderByColumn[] orderByColumns)
+        {
+            return new OrderByStatement(stmt.QueryBuilder, orderByColumns);
+        }
+        public static OrderByStatement OrderBy(this SelectHavingGroupStatement stmt, params IOrderByColumn[] orderByColumns)
+        {
+            return new OrderByStatement(stmt.QueryBuilder, orderByColumns);
+        }
+        public static OrderByStatement OrderBy(this SelectHavingGroupMultiStatement stmt, params IOrderByColumn[] orderByColumns)
         {
             return new OrderByStatement(stmt.QueryBuilder, orderByColumns);
         }

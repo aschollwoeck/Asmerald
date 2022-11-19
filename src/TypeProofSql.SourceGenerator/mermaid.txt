@@ -59,12 +59,12 @@ subgraph SGSelect
         SelectWhere --> SGWhereStart
         SelectWhereMulti --> SGWhereStart
         SelectWhereGroup --> SGWhereStart
-
+        SelectWhereGroupMulti --> SGWhereStart
 
         SelectWhere --> SGWhereEnd
         SelectWhereMulti --> SGWhereEnd
         SelectWhereGroup --> SGWhereEnd
-        ConditionalGroupStatement --> SGWhereEnd
+        SelectWhereGroupMulti --> SGWhereEnd
     end
 
     SelectFrom[SelectFrom<T>] -->|Where| SGWhereStart
@@ -73,14 +73,27 @@ subgraph SGSelect
 
     SGJoinEnd -->|GroupBy| GroupBy
     SGWhereEnd -->|GroupBy| GroupBy
-    GroupBy -->|Having| Having
-    SGWhereEnd -->|Having| Having
+
+    subgraph SGHaving
+        SelectHaving --> SGHavingStart
+        SelectHavingMulti --> SGHavingStart
+        SelectHavingGroup --> SGHavingStart
+        SelectHavingGroupMulti --> SGHavingStart
+
+        SelectHaving --> SGHavingEnd
+        SelectHavingMulti --> SGHavingEnd
+        SelectHavingGroup --> SGHavingEnd
+        SelectHavingGroupMulti --> SGHavingEnd
+    end
+
+    GroupBy -->|Having| SGHavingStart
+    SGWhereEnd -->|Having| SGHavingStart
 
     SelectFrom[SelectFrom<T>] --> SGSelectEnd
     SGJoinEnd --> SGSelectEnd
     SGWhereEnd --> SGSelectEnd
     GroupBy --> SGSelectEnd
-    Having --> SGSelectEnd
+    SGHavingEnd --> SGSelectEnd
 end
 
 SGSelectEnd -->|Union| Union
@@ -194,11 +207,13 @@ subgraph SGUpdate
         UpdateWhere --> SGUpdateWhereStart
         UpdateWhereMulti --> SGUpdateWhereStart
         UpdateWhereGroup --> SGUpdateWhereStart
+        UpdateWhereGroupMulti --> SGUpdateWhereStart
 
 
         UpdateWhere --> SGUpdateWhereEnd
         UpdateWhereMulti --> SGUpdateWhereEnd
         UpdateWhereGroup --> SGUpdateWhereEnd
+        UpdateWhereGroupMulti --> SGUpdateWhereEnd
     end
 
     
@@ -222,13 +237,15 @@ subgraph SGUpsert
 
     subgraph SGUpsertConflictWhere
         UpsertConflictWhere --> SGUpsertConflictWhereStart
-        UpsertConflictWhereMulti --> SGUpdateWhereStart
+        UpsertConflictWhereMulti --> SGUpsertConflictWhereStart
         UpsertConflictWhereGroup --> SGUpsertConflictWhereStart
+        UpsertConflictWhereGroupMulti --> SGUpsertConflictWhereStart
 
 
         UpsertConflictWhere --> SGUpsertConflictWhereEnd
         UpsertConflictWhereMulti --> SGUpsertConflictWhereEnd
         UpsertConflictWhereGroup --> SGUpsertConflictWhereEnd
+        UpsertConflictWhereGroupMulti --> SGUpsertConflictWhereEnd
     end
 
     UpsertConflictSelect --> |Where| SGUpsertConflictWhereStart
@@ -238,13 +255,26 @@ subgraph SGUpsert
     UpsertDo -->|Nothing| UpsertNothing
     UpsertDo -->|Update| UpsertUpdate
     UpsertUpdate -->|Set| UpsertSet
-    UpsertSet -->|Where| UpsertWhere
+
+    subgraph SGUpsertWhere
+        UpsertWhere --> SGUpsertWhereStart
+        UpsertWhereMulti --> SGUpsertWhereStart
+        UpsertWhereGroup --> SGUpsertWhereStart
+        UpsertWhereGroupMulti --> SGUpsertWhereStart
+
+        UpsertWhere --> SGUpsertWhereEnd
+        UpsertWhereMulti --> SGUpsertWhereEnd
+        UpsertWhereGroup --> SGUpsertWhereEnd
+        UpsertWhereGroupMulti --> SGUpsertWhereEnd
+    end
+
+    UpsertSet -->|Where| SGUpsertWhereStart
     UpsertNothing -->|On|UpsertOn
     UpsertSet -->|On|UpsertOn
 
     UpsertNothing --> SGUpsertEnd
     UpsertSet --> SGUpsertEnd
-    SGUpsertConflictWhereEnd --> SGUpsertEnd
+    SGUpsertWhereEnd --> SGUpsertEnd
 end
 
 
@@ -260,12 +290,22 @@ Root -->|Delete| Delete
 
 subgraph SGDelete
     Delete -->|From| DeleteFrom[DeleteFrom<T>]
-    DeleteFrom[DeleteFrom<T>] -->|Where| DeleteWhere
-    DeleteFrom[DeleteFrom<T>] -->|Where| DeleteWhereMulti
 
+    subgraph SGDeleteWhere
+        DeleteWhere --> SGDeleteWhereStart
+        DeleteWhereMulti --> SGDeleteWhereStart
+        DeleteWhereGroup --> SGDeleteWhereStart
+        DeleteWhereGroupMulti --> SGDeleteWhereStart
+        
+        DeleteWhere --> SGDeleteWhereEnd
+        DeleteWhereMulti --> SGDeleteWhereEnd
+        DeleteWhereGroup --> SGDeleteWhereEnd
+        DeleteWhereGroupMulti --> SGDeleteWhereEnd
+    end
+    
+    DeleteFrom[DeleteFrom<T>] -->|Where| SGDeleteWhereStart
     DeleteFrom[DeleteFrom<T>] --> SGDeleteEnd
-    DeleteWhere --> SGDeleteEnd
-    DeleteWhereMulti --> SGDeleteEnd
+    SGDeleteWhereEnd --> SGDeleteEnd
 end
 
 DeleteWhere -->|Returning| Returning
