@@ -36,10 +36,6 @@ public class Program
 
         TypeProofSql.SQLiteDSLContext dslCtxt = new SQLiteDSLContext();
 
-        var sdfsdf = dslCtxt.Group(
-            dslCtxt.Stmt(Tbl_Cards.Id().Greater(1))
-            .And(Tbl_Cards.Name().Equal("hi"))
-            );
 
         var sql2 = dslCtxt
             .Select()
@@ -47,7 +43,7 @@ public class Program
             .From<Tbl_Cards>()
             .Where(
                 dslCtxt.Group(
-                    dslCtxt.Stmt(Tbl_Cards.Id().Greater(1))
+                    Tbl_Cards.Id().Greater(1)
                     .And(Tbl_Cards.Id().Greater(10)))
                 .And(Tbl_Cards.Name().Equal("hi")))
             .QueryBuilder
@@ -140,13 +136,13 @@ public class Program
         var sql = dslCtxt
             .Select(new Table1.Column1().As("hello"), new Table1.Column1(), new Table1.Column2().As("int"))
             .From<Table1>()
-            .Where(new Table1.Column1().Equal("hello"))
+            .Where(new Table1.Column1().Equal("hello")
             .And(new Table1.Column1().Equal("hello2"))
             .And(new Table1.Column1().In(new[] { "1", "2" }))
             .And(new Table1.Column2().Greater(2))
             .And(new Table1.Column2().IsNull())
             .And(new Table1.Column2().LesserOrEqual(3))
-            .Or(new Table1.Column2().Greater(2))
+            .Or(new Table1.Column2().Greater(2)))
             .GroupBy(new Table1.Column1())
             .OrderBy(new Table1.Column1().Asc(), new Table1.Column1().Desc(), new Table1.Column2().Asc(), new Table1.Column2().Desc())
             .QueryBuilder
@@ -204,6 +200,29 @@ public class Program
         //          .And(Group(Cola().Eq(a).Or(Colb().Eq(b)))
         //          .And(Col1().Eq(b))
         //          .Or(
+
+        Tbl_Cards.Attribute().Equal("s").Group();
+        Tbl_Cards.Attribute().Equal("s").And(Tbl_Cards.Attribute().Equal("b"));
+        Tbl_Cards.Attribute().Equal("s").Or(Tbl_Cards.Attribute().Equal("b"));
+        Tbl_Cards.Attribute().Equal("s").And(Tbl_Cards.Attribute().Equal("b")).And(Tbl_Cards.Attribute().Equal("c"));
+        Tbl_Cards.Attribute().Equal("s").And(Tbl_Cards.Attribute().Equal("b")).Or(Tbl_Cards.Attribute().Equal("c"));
+        Tbl_Cards.Attribute().Equal("s").Or(Tbl_Cards.Attribute().Equal("b")).And(Tbl_Cards.Attribute().Equal("c"));
+        Tbl_Cards.Attribute().Equal("s").Or(Tbl_Cards.Attribute().Equal("b")).Or(Tbl_Cards.Attribute().Equal("c"));
+
+        Tbl_Cards.Attribute().Equal("s").And(Tbl_Cards.Attribute().Equal("b")).Group()
+            .Or(Tbl_Cards.Attribute().Equal("s"));
+        Tbl_Cards.Attribute().Equal("s").And(Tbl_Cards.Attribute().Equal("b")).Group()
+            .Or(Tbl_Cards.Attribute().Equal("s").Or(Tbl_Cards.Attribute().Equal("c")));
+        Tbl_Cards.Attribute().Equal("s").And(Tbl_Cards.Attribute().Equal("b")).Group()
+            .Or(Tbl_Cards.Attribute().Equal("s").Or(Tbl_Cards.Attribute().Equal("c")).Group()
+                .And(Tbl_Cards.Attribute().Equal("s")));
+        Tbl_Cards.Attribute().Equal("s").And(Tbl_Cards.Attribute().Equal("b")).Group()
+            .Or(Tbl_Cards.Attribute().Equal("s").Or(Tbl_Cards.Attribute().Equal("c")).Group()
+                .And(Tbl_Cards.Attribute().Equal("s").Or(Tbl_Cards.Attribute().Equal("s"))));
+        Tbl_Cards.Attribute().Equal("s").And(Tbl_Cards.Attribute().Equal("b")).Group()
+            .Or(Tbl_Cards.Attribute().Equal("s").Or(Tbl_Cards.Attribute().Equal("c")).Group()
+                .And(Tbl_Cards.Attribute().Equal("s").Or(Tbl_Cards.Attribute().Equal("s")).Group()));
+
         var g = dslCtxt.Group(Tbl_Cards.Attribute().Equal("s").And(Tbl_Cards.Form().Equal("c")))
             .And(Tbl_Cards.Id().Equal(1).And(Tbl_Cards.Id().Equal(2)));
 

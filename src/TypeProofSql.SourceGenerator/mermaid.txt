@@ -57,10 +57,12 @@ subgraph SGSelect
 
     subgraph SGWhere
         SelectWhere --> SGWhereStart
+        SelectWhereMulti --> SGWhereStart
         SelectWhereGroup --> SGWhereStart
 
 
         SelectWhere --> SGWhereEnd
+        SelectWhereMulti --> SGWhereEnd
         SelectWhereGroup --> SGWhereEnd
         ConditionalGroupStatement --> SGWhereEnd
     end
@@ -190,10 +192,12 @@ subgraph SGUpdate
     
     subgraph SGUpdateWhere
         UpdateWhere --> SGUpdateWhereStart
+        UpdateWhereMulti --> SGUpdateWhereStart
         UpdateWhereGroup --> SGUpdateWhereStart
 
 
         UpdateWhere --> SGUpdateWhereEnd
+        UpdateWhereMulti --> SGUpdateWhereEnd
         UpdateWhereGroup --> SGUpdateWhereEnd
     end
 
@@ -217,12 +221,14 @@ subgraph SGUpsert
     UpsertOn -->|Conflict| UpsertConflictSelect
 
     subgraph SGUpsertConflictWhere
-        SelectWhere --> SGUpsertConflictWhereStart
-        SelectWhereGroup --> SGUpsertConflictWhereStart
+        UpsertConflictWhere --> SGUpsertConflictWhereStart
+        UpsertConflictWhereMulti --> SGUpdateWhereStart
+        UpsertConflictWhereGroup --> SGUpsertConflictWhereStart
 
 
-        SelectWhere --> SGUpsertConflictWhereEnd
-        SelectWhereGroup --> SGUpsertConflictWhereEnd
+        UpsertConflictWhere --> SGUpsertConflictWhereEnd
+        UpsertConflictWhereMulti --> SGUpsertConflictWhereEnd
+        UpsertConflictWhereGroup --> SGUpsertConflictWhereEnd
     end
 
     UpsertConflictSelect --> |Where| SGUpsertConflictWhereStart
@@ -255,9 +261,11 @@ Root -->|Delete| Delete
 subgraph SGDelete
     Delete -->|From| DeleteFrom[DeleteFrom<T>]
     DeleteFrom[DeleteFrom<T>] -->|Where| DeleteWhere
+    DeleteFrom[DeleteFrom<T>] -->|Where| DeleteWhereMulti
 
     DeleteFrom[DeleteFrom<T>] --> SGDeleteEnd
     DeleteWhere --> SGDeleteEnd
+    DeleteWhereMulti --> SGDeleteEnd
 end
 
 DeleteWhere -->|Returning| Returning

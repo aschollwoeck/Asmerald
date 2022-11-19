@@ -12,149 +12,178 @@ namespace TypeProofSql.SQLite
 {
     public static partial class TypeProofSqlExtensions
     {
-        //public static ConditionalGroupStatement WhereGroup(this FromStatement stmt, Func<FromStatement, ConditionalGroupStatement> func)
-        //{
-        //    var groupStmt = func.Invoke(stmt);
-
-        //    var whereStmt = new WhereStatement(stmt.QueryBuilder, null);
-        //    whereStmt.AddGroup(groupStmt);
-
-        //    return whereStmt;
-        //}
-
-        //public static ConditionalGroupStatement WhereGroup(this OnStatement stmt, Func<OnStatement, ConditionalGroupStatement> func)
-        //{
-        //    var groupStmt = func.Invoke(stmt);
-
-        //    var whereStmt = new WhereStatement(stmt.QueryBuilder, null);
-        //    whereStmt.conditionalGroupStatements.Add(groupStmt);
-
-        //    return whereStmt;
-        //}
-
-        //public static ConditionalGroupStatement WhereGroup(this NonConditionalJoinStatement stmt, Func<NonConditionalJoinStatement, ConditionalGroupStatement> func)
-        //{
-        //    var groupStmt = func.Invoke(stmt);
-
-        //    var whereStmt = new WhereStatement(stmt.QueryBuilder, null);
-        //    whereStmt.conditionalGroupStatements.Add(groupStmt);
-
-        //    return whereStmt;
-        //}
-
-        //public static ConditionalGroupStatement WhereGroup(this SetStatement stmt, Func<SetStatement, ConditionalGroupStatement> func)
-        //{
-        //    var groupStmt = func.Invoke(stmt);
-
-        //    var whereStmt = new WhereStatement(stmt.QueryBuilder, null);
-        //    whereStmt.conditionalGroupStatements.Add(groupStmt);
-
-        //    return whereStmt;
-        //}
-
-        //public static WhereStatement Where(this FromStatement stmt, ConditionalExpression conditionalExpression)
-        //{
-        //    return new WhereStatement(stmt.QueryBuilder, conditionalExpression);
-        //}
-
-        //public static WhereStatement Where(this OnStatement stmt, ConditionalExpression conditionalExpression)
-        //{
-        //    return new WhereStatement(stmt.QueryBuilder, conditionalExpression);
-        //}
-
-        //public static WhereStatement Where(this SetStatement stmt, ConditionalExpression conditionalExpression)
-        //{
-        //    return new WhereStatement(stmt.QueryBuilder, conditionalExpression);
-        //}
-
-        //public static WhereStatement Where(this NonConditionalJoinStatement stmt, ConditionalExpression conditionalExpression)
-        //{
-        //    return new WhereStatement(stmt.QueryBuilder, conditionalExpression);
-        //}
-
-
         // Expression --> List<Statement>
-        public static List<ConditionalStatement> And(this ConditionalStatement condStmt, ConditionalExpression expression)
+        public static List<ConditionalStatement> And(this ConditionalExpression expression, ConditionalExpression conditionalExpression)
         {
-            List<ConditionalStatement> res = new List<ConditionalStatement>();
-            res.Add(condStmt);
-            res.Add(new AndStatement(null, expression));
-
-            return res;
+            return new List<ConditionalStatement>() 
+            {
+                new ConditionalStatement(expression),
+                new ConditionalStatement(conditionalExpression) 
+            };
         }
-        public static List<ConditionalStatement> Or(this ConditionalStatement condStmt, ConditionalExpression expression)
+        public static List<ConditionalStatement> Or(this ConditionalExpression expression, ConditionalExpression conditionalExpression)
         {
-            List<ConditionalStatement> res = new List<ConditionalStatement>();
-            res.Add(condStmt);
-            res.Add(new OrStatement(null, expression));
-
-            return res;
+            return new List<ConditionalStatement>()
+            {
+                new ConditionalStatement(expression),
+                new ConditionalStatement(conditionalExpression)
+            };
         }
 
-        // Expression --> List<Statement>
-        public static List<ConditionalStatement> And(this IEnumerable<ConditionalStatement> statements, ConditionalExpression expression)
+        // Statement --> Statement
+        public static List<ConditionalStatement> And(this List<ConditionalStatement> conditionalStatements, ConditionalExpression conditionalExpression)
         {
-            List<ConditionalStatement> res = new List<ConditionalStatement>(statements);
-            res.Add(new AndStatement(null, expression));
-
-            return res;
+            var s = new List<ConditionalStatement>(conditionalStatements);
+            s.Add(new AndStatement(null, conditionalExpression));
+            return s;
         }
-        public static List<ConditionalStatement> Or(this IEnumerable<ConditionalStatement> statements, ConditionalExpression expression)
+        public static List<ConditionalStatement> Or(this List<ConditionalStatement> conditionalStatements, ConditionalExpression conditionalExpression)
         {
-            List<ConditionalStatement> res = new List<ConditionalStatement>(statements);
-            res.Add(new OrStatement(null, expression));
+            var s = new List<ConditionalStatement>(conditionalStatements);
+            s.Add(new OrStatement(null, conditionalExpression));
+            return s;
+        }
 
-            return res;
+        // Expression --> Group
+        public static ConditionalGroupStatement Group(this ConditionalExpression expression)
+        {
+            return new ConditionalGroupStatement(expression);
         }
 
         // Statement --> Group
-        public static ConditionalGroupStatement And(this ConditionalStatement statement, ConditionalGroupStatement groupStatement)
+        public static ConditionalGroupStatement Group(this ConditionalStatement statement)
         {
-            var g = new AndGroupStatement(statement.QueryBuilder);
-            g.AddGroup(groupStatement);
+            var g = new ConditionalGroupStatement();
+            g.AddStatement(statement);
             return g;
         }
-        public static ConditionalGroupStatement Or(this ConditionalStatement statement, ConditionalGroupStatement groupStatement)
+        public static ConditionalGroupStatement Group(this List<ConditionalStatement> conditionalStatements)
         {
-            var g = new OrGroupStatement(statement.QueryBuilder);
-            g.AddGroup(groupStatement);
-            return g;
-        }
-        public static ConditionalGroupStatement And(this IEnumerable<ConditionalStatement> statements, ConditionalGroupStatement groupStatement)
-        {
-            var g = new AndGroupStatement();
-            g.AddGroup(groupStatement);
-            return g;
-        }
-        public static ConditionalGroupStatement Or(this IEnumerable<ConditionalStatement> statements, ConditionalGroupStatement groupStatement)
-        {
-            var g = new OrGroupStatement();
-            g.AddGroup(groupStatement);
+            var g = new ConditionalGroupStatement();
+            conditionalStatements.ForEach(cs => g.AddStatement(cs));
             return g;
         }
 
+        // Group --> Group
+        public static ConditionalGroupStatement And(this ConditionalGroupStatement groupStatement, ConditionalGroupStatement conditionalGroupStatement)
+        {
+            return new ConditionalGroupStatement();
+        }
+        public static ConditionalGroupStatement Or(this ConditionalGroupStatement groupStatement, ConditionalGroupStatement conditionalGroupStatement)
+        {
+            return new ConditionalGroupStatement();
+        }
+
+        // Group --> Expression
+        public static ConditionalGroupStatement And(this ConditionalGroupStatement groupStatement, ConditionalExpression expression)
+        {
+            return new ConditionalGroupStatement();
+        }
+        public static ConditionalGroupStatement Or(this ConditionalGroupStatement groupStatement, ConditionalExpression expression)
+        {
+            return new ConditionalGroupStatement();
+        }
 
         // Group --> Statement
-        public static ConditionalStatement And(this ConditionalGroupStatement condStmt, ConditionalExpression expression)
+        public static ConditionalGroupStatement And(this ConditionalGroupStatement groupStatement, ConditionalStatement conditionalStatement)
         {
-            return new AndStatement(condStmt.QueryBuilder, expression);
+            return new ConditionalGroupStatement();
+        }
+        public static ConditionalGroupStatement Or(this ConditionalGroupStatement groupStatement, ConditionalStatement conditionalStatement)
+        {
+            return new ConditionalGroupStatement();
+        }
+        public static ConditionalGroupStatement And(this ConditionalGroupStatement groupStatement, List<ConditionalStatement> conditionalStatements)
+        {
+            return new ConditionalGroupStatement();
+        }
+        public static ConditionalGroupStatement Or(this ConditionalGroupStatement groupStatement, List<ConditionalStatement> conditionalStatements)
+        {
+            return new ConditionalGroupStatement();
+        }
 
-            //var g = new AndGroupStatement(condStmt.QueryBuilder);
-            //foreach (var statement in statements)
-            //{
-            //    g.AddStatement(statement);
-            //}
-            //return g;
-        }
-        public static ConditionalStatement Or(this ConditionalGroupStatement condStmt, ConditionalExpression expression)
-        {
-            return new OrStatement(condStmt.QueryBuilder, expression);
-            //var g = new OrGroupStatement(condStmt.QueryBuilder);
-            //foreach (var statement in statements)
-            //{
-            //    g.AddStatement(statement);
-            //}
-            //return g;
-        }
+
+        //public static List<ConditionalStatement> And(this ConditionalStatement condStmt, ConditionalExpression expression)
+        //{
+        //    List<ConditionalStatement> res = new List<ConditionalStatement>();
+        //    res.Add(condStmt);
+        //    res.Add(new AndStatement(null, expression));
+
+        //    return res;
+        //}
+        //public static List<ConditionalStatement> Or(this ConditionalStatement condStmt, ConditionalExpression expression)
+        //{
+        //    List<ConditionalStatement> res = new List<ConditionalStatement>();
+        //    res.Add(condStmt);
+        //    res.Add(new OrStatement(null, expression));
+
+        //    return res;
+        //}
+
+        //// Expression --> List<Statement>
+        //public static List<ConditionalStatement> And(this IEnumerable<ConditionalStatement> statements, ConditionalExpression expression)
+        //{
+        //    List<ConditionalStatement> res = new List<ConditionalStatement>(statements);
+        //    res.Add(new AndStatement(null, expression));
+
+        //    return res;
+        //}
+        //public static List<ConditionalStatement> Or(this IEnumerable<ConditionalStatement> statements, ConditionalExpression expression)
+        //{
+        //    List<ConditionalStatement> res = new List<ConditionalStatement>(statements);
+        //    res.Add(new OrStatement(null, expression));
+
+        //    return res;
+        //}
+
+        //// Statement --> Group
+        //public static ConditionalGroupStatement And(this ConditionalStatement statement, ConditionalGroupStatement groupStatement)
+        //{
+        //    var g = new AndGroupStatement(statement.QueryBuilder);
+        //    g.AddGroup(groupStatement);
+        //    return g;
+        //}
+        //public static ConditionalGroupStatement Or(this ConditionalStatement statement, ConditionalGroupStatement groupStatement)
+        //{
+        //    var g = new OrGroupStatement(statement.QueryBuilder);
+        //    g.AddGroup(groupStatement);
+        //    return g;
+        //}
+        //public static ConditionalGroupStatement And(this IEnumerable<ConditionalStatement> statements, ConditionalGroupStatement groupStatement)
+        //{
+        //    var g = new AndGroupStatement();
+        //    g.AddGroup(groupStatement);
+        //    return g;
+        //}
+        //public static ConditionalGroupStatement Or(this IEnumerable<ConditionalStatement> statements, ConditionalGroupStatement groupStatement)
+        //{
+        //    var g = new OrGroupStatement();
+        //    g.AddGroup(groupStatement);
+        //    return g;
+        //}
+
+
+        //// Group --> Statement
+        //public static ConditionalStatement And(this ConditionalGroupStatement condStmt, ConditionalExpression expression)
+        //{
+        //    return new AndStatement(condStmt.QueryBuilder, expression);
+
+        //    //var g = new AndGroupStatement(condStmt.QueryBuilder);
+        //    //foreach (var statement in statements)
+        //    //{
+        //    //    g.AddStatement(statement);
+        //    //}
+        //    //return g;
+        //}
+        //public static ConditionalStatement Or(this ConditionalGroupStatement condStmt, ConditionalExpression expression)
+        //{
+        //    return new OrStatement(condStmt.QueryBuilder, expression);
+        //    //var g = new OrGroupStatement(condStmt.QueryBuilder);
+        //    //foreach (var statement in statements)
+        //    //{
+        //    //    g.AddStatement(statement);
+        //    //}
+        //    //return g;
+        //}
     }
 }

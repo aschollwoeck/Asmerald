@@ -79,10 +79,12 @@ On<T, J> = On<T, J>(ISelectColumn<T> left, ISelectColumn<J> right) : On(new T(),
 OnMulti<T, J> = OnMulti<T, J>((ISelectColumn<T> left, ISelectColumn<J> right)[] on) : OnMulti(new T(), new J(), on)
 
 WhereGroup = WhereGroup(ConditionalGroupStatement groupExpr)
-Where = Where(ConditionalExpression conditionalExpression) : ConditionalGroup
+Where = Where(ConditionalExpression conditionalExpression)
+WhereMulti = WhereMulti(List<ConditionalStatements> conditionalStatements)
 
 SelectWhereGroup = SelectWhereGroup(ConditionalGroupStatement groupExpr) : WhereGroup(groupExpr)
 SelectWhere = SelectWhere(ConditionalExpression conditionalExpression) : Where(conditionalExpression)
+SelectWhereMulti = SelectWhereMulti(List<ConditionalStatements> conditionalStatements) : WhereMulti(conditionalStatements)
 
 And = And(ConditionalExpression conditionalExpression) : Conditional(conditionalExpression)
 AndGroup = AndGroup(ConditionalExpression conditionalExpression) : ConditionalGroup(conditionalExpression)
@@ -151,6 +153,7 @@ UpdateFromSubQuery<T> = UpdateFromSubQuery<T>(IQueryBuilder subQueryBuilder) : F
 
 UpdateWhere = UpdateWhere(ConditionalExpression conditionalExpression) : Where(conditionalExpression)
 UpdateWhereGroup = UpdateWhereGroup(ConditionalGroupStatement groupExpr) : WhereGroup(groupExpr)
+UpdateWhereMulti = UpdateWhereMulti(List<ConditionalStatements> conditionalStatements) : WhereMulti(conditionalStatements)
 
 UpdateConditionalJoin<T, J> = UpdateConditionalJoin<T, J>() : ConditionalJoin<T, J>()
 
@@ -165,6 +168,7 @@ UpsertUpdate = UpsertUpdate
 UpsertSet = UpsertSet(ValueExpression[] valueExpressions) : Set(valueExpressions)
 UpsertWhere = UpsertWhere(ConditionalExpression conditionalExpression) : Where(conditionalExpression)
 UpsertWhereGroup = UpsertWhereGroup(ConditionalGroupStatement groupExpr) : WhereGroup(groupExpr)
+UpsertWhereMulti = UpsertWhereMulti(List<ConditionalStatements> conditionalStatements) : WhereMulti(conditionalStatements)
 UpsertOn = UpsertOn
 
 Returning = Returning
@@ -177,6 +181,7 @@ DeleteFrom = DeleteFrom(ITable table) : From(table)
 DeleteFrom<T> = DeleteFrom<T>() : From<T>()
 DeleteWhere = DeleteWhere(ConditionalExpression conditionalExpression) : Where(conditionalExpression)
 DeleteWhereGroup = DeleteWhereGroup(ConditionalGroupStatement groupExpr) : WhereGroup(groupExpr)
+DeleteWhereMulti = DeleteWhereMulti(List<ConditionalStatements> conditionalStatements) : WhereMulti(conditionalStatements)
 
 Set = Set(ValueExpression[] valueExpressions)
 Value = Value(ValueExpression[] valueExpressions)
