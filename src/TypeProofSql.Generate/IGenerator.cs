@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace TypeProofSql.Generate
 {
-    internal interface IGenerator
+    public interface IGenerator
     {
         Task<Dictionary<string, string>> Generate();
         Task<Dictionary<string, string>> Generate(string nspace);

@@ -69,7 +69,7 @@ namespace TypeProofSql.Generate.Generators
 
                 List<TableGenerate> templateTables = new List<TableGenerate>();
 
-                Func<string, Type> getColumnType = this._generateConfiguration.ColumnTypeFunc;
+                Func<string, Type>? getColumnType = this._generateConfiguration.ColumnTypeFunc;
                 if(getColumnType == null)
                 {
                     getColumnType = GetColumnType;
@@ -81,8 +81,19 @@ namespace TypeProofSql.Generate.Generators
 
                     var columns = await sqliteConnection.QueryAsync<TableSchema>("pragma table_info(" + t.tbl_name + ")");
 
-                    var ctxtColumns = columns.Select(c => new TableGenerate.ColumnGenerate { name_class = this._generateConfiguration.ColPrefixFunc() + codeProvider.CreateValidIdentifier(c.name.FirstCharToUpper()), name = c.name, name_method = c.name.FirstCharToUpper(), type = getColumnType(c.type).Name });
-                    var ctxtTable = new TableGenerate { name_class = this._generateConfiguration.PrefixFunc(t) + codeProvider.CreateValidIdentifier(t.tbl_name.FirstCharToUpper()), name = t.tbl_name, columns = ctxtColumns };
+                    var ctxtColumns = columns.Select(c => new TableGenerate.ColumnGenerate
+                    {
+                        name_class = this._generateConfiguration.ColPrefixFunc() + codeProvider.CreateValidIdentifier(c.name.FirstCharToUpper()),
+                        name = c.name,
+                        name_method = c.name.FirstCharToUpper(),
+                        type = getColumnType(c.type).Name
+                    });
+                    var ctxtTable = new TableGenerate
+                    {
+                        name_class = this._generateConfiguration.PrefixFunc(t) + codeProvider.CreateValidIdentifier(t.tbl_name.FirstCharToUpper()),
+                        name = t.tbl_name,
+                        columns = ctxtColumns
+                    };
 
                     templateTables.Add(ctxtTable);
                 }

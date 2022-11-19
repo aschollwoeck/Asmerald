@@ -1,6 +1,8 @@
 ﻿// See https://aka.ms/new-console-template for more information
 
 
+using IniParser.Model;
+using IniParser.Parser;
 using System.Reflection;
 using System.Text;
 using System.Xml.Linq;
@@ -8,141 +10,86 @@ using TypeProofSql;
 using TypeProofSql.SourceGenerator;
 using TypeProofSql.SourceGenerator.Generators;
 
+var providers = new string[] { "SQLite" };
+
 var parser = new IniParser.Parser.IniDataParser(new IniParser.Model.Configuration.IniParserConfiguration()
 {
     KeyValueAssigmentChar = '=',
     AllowDuplicateKeys = true,
 });
 
-// Load definitions from config file
-var iniSqlite = parser.Parse(File.ReadAllText("sqlite_definition"));
-var dir = iniSqlite.Global["Directory"];
-var tDir = iniSqlite.Global["TestDirectory"];
-
-// Get the current SQL dialect, e.g. SQLite, etc. for namespace and folder name
-if (System.IO.Directory.Exists(Path.Combine(dir, "Statements")) == false) System.IO.Directory.CreateDirectory(Path.Combine(dir, "Statements"));
-if (System.IO.Directory.Exists(Path.Combine(dir, "Extensions")) == false) System.IO.Directory.CreateDirectory(Path.Combine(dir, "Extensions"));
-var stmtDir = System.IO.Directory.CreateDirectory(Path.Combine(dir, "Statements", iniSqlite.Global["sqlDialect"]));
-stmtDir.GetFiles().ToList().ForEach(f => f.Delete());
-var extDir = System.IO.Directory.CreateDirectory(Path.Combine(dir, "Extensions", iniSqlite.Global["sqlDialect"]));
-extDir.GetFiles().ToList().ForEach(f => f.Delete());
-var testDir = new System.IO.DirectoryInfo(tDir);
-
-Dictionary<string, GenerateCodeStatement> classNames = new();
-Dictionary<string, GenerateCodeStatement> commonClassNames = new();
-
-// Prepare DSL
-foreach (var item in iniSqlite.Sections["COMMON_CLASSES"])
+foreach (var provider in providers)
 {
-    var gen = new GenerateCodeStatement() { class_name = item.KeyName, class_name_short = item.KeyName, full_class_name = item.KeyName };
-    classNames.Add(item.KeyName, gen);
-    commonClassNames.Add(item.KeyName, gen);
+    // Load definitions from config file
+    var iniData = parser.Parse(File.ReadAllText(Path.Combine(provider, "classDefinition")));
+    var dir = iniData.Global["Directory"];
+    var tDir = iniData.Global["TestDirectory"];
+
+    // Get the current SQL dialect, e.g. SQLite, etc. for namespace and folder name
+    if (System.IO.Directory.Exists(Path.Combine(dir, "Statements")) == false) System.IO.Directory.CreateDirectory(Path.Combine(dir, "Statements"));
+    if (System.IO.Directory.Exists(Path.Combine(dir, "Extensions")) == false) System.IO.Directory.CreateDirectory(Path.Combine(dir, "Extensions"));
+    var stmtDir = System.IO.Directory.CreateDirectory(Path.Combine(dir, "Statements", iniData.Global["sqlDialect"]));
+    stmtDir.GetFiles().ToList().ForEach(f => f.Delete());
+    var extDir = System.IO.Directory.CreateDirectory(Path.Combine(dir, "Extensions", iniData.Global["sqlDialect"]));
+    extDir.GetFiles().ToList().ForEach(f => f.Delete());
+    var testDir = new System.IO.DirectoryInfo(tDir);
+
+    Dictionary<string, GenerateCodeStatement> classNames = new();
+    Dictionary<string, GenerateCodeStatement> commonClassNames = new();
+
+    // Prepare DSL
+    foreach (var item in iniData.Sections["COMMON_CLASSES"])
+    {
+        var gen = new GenerateCodeStatement() { class_name = item.KeyName, class_name_short = item.KeyName, full_class_name = item.KeyName };
+        classNames.Add(item.KeyName, gen);
+        commonClassNames.Add(item.KeyName, gen);
+    }
+
+    // Create classes based on definitions
+    foreach (var item in iniData.Sections["CLASSES"])
+    {
+        var code = BuildClass(iniData, classNames, item.KeyName, item.Value);
+        classNames.Add(item.KeyName, code);
+
+        // Write code to file
+        var filename = code.class_name;
+        if (code.generics != null)
+        {
+            filename = filename + String.Join(", ", code.generics);
+        }
+        var generatedCode = new TypeProofSql.SourceGenerator.Generators.ClassGenerator().Generate(code);
+        File.WriteAllText(System.IO.Path.Combine(stmtDir.FullName, filename + ".cs"), generatedCode);
+    }
+
+    var genImplTest = new TestGenerator().Generate(
+        "NotImplementedTest",
+        classNames
+            .Where(c => commonClassNames.ContainsKey(c.Key) == false)
+            .Select(c => c.Value));
+
+    //Write test to file
+    File.WriteAllText(System.IO.Path.Combine(testDir.FullName, "NotImplementedTest") + ".cs", genImplTest);
+
+    //Now do create extension methods for chaining
+    var ext = GetExtensions(iniData, Path.Combine(provider, "classDefinition"), classNames);
+    foreach (var genCode in ext)
+    {
+        var generatedCode = new TypeProofSql.SourceGenerator.Generators.ExtensionGenerator().Generate(genCode);
+
+        //Write code to file
+        File.WriteAllText(System.IO.Path.Combine(extDir.FullName, genCode.extension_name + "Extensions") + ".cs", generatedCode);
+    }
 }
 
-//var classTemplate = ReadResource("classGeneration.txt");
-//var classTemplateParsed = Scriban.Template.ParseLiquid(classTemplate);
-
-// Create classes based on definitions
-foreach (var item in iniSqlite.Sections["CLASSES"])
-{
-    var code = BuildClass(item.KeyName, item.Value);
-    classNames.Add(item.KeyName, code);
-}
-
-var genImplTest = new TestGenerator().Generate(
-    "NotImplementedTest",
-    classNames
-        .Where(c => commonClassNames.ContainsKey(c.Key) == false)
-        .Select(c => c.Value));
-
-//Write test to file
-File.WriteAllText(System.IO.Path.Combine(testDir.FullName, "NotImplementedTest") + ".cs", genImplTest);
-
-
-//var extensionTemplate = ReadResource("extensionGeneration.txt");
-//var extensionTemplateParsed = Scriban.Template.ParseLiquid(extensionTemplate);
-
-
-
-
-// Now chain classes together with extension methods
-//foreach (var item in iniSqlite.Sections["CHAINING"])
-//{
-    // Now do create extension methods for chaining
-    //var ext = BuildExtensions(item.KeyName, item.Value.Split(';').Select(s => s.Trim()));
-
-    //var generatedCode = new TypeProofSql.SourceGenerator.Generators.ExtensionGenerator().Generate(e);
-
-    //var generatedCode = extensionTemplateParsed.RenderAsync(new { nspace = iniSqlite.Global["sqlDialect"], extension_name = extension_name, extensions = extensions });
-
-    // Write code to file
-    //File.WriteAllText(System.IO.Path.Combine(extDir.FullName, extension_name + "Extensions") + ".cs", generatedCode);
-//}
-
-//Now do create extension methods for chaining
-var ext = GetExtensions();
-foreach (var genCode in ext)
-{
-    var generatedCode = new TypeProofSql.SourceGenerator.Generators.ExtensionGenerator().Generate(genCode);
-
-    //Write code to file
-    File.WriteAllText(System.IO.Path.Combine(extDir.FullName, genCode.extension_name + "Extensions") + ".cs", generatedCode);
-}
-
-
-
-//GenerateExtensionCodeStatement BuildExtensions(string name, IEnumerable<string> values)
-//{
-//    // Prepare Scriban properties
-//    var extension_name = name.FirstCharToUpper();
-//    var extensions = values.Select(v => {
-
-//        var classes = v.Split(":");
-
-//        var baseClass = classes[0].Trim();
-//        var returnClass = classes[1].Trim();
-
-//        if (!classNames.ContainsKey(baseClass))
-//        {
-//            throw new NotImplementedException($"Class '{baseClass}' is not yet defined!");
-//        }
-
-//        if (!classNames.ContainsKey(returnClass))
-//        {
-//            throw new NotImplementedException($"Class '{returnClass}' is not yet defined!");
-//        }
-
-//        //return_class_name
-//        //base_class
-//        //paras
-
-//        return new { return_class_name = classNames[returnClass], base_class = classNames[baseClass] };
-//    }).ToList();
-
-//    // Now generate code
-//    var e = new GenerateExtensionCodeStatement()
-//    {
-//        nspace = iniSqlite.Global["sqlDialect"],
-//        extension_name = extension_name,
-//        extensions = extensions
-//        .Select(e => new GenerateExtensionCodeStatement.Extension()
-//        {
-//            base_class = e.base_class,
-//            return_class_name = e.return_class_name
-//        })
-//        .ToList()
-//    };
-//}
-
-IEnumerable<GenerateExtensionCodeStatement> GetExtensions()
+IEnumerable<GenerateExtensionCodeStatement> GetExtensions(IniData iniData, string extDefPath, Dictionary<string, GenerateCodeStatement> classNames)
 {
     MermaidReader mermaidReader = new MermaidReader();
-    var mermaidRes = mermaidReader.Parse(new StreamReader("mermaid.txt"));
+    var mermaidRes = mermaidReader.Parse(new StreamReader(extDefPath));
 
     return mermaidRes.GroupBy(ext => ext.method)
         .Select(ext => new GenerateExtensionCodeStatement()
         {
-            nspace = iniSqlite.Global["sqlDialect"],
+            nspace = iniData.Global["sqlDialect"],
             extension_name = ext.Key,
             extensions = ext.Select(e => new GenerateExtensionCodeStatement.Extension()
             {
@@ -190,7 +137,7 @@ List<int> FindParaCommas(string paras)
     return commas;
 }
 
-GenerateCodeStatement ParseClass(string classDef)
+GenerateCodeStatement ParseClass(IniData iniData, string classDef)
 {
     classDef = classDef.Trim();
     // ConditionalJoin<T1, T2>((ISelectColumn<T1> col1, ISelectColumn<T2> col2)[] on)
@@ -201,7 +148,7 @@ GenerateCodeStatement ParseClass(string classDef)
 
     GenerateCodeStatement statement = new GenerateCodeStatement()
     {
-        nspace = iniSqlite.Global["sqlDialect"]
+        nspace = iniData.Global["sqlDialect"]
     };
 
     int bIdx = classDef.IndexOf('(');
@@ -291,12 +238,12 @@ GenerateCodeStatement ParseClass(string classDef)
     return statement;
 }
 
-GenerateCodeStatement BuildClass(string name, string value) 
+GenerateCodeStatement BuildClass(IniData iniData, Dictionary<string, GenerateCodeStatement> classNames, string name, string value) 
 {
     // ConditionalJoin<T1, T2> = ConditionalJoin<T1, T2>((ISelectColumn<T1> col1, ISelectColumn<T2> col2)[] on) : Join<T1, T2>()
     var classDef = value.Split(':');
 
-    GenerateCodeStatement generateCodeStatement = ParseClass(classDef[0]);
+    GenerateCodeStatement generateCodeStatement = ParseClass(iniData, classDef[0]);
 
 
     if (classDef.Length > 1)
@@ -341,37 +288,5 @@ GenerateCodeStatement BuildClass(string name, string value)
         generateCodeStatement.inherit_class = baseClass;
     }
 
-    var generatedCode = new TypeProofSql.SourceGenerator.Generators.ClassGenerator().Generate(generateCodeStatement);
-
-    // Now generate code via Scriban!
-    //var generatedCode = classTemplateParsed.RenderAsync(new { nspace = iniSqlite.Global["sqlDialect"], class_gen = generateCodeStatement });
-
-    // Write code to file
-    var filename = generateCodeStatement.class_name;
-    if(generateCodeStatement.generics != null)
-    {
-        filename = filename + String.Join(", ", generateCodeStatement.generics);
-    }
-    File.WriteAllText(System.IO.Path.Combine(stmtDir.FullName, filename + ".cs"), generatedCode);
-
     return generateCodeStatement;
-}
-
-string ReadResource(string name)
-{
-    // Determine path
-    var assembly = Assembly.GetExecutingAssembly();
-    string resourcePath = name;
-    // Format: "{Namespace}.{Folder}.{filename}.{Extension}"
-    if (!name.StartsWith(nameof(TypeProofSql)))
-    {
-        resourcePath = assembly.GetManifestResourceNames()
-            .Single(str => str.EndsWith(name));
-    }
-
-    using (Stream stream = assembly.GetManifestResourceStream(resourcePath))
-    using (StreamReader reader = new StreamReader(stream))
-    {
-        return reader.ReadToEnd();
-    }
 }
