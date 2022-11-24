@@ -21,7 +21,7 @@ namespace TypeProofSql.Columns
         public abstract string Name();
     }
 
-    public abstract class BlobColumn<D> : StringColumn, IColumn<byte[], D> where D : ITable
+    public abstract class BlobColumn<D> : BlobColumn, IColumn<byte[], D> where D : ITable
     {
         public EqualConditionalExpression Equal(byte[] condition)
         {
