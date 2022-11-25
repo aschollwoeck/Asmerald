@@ -28,27 +28,46 @@ foreach (var provider in providers)
     // Get the current SQL dialect, e.g. SQLite, etc. for namespace and folder name
     if (System.IO.Directory.Exists(Path.Combine(dir, "Statements")) == false) System.IO.Directory.CreateDirectory(Path.Combine(dir, "Statements"));
     if (System.IO.Directory.Exists(Path.Combine(dir, "Extensions")) == false) System.IO.Directory.CreateDirectory(Path.Combine(dir, "Extensions"));
+    if (System.IO.Directory.Exists(Path.Combine(dir, "Functions")) == false) System.IO.Directory.CreateDirectory(Path.Combine(dir, "Functions"));
     var stmtDir = System.IO.Directory.CreateDirectory(Path.Combine(dir, "Statements", iniData.Global["sqlDialect"]));
     stmtDir.GetFiles().ToList().ForEach(f => f.Delete());
     var extDir = System.IO.Directory.CreateDirectory(Path.Combine(dir, "Extensions", iniData.Global["sqlDialect"]));
     extDir.GetFiles().ToList().ForEach(f => f.Delete());
+    var funcDir = System.IO.Directory.CreateDirectory(Path.Combine(dir, "Functions", iniData.Global["sqlDialect"]));
+    stmtDir.GetFiles().ToList().ForEach(f => f.Delete());
     var testDir = new System.IO.DirectoryInfo(tDir);
 
-    Dictionary<string, GenerateCodeStatement> classNames = new();
-    Dictionary<string, GenerateCodeStatement> commonClassNames = new();
+    Dictionary<string, GenerateCodeClass> classNames = new();
+    Dictionary<string, GenerateCodeClass> commonClassNames = new();
 
     // Prepare DSL
     foreach (var item in iniData.Sections["COMMON_CLASSES"])
     {
-        var gen = new GenerateCodeStatement() { class_name = item.KeyName, class_name_short = item.KeyName, full_class_name = item.KeyName };
+        var gen = new GenerateCodeClass() { class_name = item.KeyName, class_name_short = item.KeyName, full_class_name = item.KeyName };
         classNames.Add(item.KeyName, gen);
         commonClassNames.Add(item.KeyName, gen);
     }
 
     // Create classes based on definitions
+    foreach (var item in iniData.Sections["FUNCTIONS"])
+    {
+        var code = BuildClass(iniData, classNames, item.KeyName, item.Value, "FunctionExpression");
+        classNames.Add(item.KeyName, code);
+
+        // Write code to file
+        var filename = code.class_name;
+        if (code.generics != null)
+        {
+            filename = filename + String.Join(", ", code.generics);
+        }
+        var generatedCode = new TypeProofSql.SourceGenerator.Generators.ClassGenerator().Generate(code);
+        File.WriteAllText(System.IO.Path.Combine(funcDir.FullName, filename + ".cs"), generatedCode);
+    }
+
+    // Create classes based on definitions
     foreach (var item in iniData.Sections["CLASSES"])
     {
-        var code = BuildClass(iniData, classNames, item.KeyName, item.Value);
+        var code = BuildClass(iniData, classNames, item.KeyName, item.Value, "Statement");
         classNames.Add(item.KeyName, code);
 
         // Write code to file
@@ -81,7 +100,7 @@ foreach (var provider in providers)
     }
 }
 
-IEnumerable<GenerateExtensionCodeStatement> GetExtensions(IniData iniData, string extDefPath, Dictionary<string, GenerateCodeStatement> classNames)
+IEnumerable<GenerateExtensionCodeStatement> GetExtensions(IniData iniData, string extDefPath, Dictionary<string, GenerateCodeClass> classNames)
 {
     MermaidReader mermaidReader = new MermaidReader();
     var mermaidRes = mermaidReader.Parse(new StreamReader(extDefPath));
@@ -137,7 +156,7 @@ List<int> FindParaCommas(string paras)
     return commas;
 }
 
-GenerateCodeStatement ParseClass(IniData iniData, string classDef)
+GenerateCodeClass ParseClass(IniData iniData, string classDef, string classSuffix)
 {
     classDef = classDef.Trim();
     // ConditionalJoin<T1, T2>((ISelectColumn<T1> col1, ISelectColumn<T2> col2)[] on)
@@ -146,7 +165,7 @@ GenerateCodeStatement ParseClass(IniData iniData, string classDef)
     // Into<T>()
     // Update(ITable table)
 
-    GenerateCodeStatement statement = new GenerateCodeStatement()
+    GenerateCodeClass statement = new GenerateCodeClass()
     {
         nspace = iniData.Global["sqlDialect"]
     };
@@ -162,12 +181,12 @@ GenerateCodeStatement ParseClass(IniData iniData, string classDef)
             gIdx = statement.full_class_name.Length;
         }
         statement.class_name_short = statement.full_class_name;
-        statement.full_class_name = statement.full_class_name.Insert(gIdx, "Statement");
+        statement.full_class_name = statement.full_class_name.Insert(gIdx, classSuffix);
     }
     else
     {
         statement.class_name_short = classDef;
-        statement.full_class_name = classDef + "Statement";
+        statement.full_class_name = classDef + classSuffix;
     }
 
     var name_split = statement.full_class_name.ToString().Split('<', '>').Where(s => !String.IsNullOrEmpty(s));
@@ -238,12 +257,12 @@ GenerateCodeStatement ParseClass(IniData iniData, string classDef)
     return statement;
 }
 
-GenerateCodeStatement BuildClass(IniData iniData, Dictionary<string, GenerateCodeStatement> classNames, string name, string value) 
+GenerateCodeClass BuildClass(IniData iniData, Dictionary<string, GenerateCodeClass> classNames, string name, string value, string classSuffix) 
 {
     // ConditionalJoin<T1, T2> = ConditionalJoin<T1, T2>((ISelectColumn<T1> col1, ISelectColumn<T2> col2)[] on) : Join<T1, T2>()
     var classDef = value.Split(':');
 
-    GenerateCodeStatement generateCodeStatement = ParseClass(iniData, classDef[0]);
+    GenerateCodeClass generateCodeStatement = ParseClass(iniData, classDef[0], classSuffix);
 
 
     if (classDef.Length > 1)
@@ -262,7 +281,7 @@ GenerateCodeStatement BuildClass(IniData iniData, Dictionary<string, GenerateCod
                 gIdx = baseClass.full_class_name.Length;
             }
             baseClass.class_name_short = baseClass.full_class_name;
-            baseClass.full_class_name = baseClass.full_class_name.Insert(gIdx, "Statement");
+            baseClass.full_class_name = baseClass.full_class_name.Insert(gIdx, classSuffix);
 
 
             baseClass.parameters = baseCls
@@ -276,7 +295,7 @@ GenerateCodeStatement BuildClass(IniData iniData, Dictionary<string, GenerateCod
         else
         {
             baseClass.class_name_short = baseCls;
-            baseClass.full_class_name = baseCls + "Statement";
+            baseClass.full_class_name = baseCls + classSuffix;
         }
 
         if (classNames.ContainsKey(baseClass.class_name_short))

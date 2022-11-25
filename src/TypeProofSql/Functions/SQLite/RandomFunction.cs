@@ -3,15 +3,12 @@ using System.Collections.Generic;
 using System.Text;
 using TypeProofSql.Columns;
 
-namespace TypeProofSql.Expressions.Functions
+namespace TypeProofSql.Expressions.Functions.SQLite
 {
-    public class AbsFunction
+    public class RandomFunction
     {
-
-
-        public AbsFunction(IColumn column)
+        public RandomFunction()
         {
-
         }
     }
 }

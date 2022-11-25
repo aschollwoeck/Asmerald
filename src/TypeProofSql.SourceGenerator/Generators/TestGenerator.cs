@@ -9,7 +9,7 @@ namespace TypeProofSql.SourceGenerator.Generators
 {
     internal class TestGenerator
     {
-        internal string Generate(string testClass, IEnumerable<GenerateCodeStatement> classObjs)
+        internal string Generate(string testClass, IEnumerable<GenerateCodeClass> classObjs)
         {
             var sw = new StringWriter();
             IndentedTextWriter w = new IndentedTextWriter(sw);

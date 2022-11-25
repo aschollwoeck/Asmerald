@@ -4,7 +4,7 @@ using System.Text;
 
 namespace TypeProofSql.Columns
 {
-    public interface ISelectColumn
+    public interface ISelectColumn : ISelectExpression
     {
         string Name { get; }
     }

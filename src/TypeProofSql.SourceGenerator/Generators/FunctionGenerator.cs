@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace TypeProofSql.SourceGenerator.Generators
 {
-    internal class ClassGenerator
+    internal class FunctionGenerator
     {
         internal string Generate(GenerateCodeClass classObj)
         {
@@ -22,7 +22,7 @@ namespace TypeProofSql.SourceGenerator.Generators
             w.WriteLine("using TypeProofSql.QueryBuilders;");
             w.WriteLine("using TypeProofSql.Expressions;");
             w.WriteLine();
-            w.WriteLine($"namespace TypeProofSql.Statements.{classObj.nspace}");
+            w.WriteLine($"namespace TypeProofSql.Functions.{classObj.nspace}");
             w.WriteLine("{");
             w.Indent++;
             
@@ -34,26 +34,11 @@ namespace TypeProofSql.SourceGenerator.Generators
             }
             else
             {
-                w.WriteLine("IStatement");
-            }
-            if (classObj.generics != null)
-            {
-                w.Indent++;
-                foreach (var gen in classObj.generics)
-                {
-                    w.WriteLine($"where {gen} : ITable, new()");
-                }
-                w.Indent--;
+                w.WriteLine("ISelectExpression");
             }
 
             w.WriteLine("{");
             w.Indent++;
-
-            // Properties
-            if (classObj.inherit_class == null)
-            {
-                w.WriteLine("public IQueryBuilder QueryBuilder { get; private set; }");
-            }
 
             foreach (var prop in classObj.properties)
             {
@@ -76,44 +61,31 @@ namespace TypeProofSql.SourceGenerator.Generators
             w.WriteLine($"public {classObj.class_name}() {{ }}");
 
             // Constructor
-            w.Write($"public {classObj.class_name}(IQueryBuilder queryBuilder");
-
-            foreach (var prop in classObj.properties)
-            {
-                w.Write(", ");
-                if(prop.is_list)
-                {
-                    w.Write($"IEnumerable<{prop.class_name}>");
-                }
-                else
-                {
-                    w.Write(prop.class_name);
-                }
-                w.Write($" {prop.para}");
-            }
+            w.Write($"public {classObj.class_name}(");
+            w.WriteLine(
+                String.Join(", ",
+                    classObj.properties
+                    .Select(prop =>
+                    {
+                        if (prop.is_list)
+                        {
+                            return $"IEnumerable<{prop.class_name}> {prop.para}";
+                        }
+                        return $"{prop.class_name} {prop.para}";
+                    })
+                )
+            );
             w.WriteLine(")");
 
-            if(classObj.inherit_class != null)
+            if (classObj.inherit_class != null)
             {
                 w.Indent++;
-                w.Write($": base(queryBuilder");
-                foreach (var para in classObj.inherit_class.parameters)
-                {
-                    w.Write($", {para}");
-                }
-                w.WriteLine(")");
+                w.Write($": base({String.Join(", ", classObj.inherit_class.parameters)})");
                 w.Indent--;
             }
 
             w.WriteLine("{");
             w.Indent++;
-
-            // Constructor Body
-            if(classObj.inherit_class == null)
-            {
-                w.WriteLine("this.QueryBuilder = queryBuilder;");
-                w.WriteLine("this.QueryBuilder.AddStatment(this);");
-            }
 
             foreach (var prop in classObj.properties)
             {

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace TypeProofSql.SourceGenerator
 {
-    internal class GenerateCodeStatement
+    internal class GenerateCodeClass
     {
         public string nspace { get; set; } = "";
         public string class_name { get; set; } = "";
@@ -25,7 +25,7 @@ namespace TypeProofSql.SourceGenerator
         public string full_class_name { get; set; } = "";
         public string class_name_short { get; set; } = "";
         public List<string> parameters = new();
-        public GenerateCodeStatement base_class { get; set; }
+        public GenerateCodeClass base_class { get; set; }
     }
 
     internal class GenerateCodeProperty
@@ -49,8 +49,8 @@ namespace TypeProofSql.SourceGenerator
 
         internal class Extension
         {
-            public GenerateCodeStatement base_class { get; set; }
-            public GenerateCodeStatement return_class_name { get; set; }
+            public GenerateCodeClass base_class { get; set; }
+            public GenerateCodeClass return_class_name { get; set; }
             public List<string> generic_types { get; set; } = new List<string>();
         }
     }
