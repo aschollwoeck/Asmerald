@@ -72,6 +72,13 @@ namespace TypeProofSql.Test
         {
             TypeProofSql.SQLiteDSLContext dslCtxt = new SQLiteDSLContext();
 
+            // Functions
+            dslCtxt.Abs((-2).Expr());
+            dslCtxt.Abs("hi".Expr());
+            dslCtxt.Abs(TblCards.Id());
+            dslCtxt.Abs(TblCards.Name());
+
+            // Statements
 
             var sql2 = dslCtxt
                 .Select()

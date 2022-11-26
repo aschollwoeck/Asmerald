@@ -11,9 +11,9 @@ namespace TypeProofSql.Statements.SQLite
     public class SelectColumnsStatement : IStatement
     {
         public IQueryBuilder QueryBuilder { get; private set; }
-        public List<ISelectColumn> Columns { get; private set; } = new List<ISelectColumn>();
+        public List<ISelectExpression> Columns { get; private set; } = new List<ISelectExpression>();
         public SelectColumnsStatement() { }
-        public SelectColumnsStatement(IQueryBuilder queryBuilder, IEnumerable<ISelectColumn> columns)
+        public SelectColumnsStatement(IQueryBuilder queryBuilder, IEnumerable<ISelectExpression> columns)
         {
             this.QueryBuilder = queryBuilder;
             this.QueryBuilder.AddStatment(this);

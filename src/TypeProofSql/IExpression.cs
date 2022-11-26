@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace TypeProofSql.Expressions.Functions
+namespace TypeProofSql
 {
     public interface IExpression
     {

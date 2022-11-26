@@ -10,7 +10,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Extensions\SQLite\" />
     <Folder Include="Statements\SQLite\" />
   </ItemGroup>
 

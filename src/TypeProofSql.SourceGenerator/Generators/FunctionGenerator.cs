@@ -61,21 +61,24 @@ namespace TypeProofSql.SourceGenerator.Generators
             w.WriteLine($"public {classObj.class_name}() {{ }}");
 
             // Constructor
-            w.Write($"public {classObj.class_name}(");
-            w.WriteLine(
-                String.Join(", ",
-                    classObj.properties
-                    .Select(prop =>
-                    {
-                        if (prop.is_list)
+            if (classObj.properties != null && classObj.properties.Count > 0)
+            {
+                w.Write($"public {classObj.class_name}(");
+                w.Write(
+                    String.Join(", ",
+                        classObj.properties
+                        .Select(prop =>
                         {
-                            return $"IEnumerable<{prop.class_name}> {prop.para}";
-                        }
-                        return $"{prop.class_name} {prop.para}";
-                    })
-                )
-            );
-            w.WriteLine(")");
+                            if (prop.is_list)
+                            {
+                                return $"IEnumerable<{prop.class_name}> {prop.para}";
+                            }
+                            return $"{prop.class_name} {prop.para}";
+                        })
+                    )
+                );
+                w.WriteLine(")");
+            }
 
             if (classObj.inherit_class != null)
             {

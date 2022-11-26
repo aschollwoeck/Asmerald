@@ -6,7 +6,7 @@ using TypeProofSql.Expressions;
 namespace TypeProofSql.Columns
 {
 
-    public interface IColumn
+    public interface IColumn : ISelectExpression
     {
         string Name();
     }

@@ -34,7 +34,7 @@ foreach (var provider in providers)
     var extDir = System.IO.Directory.CreateDirectory(Path.Combine(dir, "Extensions", iniData.Global["sqlDialect"]));
     extDir.GetFiles().ToList().ForEach(f => f.Delete());
     var funcDir = System.IO.Directory.CreateDirectory(Path.Combine(dir, "Functions", iniData.Global["sqlDialect"]));
-    stmtDir.GetFiles().ToList().ForEach(f => f.Delete());
+    funcDir.GetFiles().ToList().ForEach(f => f.Delete());
     var testDir = new System.IO.DirectoryInfo(tDir);
 
     Dictionary<string, GenerateCodeClass> classNames = new();
@@ -60,7 +60,7 @@ foreach (var provider in providers)
         {
             filename = filename + String.Join(", ", code.generics);
         }
-        var generatedCode = new TypeProofSql.SourceGenerator.Generators.ClassGenerator().Generate(code);
+        var generatedCode = new TypeProofSql.SourceGenerator.Generators.FunctionGenerator().Generate(code);
         File.WriteAllText(System.IO.Path.Combine(funcDir.FullName, filename + ".cs"), generatedCode);
     }
 
