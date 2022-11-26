@@ -31,7 +31,7 @@ foreach (var provider in providers)
     if (System.IO.Directory.Exists(Path.Combine(dir, "Functions")) == false) System.IO.Directory.CreateDirectory(Path.Combine(dir, "Functions"));
     var stmtDir = System.IO.Directory.CreateDirectory(Path.Combine(dir, "Statements", iniData.Global["sqlDialect"]));
     stmtDir.GetFiles().ToList().ForEach(f => f.Delete());
-    var extDir = System.IO.Directory.CreateDirectory(Path.Combine(dir, "Extensions", iniData.Global["sqlDialect"]));
+    var extDir = System.IO.Directory.CreateDirectory(Path.Combine(dir, "Extensions", iniData.Global["sqlDialect"], "Statements"));
     extDir.GetFiles().ToList().ForEach(f => f.Delete());
     var funcDir = System.IO.Directory.CreateDirectory(Path.Combine(dir, "Functions", iniData.Global["sqlDialect"]));
     funcDir.GetFiles().ToList().ForEach(f => f.Delete());
