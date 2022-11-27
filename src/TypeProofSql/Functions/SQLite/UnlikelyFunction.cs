@@ -8,7 +8,7 @@ using TypeProofSql.Expressions;
 
 namespace TypeProofSql.Functions.SQLite
 {
-    public class UnlikelyFunction : ISelectExpression
+    public class UnlikelyFunction : IFunction
     {
         public ISelectExpression X { get; private set; }
         public UnlikelyFunction() { }

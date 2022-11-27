@@ -77,6 +77,19 @@ namespace TypeProofSql.Test
             dslCtxt.Abs("hi".Expr());
             dslCtxt.Abs(TblCards.Id());
             dslCtxt.Abs(TblCards.Name());
+            dslCtxt.Replace(TblCards.Name(), "hi".Expr(), "servus".Expr());
+            
+            3.Abs();
+            "".Expr
+
+            TblCards.Id().Abs();
+
+            var tsdf = dslCtxt
+                .Select(
+                    dslCtxt.Abs(TblCards.Id()))
+                .From<TblCards>()
+                .QueryBuilder
+                .Build();
 
             // Statements
 

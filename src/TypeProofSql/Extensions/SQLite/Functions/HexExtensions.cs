@@ -12,7 +12,7 @@ namespace TypeProofSql.SQLite
 {
     public static partial class TypeProofSqlHexExtensions
     {
-        public static HexFunction Hex(this SQLiteDSLContext stmt, params ISelectExpression[] z)
+        public static HexFunction Hex(this SQLiteDSLContext stmt, ISelectExpression z)
         {
             return new HexFunction(z);
         }

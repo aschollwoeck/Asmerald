@@ -8,7 +8,7 @@ using TypeProofSql.Expressions;
 
 namespace TypeProofSql.Functions.SQLite
 {
-    public class MaxFunction : ISelectExpression
+    public class MaxFunction : IFunction
     {
         public List<ISelectExpression> X { get; private set; } = new List<ISelectExpression>();
         public MaxFunction() { }

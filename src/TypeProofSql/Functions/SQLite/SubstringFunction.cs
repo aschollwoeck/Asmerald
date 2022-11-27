@@ -8,7 +8,7 @@ using TypeProofSql.Expressions;
 
 namespace TypeProofSql.Functions.SQLite
 {
-    public class SubstringFunction : ISelectExpression
+    public class SubstringFunction : IFunction
     {
         public ISelectExpression X { get; private set; }
         public ISelectExpression Y { get; private set; }

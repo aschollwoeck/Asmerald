@@ -12,13 +12,9 @@ namespace TypeProofSql.SQLite
 {
     public static partial class TypeProofSqlIfNullExtensions
     {
-        public static IfNullFunction IfNull(this SQLiteDSLContext stmt, ISelectExpression x)
+        public static IfNullFunction IfNull(this SQLiteDSLContext stmt, ISelectExpression x, ISelectExpression y)
         {
-            return new IfNullFunction(x);
-        }
-        public static IfNullYFunction IfNull(this SQLiteDSLContext stmt, ISelectExpression x, ISelectExpression y)
-        {
-            return new IfNullYFunction(x, y);
+            return new IfNullFunction(x, y);
         }
     }
 }

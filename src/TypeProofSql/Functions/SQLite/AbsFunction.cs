@@ -8,7 +8,7 @@ using TypeProofSql.Expressions;
 
 namespace TypeProofSql.Functions.SQLite
 {
-    public class AbsFunction : ISelectExpression
+    public class AbsFunction : IFunction
     {
         public ISelectExpression X { get; private set; }
         public AbsFunction() { }
@@ -16,5 +16,7 @@ namespace TypeProofSql.Functions.SQLite
         {
             this.X = x;
         }
+
+
     }
 }

@@ -8,11 +8,11 @@ using TypeProofSql.Expressions;
 
 namespace TypeProofSql.Functions.SQLite
 {
-    public class ZerblobFunction : ISelectExpression
+    public class ZeroblobFunction : IFunction
     {
         public ISelectExpression X { get; private set; }
-        public ZerblobFunction() { }
-        public ZerblobFunction(ISelectExpression x)
+        public ZeroblobFunction() { }
+        public ZeroblobFunction(ISelectExpression x)
         {
             this.X = x;
         }

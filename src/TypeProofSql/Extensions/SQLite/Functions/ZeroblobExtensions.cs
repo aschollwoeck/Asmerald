@@ -10,11 +10,11 @@ using TypeProofSql.Functions.SQLite;
 
 namespace TypeProofSql.SQLite
 {
-    public static partial class TypeProofSqlZerblobExtensions
+    public static partial class TypeProofSqlZeroblobExtensions
     {
-        public static ZerblobFunction Zerblob(this SQLiteDSLContext stmt, ISelectExpression x)
+        public static ZeroblobFunction Zeroblob(this SQLiteDSLContext stmt, ISelectExpression x)
         {
-            return new ZerblobFunction(x);
+            return new ZeroblobFunction(x);
         }
     }
 }

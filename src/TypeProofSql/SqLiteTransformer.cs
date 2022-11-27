@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using TypeProofSql.Columns;
 using TypeProofSql.Expressions;
+using TypeProofSql.Functions;
+using TypeProofSql.Functions.SQLite;
 using TypeProofSql.Statements;
 using TypeProofSql.Statements.SQLite;
 
@@ -561,6 +563,214 @@ namespace TypeProofSql
             if(expression is ISelectColumn selColumn)
             {
                 return selColumn.Name;
+            }
+            else if(expression is IFunction function)
+            {
+                if(function is AbsFunction absFunction)
+                {
+                    return $"abs({this.GetValueName(absFunction.X)})";
+                }
+                else if(function is ChangesFunction changesFunction)
+                {
+                    return "changes()";
+                }
+                else if(function is CharFunction charFunction)
+                {
+                    List<ISelectExpression> le = new List<ISelectExpression>();
+                    if (charFunction.X1 != null) le.Add(charFunction.X1);
+                    if (charFunction.X2 != null) le.Add(charFunction.X2);
+                    le.AddRange(charFunction.Xn);
+
+                    return $"char({String.Join(", ", le)})";
+                }
+                else if(function is CoalesceFunction coalesceFunction)
+                {
+                    return $"coalesece({coalesceFunction.X})";
+                }
+                else if(function is DateFunction dateFunction)
+                {
+                    return $"date({dateFunction.Value}, {String.Join(", ", dateFunction.Modifier)})";
+                }
+                else if(function is DateTimeFunction dateTimeFunction)
+                {
+                    return $"datetime({dateTimeFunction.Value}, {String.Join(", ", dateTimeFunction.Modifier)})";
+                }
+                else if(function is FormatFunction formatFunction)
+                {
+                    return $"format({formatFunction.Format}, {formatFunction.Z})";
+                }
+                else if(function is GlobFunction globFunction)
+                {
+                    return $"glob({globFunction.X}, {globFunction.Y})";
+                }
+                else if(function is HexFunction hexFunction)
+                {
+                    return $"hex({hexFunction.Z})";
+                }
+                else if(function is IfNullFunction ifNullFunction)
+                {
+                    return $"ifnull({ifNullFunction.X}, {ifNullFunction.Y})";
+                }
+                else if(function is IifFunction iifFunction)
+                {
+                    return $"iif({iifFunction.X}, {iifFunction.Y}, {iifFunction.Z})";
+                }
+                else if(function is InstrFunction instrFunction)
+                {
+                    return $"instr({instrFunction.X}, {instrFunction.Y})";
+                }
+                else if(function is JulianDayFunction julianDayFunction)
+                {
+                    return $"julianday({julianDayFunction.Value}, {String.Join(", ", julianDayFunction.Modifier)})";
+                }
+                else if(function is LastInsertRowIdFunction lastInsertRowIdFunction)
+                {
+                    return "last_insert_rowid()";
+                }
+                else if(function is LengthFunction lengthFunction)
+                {
+                    return $"length({lengthFunction.X})";
+                }
+                else if(function is LikeFunction likeFunction)
+                {
+                    return $"like({likeFunction.X}, {likeFunction.Y})";
+                }
+                else if(function is LikeEscapeFunction likeEscapeFunction)
+                {
+                    return $"like({likeEscapeFunction.X}, {likeEscapeFunction.Y}, {likeEscapeFunction.Z})";
+                }
+                else if(function is LikelihoodFunction likelihoodFunction)
+                {
+                    return $"likelihood({likelihoodFunction.X}, {likelihoodFunction.Y})";
+                }
+                else if(function is LikelyFunction likelyFunction)
+                {
+                    return $"likely({likelyFunction.X})";
+                }
+                else if(function is LowerFunction lowerFunction)
+                {
+                    return $"lower({lowerFunction.X})";
+                }
+                else if(function is LTrimFunction lTrimFunction)
+                {
+                    return $"ltrim({lTrimFunction.X})";
+                }
+                else if(function is LTrimYFunction lTrimYFunction)
+                {
+                    return $"ltrim({lTrimYFunction.X}, {lTrimYFunction.Y})";
+                }
+                else if(function is MaxFunction maxFunction)
+                {
+                    return $"max({maxFunction.X})";
+                }
+                else if(function is MinFunction minFunction)
+                {
+                    return $"min({minFunction.X})";
+                }
+                else if(function is NullIfFunction nullIfFunction)
+                {
+                    return $"nullif({nullIfFunction.X}, {nullIfFunction.Y})";
+                }
+                else if(function is QuoteFunction quoteFunction)
+                {
+                    return $"quote({quoteFunction.X})";
+                }
+                else if(function is RandomblobFunction randomblobFunction)
+                {
+                    return $"randomblob({randomblobFunction.N})";
+                }
+                else if(function is RandomFunction randomFunction)
+                {
+                    return $"random()";
+                }
+                else if(function is ReplaceFunction replaceFunction)
+                {
+                    return $"replace({replaceFunction.X}, {replaceFunction.Y}, {replaceFunction.Z})";
+                }
+                else if(function is RoundDigitsFunction roundDigitsFunction)
+                {
+                    return $"round({roundDigitsFunction.X}, {roundDigitsFunction.Y})";
+                }
+                else if(function is RoundFunction roundFunction)
+                {
+                    return $"round({roundFunction.X})";
+                }
+                else if(function is RTrimFunction rTrimFunction)
+                {
+                    return $"rtrim({rTrimFunction.X})";
+                }
+                else if(function is RTrimYFunction rTrimYFunction)
+                {
+                    return $"rtrim({rTrimYFunction.X}, {rTrimYFunction.Y})";
+                }
+                else if(function is SignFunction signFunction)
+                {
+                    return $"sign({signFunction.X})";
+                }
+                else if(function is SoundexFunction soundexFunction)
+                {
+                    return $"soundex({soundexFunction.X})";
+                }
+                else if(function is StrftimeFunction strftimeFunction)
+                {
+                    return $"strftime({strftimeFunction.Format}, {strftimeFunction.Value}, {String.Join(", ", strftimeFunction.Modifier)})";
+                }
+                else if(function is SubstrFunction substrFunction)
+                {
+                    return $"substr({substrFunction.X}, {substrFunction.Y})";
+                }
+                else if(function is SubstrLengthFunction substrLengthFunction)
+                {
+                    return $"substr({substrLengthFunction.X}, {substrLengthFunction.Y}, {substrLengthFunction.Z})";
+                }
+                else if (function is SubstringFunction substringFunction)
+                {
+                    return $"substring({substringFunction.X}, {substringFunction.Y})";
+                }
+                else if (function is SubstringLengthFunction substringLengthFunction)
+                {
+                    return $"substring({substringLengthFunction.X}, {substringLengthFunction.Y}, {substringLengthFunction.Z})";
+                }
+                else if(function is TimeFunction timeFunction)
+                {
+                    return $"time({timeFunction.Value}, {String.Join(", ", timeFunction.Modifier)})";
+                }
+                else if(function is TotalChangesFunction totalChangesFunction)
+                {
+                    return "total_changes()";
+                }
+                else if(function is TrimFunction trimFunction)
+                {
+                    return $"trim({trimFunction.X})";
+                }
+                else if(function is TrimYFunction trimYFunction)
+                {
+                    return $"trim({trimYFunction.X}, {trimYFunction.Y})";
+                }
+                else if(function is TypeofFunction typeofFunction)
+                {
+                    return $"typeof({typeofFunction.X})";
+                }
+                else if(function is UnicodeFunction unicodeFunction)
+                {
+                    return $"unicode({unicodeFunction.X})";
+                }
+                else if(function is UnlikelyFunction unlikelyFunction)
+                {
+                    return $"unlikely({unlikelyFunction.X})";
+                }
+                else if(function is UpperFunction upperFunction)
+                {
+                    return $"upper({upperFunction.X})";
+                }
+                else if(function is ZeroblobFunction zeroblobFunction)
+                {
+                    return $"zeroblob({zeroblobFunction.X})";
+                }
+                else
+                {
+                    throw new NotImplementedException($"Function '{function}' not implemented!");
+                }
             }
 
             throw new NotImplementedException("Select expression not yet implemented!");

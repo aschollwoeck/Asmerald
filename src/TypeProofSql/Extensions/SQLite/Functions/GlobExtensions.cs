@@ -12,9 +12,9 @@ namespace TypeProofSql.SQLite
 {
     public static partial class TypeProofSqlGlobExtensions
     {
-        public static GlobFunction Glob(this SQLiteDSLContext stmt)
+        public static GlobFunction Glob(this SQLiteDSLContext stmt, ISelectExpression x, ISelectExpression y)
         {
-            return new GlobFunction();
+            return new GlobFunction(x, y);
         }
     }
 }

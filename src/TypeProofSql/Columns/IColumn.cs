@@ -11,7 +11,7 @@ namespace TypeProofSql.Columns
         string Name();
     }
 
-    public interface IColumn<T, D> : IColumn where D : ITable
+    public interface IColumn<T, Tbl> : IColumn where Tbl : ITable
     {
         EqualConditionalExpression Equal(T condition);
         InConditionalExpression In(IEnumerable<T> condition);
@@ -24,7 +24,7 @@ namespace TypeProofSql.Columns
 
         ValueExpression Value(T value);
 
-        ISelectColumnAlias<D> As(string name);
-        ISelectColumn<D> Count();
+        ISelectColumnAlias<Tbl> As(string name);
+        ISelectColumn<Tbl> Count();
     }
 }

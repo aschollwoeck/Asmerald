@@ -1,47 +1,117 @@
 ﻿flowchart LR
 
+subgraph SGValue
+	Int16 --> SGValueStart
+	Int32 --> SGValueStart
+	Int64 --> SGValueStart
+	UInt16 --> SGValueStart
+	UInt32 --> SGValueStart
+	UInt64 --> SGValueStart
+	Decimal --> SGValueStart
+	Double --> SGValueStart
+	String --> SGValueStart
+	Char --> SGValueStart
+	Boolean --> SGValueStart
+	Byte --> SGValueStart
+	DateTime --> SGValueStart
+	Single --> SGValueStart
+
+	Int16 --> SGValueEnd
+	Int32 --> SGValueEnd
+	Int64 --> SGValueEnd
+	UInt16 --> SGValueEnd
+	UInt32 --> SGValueEnd
+	UInt64 --> SGValueEnd
+	Decimal --> SGValueEnd
+	Double --> SGValueEnd
+	String --> SGValueEnd
+	Char --> SGValueEnd
+	Boolean --> SGValueEnd
+	Byte --> SGValueEnd
+	DateTime --> SGValueEnd
+	Single --> SGValueEnd
+end
+
 Root -->|Abs| Abs
+SGValueEnd -->|Abs| Abs
 Root -->|Changes| Changes
+SGValueEnd -->|Changes| Changes
 Root -->|Char| Char
+SGValueEnd -->|Char| Char
 Root -->|Coalesce| Coalesce
+SGValueEnd -->|Coalesce| Coalesce
 Root -->|Format| Format
+SGValueEnd -->|Format| Format
 Root -->|Glob| Glob
+SGValueEnd -->|Glob| Glob
 Root -->|Hex| Hex
+SGValueEnd -->|Hex| Hex
 Root -->|IfNull| IfNull
-Root -->|IfNull| IfNullY
+SGValueEnd -->|IfNull| IfNull
 Root -->|Iif| Iif
+SGValueEnd -->|Iif| Iif
 Root -->|Instr| Instr
+SGValueEnd -->|Instr| Instr
 Root -->|LastInsertRowId| LastInsertRowId
 Root -->|Length| Length
+SGValueEnd -->|Length| Length
 Root -->|Like| Like
+SGValueEnd -->|Like| Like
 Root -->|LikeEscape| LikeEscape
+SGValueEnd -->|LikeEscape| LikeEscape
 Root -->|Likelihood| Likelihood
+SGValueEnd -->|Likelihood| Likelihood
 Root -->|Likely| Likely
+SGValueEnd -->|Likely| Likely
 Root -->|Lower| Lower
+SGValueEnd -->|Lower| Lower
 Root -->|LTrim| LTrim
+SGValueEnd -->|LTrim| LTrim
 Root -->|LTrim| LTrimY
+SGValueEnd -->|LTrim| LTrimY
 Root -->|Max| Max
+SGValueEnd -->|Max| Max
 Root -->|Min| Min
+SGValueEnd -->|Min| Min
 Root -->|NullIf| NullIf
+SGValueEnd -->|NullIf| NullIf
 Root -->|Quote| Quote
+SGValueEnd -->|Quote| Quote
 Root -->|Random| Random
 Root -->|Randomblob| Randomblob
 Root -->|Replace| Replace
+SGValueEnd -->|Replace| Replace
 Root -->|Round| Round
+SGValueEnd -->|Round| Round
 Root -->|Round| RoundDigits
+SGValueEnd -->|Round| RoundDigits
 Root -->|RTrim| RTrim
+SGValueEnd -->|RTrim| RTrim
 Root -->|RTrim| RTrimY
+SGValueEnd -->|RTrim| RTrimY
 Root -->|Sign| Sign
+SGValueEnd -->|Sign| Sign
 Root -->|Soundex| Soundex
+SGValueEnd -->|Soundex| Soundex
 Root -->|Substr| SubstrLength
+SGValueEnd -->|Substr| SubstrLength
 Root -->|Substr| Substr
+SGValueEnd -->|Substr| Substr
 Root -->|Substring| SubstringLength
+SGValueEnd -->|Substring| SubstringLength
 Root -->|Substring| Substring
+SGValueEnd -->|Substring| Substring
 Root -->|TotalChanges| TotalChanges
 Root -->|Trim| Trim
+SGValueEnd -->|Trim| Trim
 Root -->|Trim| TrimY
+SGValueEnd -->|Trim| TrimY
 Root -->|Typeof| Typeof
+SGValueEnd -->|Typeof| Typeof
 Root -->|Unicode| Unicode
+SGValueEnd -->|Unicode| Unicode
 Root -->|Unlikely| Unlikely
+SGValueEnd -->|Unlikely| Unlikely
 Root -->|Upper| Upper
-Root -->|Zerblob| Zerblob
+SGValueEnd -->|Upper| Upper
+Root -->|Zeroblob| Zeroblob

@@ -8,8 +8,15 @@ using TypeProofSql.Expressions;
 
 namespace TypeProofSql.Functions.SQLite
 {
-    public class GlobFunction : ISelectExpression
+    public class GlobFunction : IFunction
     {
+        public ISelectExpression X { get; private set; }
+        public ISelectExpression Y { get; private set; }
         public GlobFunction() { }
+        public GlobFunction(ISelectExpression x, ISelectExpression y)
+        {
+            this.X = x;
+            this.Y = y;
+        }
     }
 }

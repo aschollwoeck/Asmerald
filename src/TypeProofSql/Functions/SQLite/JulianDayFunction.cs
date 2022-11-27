@@ -8,7 +8,7 @@ using TypeProofSql.Expressions;
 
 namespace TypeProofSql.Functions.SQLite
 {
-    public class JulianDayFunction : ISelectExpression
+    public class JulianDayFunction : IFunction
     {
         public ISelectExpression Value { get; private set; }
         public List<String> Modifier { get; private set; } = new List<String>();

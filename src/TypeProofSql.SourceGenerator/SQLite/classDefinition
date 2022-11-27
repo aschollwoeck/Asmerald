@@ -7,6 +7,21 @@ TestDirectory=..\..\..\..\TypeProofSql.Test
 SQLiteDSLContext = SQLiteDSLContext
 ConditionalGroupStatement = ConditionalGroupStatement
 ConditionalStatement = ConditionalStatement
+Int16 = Int16
+Int32 = Int32
+Int64 = Int64
+UInt16 = UInt16
+UInt32 = UInt32
+UInt64 = UInt64
+Decimal = Decimal
+Double = Double
+String = String
+Char = Char
+Boolean = Boolean
+Byte = Byte
+DateTime = DateTime
+Single = Single
+
 
 [FUNCTIONS]
 Abs = Abs(ISelectExpression x)
@@ -14,10 +29,9 @@ Changes = Changes()
 Char = Char(ISelectExpression x1, ISelectExpression x2, ISelectExpression[] xn)
 Coalesce = Coalesce(ISelectExpression x, ISelectExpression y, ISelectExpression[] z)
 Format = Format(string format, ISelectExpression[] z)
-Glob = Glob()
-Hex = Hex(ISelectExpression[] z)
-IfNull = IfNull(ISelectExpression x)
-IfNullY = IfNullY(ISelectExpression x, ISelectExpression y)
+Glob = Glob(ISelectExpression x, ISelectExpression y)
+Hex = Hex(ISelectExpression z)
+IfNull = IfNull(ISelectExpression x, ISelectExpression y)
 Iif = Iif(ConditionalExpression x, ISelectExpression y, ISelectExpression z)
 Instr = Instr(ISelectExpression x, ISelectExpression y)
 LastInsertRowId = LastInsertRowId()
@@ -53,7 +67,7 @@ Typeof = Typeof(ISelectExpression x)
 Unicode = Unicode(ISelectExpression x)
 Unlikely = Unlikely(ISelectExpression x)
 Upper = Upper(ISelectExpression x)
-Zerblob = Zerblob(ISelectExpression x)
+Zeroblob = Zeroblob(ISelectExpression x)
 
 Date = Date(ISelectExpression value, string[] modifier)
 Time = Time(ISelectExpression value, string[] modifier)

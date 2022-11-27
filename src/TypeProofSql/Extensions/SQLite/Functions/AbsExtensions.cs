@@ -16,5 +16,11 @@ namespace TypeProofSql.SQLite
         {
             return new AbsFunction(x);
         }
+
+        public static AbsFunction Abs<T, Tbl>(this IColumn<T, Tbl> column) 
+            where Tbl : ITable
+        {
+            return new AbsFunction(column);
+        }
     }
 }

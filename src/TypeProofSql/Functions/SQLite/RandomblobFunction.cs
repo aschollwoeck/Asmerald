@@ -8,7 +8,7 @@ using TypeProofSql.Expressions;
 
 namespace TypeProofSql.Functions.SQLite
 {
-    public class RandomblobFunction : ISelectExpression
+    public class RandomblobFunction : IFunction
     {
         public int N { get; private set; }
         public RandomblobFunction() { }

@@ -8,13 +8,13 @@ using TypeProofSql.Expressions;
 
 namespace TypeProofSql.Functions.SQLite
 {
-    public class HexFunction : ISelectExpression
+    public class HexFunction : IFunction
     {
-        public List<ISelectExpression> Z { get; private set; } = new List<ISelectExpression>();
+        public ISelectExpression Z { get; private set; }
         public HexFunction() { }
-        public HexFunction(IEnumerable<ISelectExpression> z)
+        public HexFunction(ISelectExpression z)
         {
-            this.Z.AddRange(z);
+            this.Z = z;
         }
     }
 }

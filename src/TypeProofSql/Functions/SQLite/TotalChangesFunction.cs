@@ -8,7 +8,7 @@ using TypeProofSql.Expressions;
 
 namespace TypeProofSql.Functions.SQLite
 {
-    public class TotalChangesFunction : ISelectExpression
+    public class TotalChangesFunction : IFunction
     {
         public TotalChangesFunction() { }
     }

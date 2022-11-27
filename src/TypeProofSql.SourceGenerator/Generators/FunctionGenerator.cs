@@ -34,7 +34,7 @@ namespace TypeProofSql.SourceGenerator.Generators
             }
             else
             {
-                w.WriteLine("ISelectExpression");
+                w.WriteLine("IFunction");
             }
 
             w.WriteLine("{");

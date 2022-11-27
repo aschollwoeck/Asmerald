@@ -8,7 +8,7 @@ using TypeProofSql.Expressions;
 
 namespace TypeProofSql.Functions.SQLite
 {
-    public class LastInsertRowIdFunction : ISelectExpression
+    public class LastInsertRowIdFunction : IFunction
     {
         public LastInsertRowIdFunction() { }
     }
