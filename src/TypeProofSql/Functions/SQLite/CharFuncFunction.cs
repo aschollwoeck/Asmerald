@@ -8,13 +8,13 @@ using TypeProofSql.Expressions;
 
 namespace TypeProofSql.Functions.SQLite
 {
-    public class CharFunction : IFunction
+    public class CharFuncFunction : IFunction
     {
         public ISelectExpression X1 { get; private set; }
         public ISelectExpression X2 { get; private set; }
         public List<ISelectExpression> Xn { get; private set; } = new List<ISelectExpression>();
-        public CharFunction() { }
-        public CharFunction(ISelectExpression x1, ISelectExpression x2, IEnumerable<ISelectExpression> xn)
+        public CharFuncFunction() { }
+        public CharFuncFunction(ISelectExpression x1, ISelectExpression x2, IEnumerable<ISelectExpression> xn)
         {
             this.X1 = x1;
             this.X2 = x2;

@@ -21,12 +21,13 @@ Boolean = Boolean
 Byte = Byte
 DateTime = DateTime
 Single = Single
+ISelectColumn = ISelectColumn
 
 
 [FUNCTIONS]
 Abs = Abs(ISelectExpression x)
 Changes = Changes()
-Char = Char(ISelectExpression x1, ISelectExpression x2, ISelectExpression[] xn)
+CharFunc = CharFunc(ISelectExpression x1, ISelectExpression x2, ISelectExpression[] xn)
 Coalesce = Coalesce(ISelectExpression x, ISelectExpression y, ISelectExpression[] z)
 Format = Format(string format, ISelectExpression[] z)
 Glob = Glob(ISelectExpression x, ISelectExpression y)
@@ -43,8 +44,10 @@ Likely = Likely(ISelectExpression x)
 Lower = Lower(ISelectExpression x)
 LTrim = LTrim(ISelectExpression x)
 LTrimY = LTrimY(ISelectExpression x, ISelectExpression y)
-Max = Max(ISelectExpression[] x)
-Min = Min(ISelectExpression[] x)
+Max = Max(ISelectExpression x)
+Min = Min(ISelectExpression x)
+MaxAggregate = MaxAggregate(ISelectExpression[] x)
+MinAggregate = MinAggregate(ISelectExpression[] x)
 NullIf = NullIf(ISelectExpression x, ISelectExpression y)
 Quote = Quote(ISelectExpression x)
 Random = Random()
@@ -69,9 +72,9 @@ Unlikely = Unlikely(ISelectExpression x)
 Upper = Upper(ISelectExpression x)
 Zeroblob = Zeroblob(ISelectExpression x)
 
-Date = Date(ISelectExpression value, string[] modifier)
-Time = Time(ISelectExpression value, string[] modifier)
-DateTime = DateTime(ISelectExpression value, string[] modifier)
+DateFunc = DateFunc(ISelectExpression value, string[] modifier)
+TimeFunc = TimeFunc(ISelectExpression value, string[] modifier)
+DateTimeFunc = DateTimeFunc(ISelectExpression value, string[] modifier)
 JulianDay = JulianDay(ISelectExpression value, string[] modifier)
 Unixepoch = Unixepoch(ISelectExpression value, string[] modifier)
 Strftime = Strftime(string format, ISelectExpression value, string[] modifier)

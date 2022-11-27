@@ -15,6 +15,7 @@ subgraph SGValue
 	Byte --> SGValueStart
 	DateTime --> SGValueStart
 	Single --> SGValueStart
+	ISelectColumn --> SGValueStart
 
 	Int16 --> SGValueEnd
 	Int32 --> SGValueEnd
@@ -30,18 +31,17 @@ subgraph SGValue
 	Byte --> SGValueEnd
 	DateTime --> SGValueEnd
 	Single --> SGValueEnd
+	ISelectColumn --> SGValueEnd
 end
 
 Root -->|Abs| Abs
 SGValueEnd -->|Abs| Abs
 Root -->|Changes| Changes
-SGValueEnd -->|Changes| Changes
-Root -->|Char| Char
-SGValueEnd -->|Char| Char
+Root -->|Char| CharFunc
+SGValueEnd -->|Char| CharFunc
 Root -->|Coalesce| Coalesce
 SGValueEnd -->|Coalesce| Coalesce
 Root -->|Format| Format
-SGValueEnd -->|Format| Format
 Root -->|Glob| Glob
 SGValueEnd -->|Glob| Glob
 Root -->|Hex| Hex
@@ -49,7 +49,6 @@ SGValueEnd -->|Hex| Hex
 Root -->|IfNull| IfNull
 SGValueEnd -->|IfNull| IfNull
 Root -->|Iif| Iif
-SGValueEnd -->|Iif| Iif
 Root -->|Instr| Instr
 SGValueEnd -->|Instr| Instr
 Root -->|LastInsertRowId| LastInsertRowId
@@ -69,8 +68,10 @@ Root -->|LTrim| LTrim
 SGValueEnd -->|LTrim| LTrim
 Root -->|LTrim| LTrimY
 SGValueEnd -->|LTrim| LTrimY
+Root -->|Max| MaxAggregate
 Root -->|Max| Max
 SGValueEnd -->|Max| Max
+Root -->|Min| MinAggregate
 Root -->|Min| Min
 SGValueEnd -->|Min| Min
 Root -->|NullIf| NullIf

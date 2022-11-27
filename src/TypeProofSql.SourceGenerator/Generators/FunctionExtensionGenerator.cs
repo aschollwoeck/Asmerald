@@ -41,29 +41,43 @@ namespace TypeProofSql.SourceGenerator.Generators
                 {
                     w.Write($"<{String.Join(", ", ext.generic_types)}>");
                 }
-                w.Write($"(this {ext.base_class.class_name}");
 
-                if(ext.base_class.generics != null && ext.base_class.generics.Count > 0)
+                bool bClass = false;
+                if (ext.base_class.class_name.Contains("DSLContext"))
                 {
-                    w.Write("<");
-                    w.Write(String.Join(", ", ext.base_class.generics));
-                    w.Write(">");
-                }
+                    w.Write($"(this {ext.base_class.class_name}");
 
-                w.Write(" stmt");
+                    if (ext.base_class.generics != null && ext.base_class.generics.Count > 0)
+                    {
+                        w.Write("<");
+                        w.Write(String.Join(", ", ext.base_class.generics));
+                        w.Write(">");
+                    }
+
+                    w.Write(" stmt");
+                    bClass = true;
+                }
 
                 foreach (var prop in ext.return_class_name.properties)
                 {
-                    w.Write(", ");
-                    if (prop.is_list)
+                    if(bClass == false)
                     {
-                        w.Write($"params {prop.class_name}[]");
+                        w.Write($"(this {ext.base_class.class_name} {prop.para}");
+                        bClass = true;
                     }
                     else
                     {
-                        w.Write(prop.class_name);
+                        w.Write(", ");
+                        if (prop.is_list)
+                        {
+                            w.Write($"params {prop.class_name}[]");
+                        }
+                        else
+                        {
+                            w.Write(prop.class_name);
+                        }
+                        w.Write($" {prop.para}");
                     }
-                    w.Write($" {prop.para}");
                 }
                 w.WriteLine(")");
 
@@ -80,7 +94,21 @@ namespace TypeProofSql.SourceGenerator.Generators
                 w.WriteLine("{");
                 w.Indent++;
 
-                w.Write($"return new {ext.return_class_name.full_class_name}({String.Join(", ", ext.return_class_name.properties.Select(prop => prop.para))}");
+
+                IEnumerable<string> lPara = ext.return_class_name.properties.Select(prop => prop.para);
+                if (ext.base_class.class_name.Contains("DSLContext") == false && ext.base_class.class_name.Contains("Select") == false)
+                {
+                    // e.g. from int, string, etc.
+                    // int.Abs() or
+                    // "".Replace(y, z) -> this string x, string y, string z
+                    var n = new List<string>();
+                    n.Add($"{lPara.First()}.Expr()");
+                    n.AddRange(lPara.Skip(1));
+
+                    lPara = n;
+                }
+                w.Write($"return new {ext.return_class_name.full_class_name}({String.Join(", ", lPara)}");
+
                 if (ext.generic_types != null)
                 {
                     foreach (var gentyp in ext.generic_types)

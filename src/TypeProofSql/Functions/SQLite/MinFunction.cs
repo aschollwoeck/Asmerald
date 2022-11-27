@@ -10,11 +10,11 @@ namespace TypeProofSql.Functions.SQLite
 {
     public class MinFunction : IFunction
     {
-        public List<ISelectExpression> X { get; private set; } = new List<ISelectExpression>();
+        public ISelectExpression X { get; private set; }
         public MinFunction() { }
-        public MinFunction(IEnumerable<ISelectExpression> x)
+        public MinFunction(ISelectExpression x)
         {
-            this.X.AddRange(x);
+            this.X = x;
         }
     }
 }

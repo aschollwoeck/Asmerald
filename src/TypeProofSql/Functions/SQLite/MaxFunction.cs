@@ -10,11 +10,11 @@ namespace TypeProofSql.Functions.SQLite
 {
     public class MaxFunction : IFunction
     {
-        public List<ISelectExpression> X { get; private set; } = new List<ISelectExpression>();
+        public ISelectExpression X { get; private set; }
         public MaxFunction() { }
-        public MaxFunction(IEnumerable<ISelectExpression> x)
+        public MaxFunction(ISelectExpression x)
         {
-            this.X.AddRange(x);
+            this.X = x;
         }
     }
 }

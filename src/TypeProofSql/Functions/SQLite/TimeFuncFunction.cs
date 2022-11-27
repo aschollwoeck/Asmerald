@@ -8,12 +8,12 @@ using TypeProofSql.Expressions;
 
 namespace TypeProofSql.Functions.SQLite
 {
-    public class DateFunction : IFunction
+    public class TimeFuncFunction : IFunction
     {
         public ISelectExpression Value { get; private set; }
         public List<String> Modifier { get; private set; } = new List<String>();
-        public DateFunction() { }
-        public DateFunction(ISelectExpression value, IEnumerable<String> modifier)
+        public TimeFuncFunction() { }
+        public TimeFuncFunction(ISelectExpression value, IEnumerable<String> modifier)
         {
             this.Value = value;
             this.Modifier.AddRange(modifier);

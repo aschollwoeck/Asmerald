@@ -574,7 +574,7 @@ namespace TypeProofSql
                 {
                     return "changes()";
                 }
-                else if(function is CharFunction charFunction)
+                else if(function is CharFuncFunction charFunction)
                 {
                     List<ISelectExpression> le = new List<ISelectExpression>();
                     if (charFunction.X1 != null) le.Add(charFunction.X1);
@@ -587,11 +587,11 @@ namespace TypeProofSql
                 {
                     return $"coalesece({coalesceFunction.X})";
                 }
-                else if(function is DateFunction dateFunction)
+                else if(function is DateFuncFunction dateFunction)
                 {
                     return $"date({dateFunction.Value}, {String.Join(", ", dateFunction.Modifier)})";
                 }
-                else if(function is DateTimeFunction dateTimeFunction)
+                else if(function is DateTimeFuncFunction dateTimeFunction)
                 {
                     return $"datetime({dateTimeFunction.Value}, {String.Join(", ", dateTimeFunction.Modifier)})";
                 }
@@ -731,7 +731,7 @@ namespace TypeProofSql
                 {
                     return $"substring({substringLengthFunction.X}, {substringLengthFunction.Y}, {substringLengthFunction.Z})";
                 }
-                else if(function is TimeFunction timeFunction)
+                else if(function is TimeFuncFunction timeFunction)
                 {
                     return $"time({timeFunction.Value}, {String.Join(", ", timeFunction.Modifier)})";
                 }

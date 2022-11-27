@@ -78,9 +78,8 @@ namespace TypeProofSql.Test
             dslCtxt.Abs(TblCards.Id());
             dslCtxt.Abs(TblCards.Name());
             dslCtxt.Replace(TblCards.Name(), "hi".Expr(), "servus".Expr());
-            
-            3.Abs();
-            "".Expr
+
+            (-2).Abs();
 
             TblCards.Id().Abs();
 

@@ -16,7 +16,5 @@ namespace TypeProofSql.Functions.SQLite
         {
             this.X = x;
         }
-
-
     }
 }
