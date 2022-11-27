@@ -581,47 +581,47 @@ namespace TypeProofSql
                     if (charFunction.X2 != null) le.Add(charFunction.X2);
                     le.AddRange(charFunction.Xn);
 
-                    return $"char({String.Join(", ", le)})";
+                    return $"char({String.Join(", ", le.Select(l => this.GetValueName(l)))})";
                 }
                 else if(function is CoalesceFunction coalesceFunction)
                 {
-                    return $"coalesece({coalesceFunction.X})";
+                    return $"coalesece({this.GetValueName(coalesceFunction.X)})";
                 }
                 else if(function is DateFuncFunction dateFunction)
                 {
-                    return $"date({dateFunction.Value}, {String.Join(", ", dateFunction.Modifier)})";
+                    return $"date({this.GetValueName(dateFunction.Value)}, {String.Join(", ", dateFunction.Modifier)})";
                 }
                 else if(function is DateTimeFuncFunction dateTimeFunction)
                 {
-                    return $"datetime({dateTimeFunction.Value}, {String.Join(", ", dateTimeFunction.Modifier)})";
+                    return $"datetime({this.GetValueName(dateTimeFunction.Value)}, {String.Join(", ", dateTimeFunction.Modifier)})";
                 }
                 else if(function is FormatFunction formatFunction)
                 {
-                    return $"format({formatFunction.Format}, {formatFunction.Z})";
+                    return $"format({formatFunction.Format}, {String.Join(", ", formatFunction.Z.Select(f => this.GetValueName(f)))})";
                 }
                 else if(function is GlobFunction globFunction)
                 {
-                    return $"glob({globFunction.X}, {globFunction.Y})";
+                    return $"glob({this.GetValueName(globFunction.X)}, {this.GetValueName(globFunction.Y)})";
                 }
                 else if(function is HexFunction hexFunction)
                 {
-                    return $"hex({hexFunction.Z})";
+                    return $"hex({this.GetValueName(hexFunction.Z)})";
                 }
                 else if(function is IfNullFunction ifNullFunction)
                 {
-                    return $"ifnull({ifNullFunction.X}, {ifNullFunction.Y})";
+                    return $"ifnull({this.GetValueName(ifNullFunction.X)}, {this.GetValueName(ifNullFunction.Y)})";
                 }
                 else if(function is IifFunction iifFunction)
                 {
-                    return $"iif({iifFunction.X}, {iifFunction.Y}, {iifFunction.Z})";
+                    return $"iif({iifFunction.X}, {this.GetValueName(iifFunction.Y)}, {this.GetValueName(iifFunction.Z)})";
                 }
                 else if(function is InstrFunction instrFunction)
                 {
-                    return $"instr({instrFunction.X}, {instrFunction.Y})";
+                    return $"instr({this.GetValueName(instrFunction.X)}, {this.GetValueName(instrFunction.Y)})";
                 }
                 else if(function is JulianDayFunction julianDayFunction)
                 {
-                    return $"julianday({julianDayFunction.Value}, {String.Join(", ", julianDayFunction.Modifier)})";
+                    return $"julianday({this.GetValueName(julianDayFunction.Value)}, {String.Join(", ", julianDayFunction.Modifier)})";
                 }
                 else if(function is LastInsertRowIdFunction lastInsertRowIdFunction)
                 {
@@ -629,51 +629,51 @@ namespace TypeProofSql
                 }
                 else if(function is LengthFunction lengthFunction)
                 {
-                    return $"length({lengthFunction.X})";
+                    return $"length({this.GetValueName(lengthFunction.X)})";
                 }
                 else if(function is LikeFunction likeFunction)
                 {
-                    return $"like({likeFunction.X}, {likeFunction.Y})";
+                    return $"like({this.GetValueName(likeFunction.X)}, {this.GetValueName(likeFunction.Y)})";
                 }
                 else if(function is LikeEscapeFunction likeEscapeFunction)
                 {
-                    return $"like({likeEscapeFunction.X}, {likeEscapeFunction.Y}, {likeEscapeFunction.Z})";
+                    return $"like({this.GetValueName(likeEscapeFunction.X)}, {this.GetValueName(likeEscapeFunction.Y)}, {this.GetValueName(likeEscapeFunction.Z)})";
                 }
                 else if(function is LikelihoodFunction likelihoodFunction)
                 {
-                    return $"likelihood({likelihoodFunction.X}, {likelihoodFunction.Y})";
+                    return $"likelihood({this.GetValueName(likelihoodFunction.X)}, {this.GetValueName(likelihoodFunction.Y)})";
                 }
                 else if(function is LikelyFunction likelyFunction)
                 {
-                    return $"likely({likelyFunction.X})";
+                    return $"likely({this.GetValueName(likelyFunction.X)})";
                 }
                 else if(function is LowerFunction lowerFunction)
                 {
-                    return $"lower({lowerFunction.X})";
+                    return $"lower({this.GetValueName(lowerFunction.X)})";
                 }
                 else if(function is LTrimFunction lTrimFunction)
                 {
-                    return $"ltrim({lTrimFunction.X})";
+                    return $"ltrim({this.GetValueName(lTrimFunction.X)})";
                 }
                 else if(function is LTrimYFunction lTrimYFunction)
                 {
-                    return $"ltrim({lTrimYFunction.X}, {lTrimYFunction.Y})";
+                    return $"ltrim({this.GetValueName(lTrimYFunction.X)}, {this.GetValueName(lTrimYFunction.Y)})";
                 }
                 else if(function is MaxFunction maxFunction)
                 {
-                    return $"max({maxFunction.X})";
+                    return $"max({this.GetValueName(maxFunction.X)})";
                 }
                 else if(function is MinFunction minFunction)
                 {
-                    return $"min({minFunction.X})";
+                    return $"min({this.GetValueName(minFunction.X)})";
                 }
                 else if(function is NullIfFunction nullIfFunction)
                 {
-                    return $"nullif({nullIfFunction.X}, {nullIfFunction.Y})";
+                    return $"nullif({this.GetValueName(nullIfFunction.X)}, {this.GetValueName(nullIfFunction.Y)})";
                 }
                 else if(function is QuoteFunction quoteFunction)
                 {
-                    return $"quote({quoteFunction.X})";
+                    return $"quote({this.GetValueName(quoteFunction.X)})";
                 }
                 else if(function is RandomblobFunction randomblobFunction)
                 {
@@ -685,55 +685,55 @@ namespace TypeProofSql
                 }
                 else if(function is ReplaceFunction replaceFunction)
                 {
-                    return $"replace({replaceFunction.X}, {replaceFunction.Y}, {replaceFunction.Z})";
+                    return $"replace({this.GetValueName(replaceFunction.X)}, {this.GetValueName(replaceFunction.Y)}, {this.GetValueName(replaceFunction.Z)})";
                 }
                 else if(function is RoundDigitsFunction roundDigitsFunction)
                 {
-                    return $"round({roundDigitsFunction.X}, {roundDigitsFunction.Y})";
+                    return $"round({this.GetValueName(roundDigitsFunction.X)}, {this.GetValueName(roundDigitsFunction.Y)})";
                 }
                 else if(function is RoundFunction roundFunction)
                 {
-                    return $"round({roundFunction.X})";
+                    return $"round({this.GetValueName(roundFunction.X)})";
                 }
                 else if(function is RTrimFunction rTrimFunction)
                 {
-                    return $"rtrim({rTrimFunction.X})";
+                    return $"rtrim({this.GetValueName(rTrimFunction.X)})";
                 }
                 else if(function is RTrimYFunction rTrimYFunction)
                 {
-                    return $"rtrim({rTrimYFunction.X}, {rTrimYFunction.Y})";
+                    return $"rtrim({this.GetValueName(rTrimYFunction.X)}, {this.GetValueName(rTrimYFunction.Y)})";
                 }
                 else if(function is SignFunction signFunction)
                 {
-                    return $"sign({signFunction.X})";
+                    return $"sign({this.GetValueName(signFunction.X)})";
                 }
                 else if(function is SoundexFunction soundexFunction)
                 {
-                    return $"soundex({soundexFunction.X})";
+                    return $"soundex({this.GetValueName(soundexFunction.X)})";
                 }
                 else if(function is StrftimeFunction strftimeFunction)
                 {
-                    return $"strftime({strftimeFunction.Format}, {strftimeFunction.Value}, {String.Join(", ", strftimeFunction.Modifier)})";
+                    return $"strftime({strftimeFunction.Format}, {this.GetValueName(strftimeFunction.Value)}, {String.Join(", ", strftimeFunction.Modifier)})";
                 }
                 else if(function is SubstrFunction substrFunction)
                 {
-                    return $"substr({substrFunction.X}, {substrFunction.Y})";
+                    return $"substr({this.GetValueName(substrFunction.X)}, {this.GetValueName(substrFunction.Y)})";
                 }
                 else if(function is SubstrLengthFunction substrLengthFunction)
                 {
-                    return $"substr({substrLengthFunction.X}, {substrLengthFunction.Y}, {substrLengthFunction.Z})";
+                    return $"substr({this.GetValueName(substrLengthFunction.X)}, {this.GetValueName(substrLengthFunction.Y)}, {this.GetValueName(substrLengthFunction.Z)})";
                 }
                 else if (function is SubstringFunction substringFunction)
                 {
-                    return $"substring({substringFunction.X}, {substringFunction.Y})";
+                    return $"substring({this.GetValueName(substringFunction.X)}, {this.GetValueName(substringFunction.Y)})";
                 }
                 else if (function is SubstringLengthFunction substringLengthFunction)
                 {
-                    return $"substring({substringLengthFunction.X}, {substringLengthFunction.Y}, {substringLengthFunction.Z})";
+                    return $"substring({this.GetValueName(substringLengthFunction.X)}, {this.GetValueName(substringLengthFunction.Y)}, {this.GetValueName(substringLengthFunction.Z)})";
                 }
                 else if(function is TimeFuncFunction timeFunction)
                 {
-                    return $"time({timeFunction.Value}, {String.Join(", ", timeFunction.Modifier)})";
+                    return $"time({this.GetValueName(timeFunction.Value)}, {String.Join(", ", timeFunction.Modifier)})";
                 }
                 else if(function is TotalChangesFunction totalChangesFunction)
                 {
@@ -741,31 +741,31 @@ namespace TypeProofSql
                 }
                 else if(function is TrimFunction trimFunction)
                 {
-                    return $"trim({trimFunction.X})";
+                    return $"trim({this.GetValueName(trimFunction.X)})";
                 }
                 else if(function is TrimYFunction trimYFunction)
                 {
-                    return $"trim({trimYFunction.X}, {trimYFunction.Y})";
+                    return $"trim({this.GetValueName(trimYFunction.X)}, {this.GetValueName(trimYFunction.Y)})";
                 }
                 else if(function is TypeofFunction typeofFunction)
                 {
-                    return $"typeof({typeofFunction.X})";
+                    return $"typeof({this.GetValueName(typeofFunction.X)})";
                 }
                 else if(function is UnicodeFunction unicodeFunction)
                 {
-                    return $"unicode({unicodeFunction.X})";
+                    return $"unicode({this.GetValueName(unicodeFunction.X)})";
                 }
                 else if(function is UnlikelyFunction unlikelyFunction)
                 {
-                    return $"unlikely({unlikelyFunction.X})";
+                    return $"unlikely({this.GetValueName(unlikelyFunction.X)})";
                 }
                 else if(function is UpperFunction upperFunction)
                 {
-                    return $"upper({upperFunction.X})";
+                    return $"upper({this.GetValueName(upperFunction.X)})";
                 }
                 else if(function is ZeroblobFunction zeroblobFunction)
                 {
-                    return $"zeroblob({zeroblobFunction.X})";
+                    return $"zeroblob({this.GetValueName(zeroblobFunction.X)})";
                 }
                 else
                 {
