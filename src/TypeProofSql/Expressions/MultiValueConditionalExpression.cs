@@ -7,7 +7,7 @@ namespace TypeProofSql.Expressions
 {
     public class MultiValueConditionalExpression : ConditionalExpression
     {
-        public MultiValueConditionalExpression(IColumn column, object value) : base(column, value)
+        public MultiValueConditionalExpression(ISelectExpression column, object value) : base(column, value)
         {
 
         }

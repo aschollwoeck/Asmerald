@@ -12,10 +12,13 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="SQLite\extensionDefinition">
+    <None Update="SQLite\StatementExtensionDefinition">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="SQLite\classDefinition">
+    <None Update="SQLite\ClassDefinition">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="SQLite\FunctionExtensionDefinition">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>

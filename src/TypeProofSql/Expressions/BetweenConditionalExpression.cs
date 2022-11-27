@@ -10,7 +10,7 @@ namespace TypeProofSql.Expressions
         public object MinValue { get; private set; }
         public object MaxValue { get; private set; }
 
-        public BetweenConditionalExpression(IColumn column, object minValue, object maxValue) : base(column, "")
+        public BetweenConditionalExpression(ISelectExpression column, object minValue, object maxValue) : base(column, "")
         {
             this.MinValue = minValue;
             this.MinValue = maxValue;

@@ -27,10 +27,10 @@ namespace TypeProofSql.SQLite
         {
             return new SelectWhereGroupStatement(stmt.QueryBuilder, groupExpr);
         }
-        public static SelectWhereGroupMultiStatement Where<T>(this SelectFromStatement<T> stmt, List<ConditionalGroupStatement> groupExpr)
-    where T : ITable, new()
+        public static SelectWhereGroupMultiStatement Where<T>(this SelectFromStatement<T> stmt, List<ConditionalGroupStatement> conditionalGroupStatements)
+            where T : ITable, new()
         {
-            return new SelectWhereGroupMultiStatement(stmt.QueryBuilder, groupExpr);
+            return new SelectWhereGroupMultiStatement(stmt.QueryBuilder, conditionalGroupStatements);
         }
         public static SelectWhereStatement Where<T, J>(this NonConditionalJoinStatement<T, J> stmt, ConditionalExpression conditionalExpression)
             where T : ITable, new()
@@ -50,6 +50,12 @@ namespace TypeProofSql.SQLite
         {
             return new SelectWhereGroupStatement(stmt.QueryBuilder, groupExpr);
         }
+        public static SelectWhereGroupMultiStatement Where<T, J>(this NonConditionalJoinStatement<T, J> stmt, List<ConditionalGroupStatement> conditionalGroupStatements)
+            where T : ITable, new()
+            where J : ITable, new()
+        {
+            return new SelectWhereGroupMultiStatement(stmt.QueryBuilder, conditionalGroupStatements);
+        }
         public static SelectWhereStatement Where<T, J>(this OnStatement<T, J> stmt, ConditionalExpression conditionalExpression)
             where T : ITable, new()
             where J : ITable, new()
@@ -67,6 +73,12 @@ namespace TypeProofSql.SQLite
             where J : ITable, new()
         {
             return new SelectWhereGroupStatement(stmt.QueryBuilder, groupExpr);
+        }
+        public static SelectWhereGroupMultiStatement Where<T, J>(this OnStatement<T, J> stmt, List<ConditionalGroupStatement> conditionalGroupStatements)
+            where T : ITable, new()
+            where J : ITable, new()
+        {
+            return new SelectWhereGroupMultiStatement(stmt.QueryBuilder, conditionalGroupStatements);
         }
         public static SelectWhereStatement Where<T, J>(this OnMultiStatement<T, J> stmt, ConditionalExpression conditionalExpression)
             where T : ITable, new()
@@ -86,6 +98,12 @@ namespace TypeProofSql.SQLite
         {
             return new SelectWhereGroupStatement(stmt.QueryBuilder, groupExpr);
         }
+        public static SelectWhereGroupMultiStatement Where<T, J>(this OnMultiStatement<T, J> stmt, List<ConditionalGroupStatement> conditionalGroupStatements)
+            where T : ITable, new()
+            where J : ITable, new()
+        {
+            return new SelectWhereGroupMultiStatement(stmt.QueryBuilder, conditionalGroupStatements);
+        }
         public static UpdateWhereStatement Where<T>(this UpdateSetStatement<T> stmt, ConditionalExpression conditionalExpression)
             where T : ITable, new()
         {
@@ -101,13 +119,26 @@ namespace TypeProofSql.SQLite
         {
             return new UpdateWhereGroupStatement(stmt.QueryBuilder, groupExpr);
         }
+        public static UpdateWhereGroupMultiStatement Where<T>(this UpdateSetStatement<T> stmt, List<ConditionalGroupStatement> conditionalGroupStatements)
+            where T : ITable, new()
+        {
+            return new UpdateWhereGroupMultiStatement(stmt.QueryBuilder, conditionalGroupStatements);
+        }
         public static UpsertConflictWhereStatement Where(this UpsertConflictSelectColumnsStatement stmt, ConditionalExpression conditionalExpression)
         {
             return new UpsertConflictWhereStatement(stmt.QueryBuilder, conditionalExpression);
         }
+        public static UpsertConflictWhereMultiStatement Where(this UpsertConflictSelectColumnsStatement stmt, List<ConditionalStatement> conditionalStatements)
+        {
+            return new UpsertConflictWhereMultiStatement(stmt.QueryBuilder, conditionalStatements);
+        }
         public static UpsertConflictWhereGroupStatement Where(this UpsertConflictSelectColumnsStatement stmt, ConditionalGroupStatement groupExpr)
         {
             return new UpsertConflictWhereGroupStatement(stmt.QueryBuilder, groupExpr);
+        }
+        public static UpsertConflictWhereGroupMultiStatement Where(this UpsertConflictSelectColumnsStatement stmt, List<ConditionalGroupStatement> conditionalGroupStatements)
+        {
+            return new UpsertConflictWhereGroupMultiStatement(stmt.QueryBuilder, conditionalGroupStatements);
         }
         public static UpsertWhereStatement Where(this UpsertSetStatement stmt, ConditionalExpression conditionalExpression)
         {
@@ -121,6 +152,10 @@ namespace TypeProofSql.SQLite
         {
             return new UpsertWhereGroupStatement(stmt.QueryBuilder, groupExpr);
         }
+        public static UpsertWhereGroupMultiStatement Where(this UpsertSetStatement stmt, List<ConditionalGroupStatement> conditionalGroupStatements)
+        {
+            return new UpsertWhereGroupMultiStatement(stmt.QueryBuilder, conditionalGroupStatements);
+        }
         public static DeleteWhereStatement Where<T>(this DeleteFromStatement<T> stmt, ConditionalExpression conditionalExpression)
             where T : ITable, new()
         {
@@ -130,6 +165,16 @@ namespace TypeProofSql.SQLite
             where T : ITable, new()
         {
             return new DeleteWhereMultiStatement(stmt.QueryBuilder, conditionalStatements);
+        }
+        public static DeleteWhereGroupStatement Where<T>(this DeleteFromStatement<T> stmt, ConditionalGroupStatement groupExpr)
+            where T : ITable, new()
+        {
+            return new DeleteWhereGroupStatement(stmt.QueryBuilder, groupExpr);
+        }
+        public static DeleteWhereGroupMultiStatement Where<T>(this DeleteFromStatement<T> stmt, List<ConditionalGroupStatement> conditionalGroupStatements)
+            where T : ITable, new()
+        {
+            return new DeleteWhereGroupMultiStatement(stmt.QueryBuilder, conditionalGroupStatements);
         }
     }
 }

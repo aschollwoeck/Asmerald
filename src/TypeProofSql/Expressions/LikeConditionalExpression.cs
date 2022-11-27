@@ -7,7 +7,7 @@ namespace TypeProofSql.Expressions
 {
     public class LikeConditionalExpression : SingularConditionalExpression
     {
-        public LikeConditionalExpression(IColumn column, object value) : base(column, value)
+        public LikeConditionalExpression(ISelectExpression column, object value) : base(column, value)
         {
 
         }

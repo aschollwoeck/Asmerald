@@ -7,7 +7,7 @@ namespace TypeProofSql.Expressions
 {
     public class LesserConditionalExpression : SingularConditionalExpression
     {
-        public LesserConditionalExpression(IColumn column, object value) : base(column, value)
+        public LesserConditionalExpression(ISelectExpression column, object value) : base(column, value)
         {
 
         }

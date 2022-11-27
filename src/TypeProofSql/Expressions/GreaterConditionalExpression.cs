@@ -7,7 +7,7 @@ namespace TypeProofSql.Expressions
 {
     public class GreaterConditionalExpression : SingularConditionalExpression
     {
-        public GreaterConditionalExpression(IColumn column, object value) : base(column, value)
+        public GreaterConditionalExpression(ISelectExpression column, object value) : base(column, value)
         {
 
         }

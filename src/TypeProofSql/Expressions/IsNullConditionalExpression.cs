@@ -7,7 +7,7 @@ namespace TypeProofSql.Expressions
 {
     public class IsNullConditionalExpression : EmptyConditionalExpression
     {
-        public IsNullConditionalExpression(IColumn column) : base(column)
+        public IsNullConditionalExpression(ISelectExpression column) : base(column)
         {
 
         }

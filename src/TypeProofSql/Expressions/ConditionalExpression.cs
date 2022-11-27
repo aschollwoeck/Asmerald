@@ -7,10 +7,10 @@ namespace TypeProofSql.Expressions
 {
     public class ConditionalExpression
     {
-        public readonly IColumn Column;
+        public readonly ISelectExpression Column;
         public readonly object Value;
 
-        public ConditionalExpression(IColumn column, object value)
+        public ConditionalExpression(ISelectExpression column, object value)
         {
             this.Column = column;
             this.Value = value;

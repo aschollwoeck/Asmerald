@@ -21,7 +21,7 @@ var parser = new IniParser.Parser.IniDataParser(new IniParser.Model.Configuratio
 foreach (var provider in providers)
 {
     // Load definitions from config file
-    var iniData = parser.Parse(File.ReadAllText(Path.Combine(provider, "classDefinition")));
+    var iniData = parser.Parse(File.ReadAllText(Path.Combine(provider, "ClassDefinition")));
     var dir = iniData.Global["Directory"];
     var tDir = iniData.Global["TestDirectory"];
 
@@ -31,28 +31,32 @@ foreach (var provider in providers)
     if (System.IO.Directory.Exists(Path.Combine(dir, "Functions")) == false) System.IO.Directory.CreateDirectory(Path.Combine(dir, "Functions"));
     var stmtDir = System.IO.Directory.CreateDirectory(Path.Combine(dir, "Statements", iniData.Global["sqlDialect"]));
     stmtDir.GetFiles().ToList().ForEach(f => f.Delete());
-    var extDir = System.IO.Directory.CreateDirectory(Path.Combine(dir, "Extensions", iniData.Global["sqlDialect"], "Statements"));
-    extDir.GetFiles().ToList().ForEach(f => f.Delete());
+    var stmtExtDir = System.IO.Directory.CreateDirectory(Path.Combine(dir, "Extensions", iniData.Global["sqlDialect"], "Statements"));
+    stmtExtDir.GetFiles().ToList().ForEach(f => f.Delete());
     var funcDir = System.IO.Directory.CreateDirectory(Path.Combine(dir, "Functions", iniData.Global["sqlDialect"]));
     funcDir.GetFiles().ToList().ForEach(f => f.Delete());
+    var funcExtDir = System.IO.Directory.CreateDirectory(Path.Combine(dir, "Extensions", iniData.Global["sqlDialect"], "Functions"));
+    funcExtDir.GetFiles().ToList().ForEach(f => f.Delete());
     var testDir = new System.IO.DirectoryInfo(tDir);
 
-    Dictionary<string, GenerateCodeClass> classNames = new();
     Dictionary<string, GenerateCodeClass> commonClassNames = new();
+    Dictionary<string, GenerateCodeClass> statementClassNames = new();
+    Dictionary<string, GenerateCodeClass> functionClassNames = new();
 
     // Prepare DSL
     foreach (var item in iniData.Sections["COMMON_CLASSES"])
     {
         var gen = new GenerateCodeClass() { class_name = item.KeyName, class_name_short = item.KeyName, full_class_name = item.KeyName };
-        classNames.Add(item.KeyName, gen);
+        functionClassNames.Add(item.KeyName, gen);
+        statementClassNames.Add(item.KeyName, gen);
         commonClassNames.Add(item.KeyName, gen);
     }
 
     // Create classes based on definitions
     foreach (var item in iniData.Sections["FUNCTIONS"])
     {
-        var code = BuildClass(iniData, classNames, item.KeyName, item.Value, "FunctionExpression");
-        classNames.Add(item.KeyName, code);
+        var code = BuildClass(iniData, functionClassNames, item.KeyName, item.Value, "Function");
+        functionClassNames.Add(item.KeyName, code);
 
         // Write code to file
         var filename = code.class_name;
@@ -64,11 +68,22 @@ foreach (var provider in providers)
         File.WriteAllText(System.IO.Path.Combine(funcDir.FullName, filename + ".cs"), generatedCode);
     }
 
+    //Now do create extension methods for chaining
+    var funcExt = GetExtensions(iniData, Path.Combine(provider, "FunctionExtensionDefinition"), functionClassNames);
+    foreach (var genCode in funcExt)
+    {
+        var generatedCode = new TypeProofSql.SourceGenerator.Generators.FunctionExtensionGenerator().Generate(genCode);
+
+        //Write code to file
+        File.WriteAllText(System.IO.Path.Combine(funcExtDir.FullName, genCode.extension_name + "Extensions") + ".cs", generatedCode);
+    }
+
+
     // Create classes based on definitions
     foreach (var item in iniData.Sections["CLASSES"])
     {
-        var code = BuildClass(iniData, classNames, item.KeyName, item.Value, "Statement");
-        classNames.Add(item.KeyName, code);
+        var code = BuildClass(iniData, statementClassNames, item.KeyName, item.Value, "Statement");
+        statementClassNames.Add(item.KeyName, code);
 
         // Write code to file
         var filename = code.class_name;
@@ -76,13 +91,13 @@ foreach (var provider in providers)
         {
             filename = filename + String.Join(", ", code.generics);
         }
-        var generatedCode = new TypeProofSql.SourceGenerator.Generators.ClassGenerator().Generate(code);
+        var generatedCode = new TypeProofSql.SourceGenerator.Generators.StatementGenerator().Generate(code);
         File.WriteAllText(System.IO.Path.Combine(stmtDir.FullName, filename + ".cs"), generatedCode);
     }
 
     var genImplTest = new TestGenerator().Generate(
         "NotImplementedTest",
-        classNames
+        statementClassNames
             .Where(c => commonClassNames.ContainsKey(c.Key) == false)
             .Select(c => c.Value));
 
@@ -90,13 +105,13 @@ foreach (var provider in providers)
     File.WriteAllText(System.IO.Path.Combine(testDir.FullName, "NotImplementedTest") + ".cs", genImplTest);
 
     //Now do create extension methods for chaining
-    var ext = GetExtensions(iniData, Path.Combine(provider, "classDefinition"), classNames);
+    var ext = GetExtensions(iniData, Path.Combine(provider, "StatementExtensionDefinition"), statementClassNames);
     foreach (var genCode in ext)
     {
-        var generatedCode = new TypeProofSql.SourceGenerator.Generators.ExtensionGenerator().Generate(genCode);
+        var generatedCode = new TypeProofSql.SourceGenerator.Generators.StatementExtensionGenerator().Generate(genCode);
 
         //Write code to file
-        File.WriteAllText(System.IO.Path.Combine(extDir.FullName, genCode.extension_name + "Extensions") + ".cs", generatedCode);
+        File.WriteAllText(System.IO.Path.Combine(stmtExtDir.FullName, genCode.extension_name + "Extensions") + ".cs", generatedCode);
     }
 }
 
