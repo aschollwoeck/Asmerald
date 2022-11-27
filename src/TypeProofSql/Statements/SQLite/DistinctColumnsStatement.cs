@@ -11,9 +11,9 @@ namespace TypeProofSql.Statements.SQLite
     public class DistinctColumnsStatement : IStatement
     {
         public IQueryBuilder QueryBuilder { get; private set; }
-        public List<ISelectColumn> Columns { get; private set; } = new List<ISelectColumn>();
+        public List<ISelectExpression> Columns { get; private set; } = new List<ISelectExpression>();
         public DistinctColumnsStatement() { }
-        public DistinctColumnsStatement(IQueryBuilder queryBuilder, IEnumerable<ISelectColumn> columns)
+        public DistinctColumnsStatement(IQueryBuilder queryBuilder, IEnumerable<ISelectExpression> columns)
         {
             this.QueryBuilder = queryBuilder;
             this.QueryBuilder.AddStatment(this);

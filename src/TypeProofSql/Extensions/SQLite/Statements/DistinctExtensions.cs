@@ -16,7 +16,7 @@ namespace TypeProofSql.SQLite
         {
             return new DistinctStatement(stmt.QueryBuilder);
         }
-        public static DistinctColumnsStatement Distinct(this SelectStatement stmt, params ISelectColumn[] columns)
+        public static DistinctColumnsStatement Distinct(this SelectStatement stmt, params ISelectExpression[] columns)
         {
             return new DistinctColumnsStatement(stmt.QueryBuilder, columns);
         }

@@ -12,7 +12,7 @@ namespace TypeProofSql.Statements.SQLite
         where T : ITable, new()
     {
         public WithTableStatement() { }
-        public WithTableStatement(IQueryBuilder queryBuilder, IEnumerable<ISelectColumn> selectColumns)
+        public WithTableStatement(IQueryBuilder queryBuilder, IEnumerable<ISelectExpression> selectColumns)
             : base(queryBuilder, new T(), selectColumns)
         {
         }

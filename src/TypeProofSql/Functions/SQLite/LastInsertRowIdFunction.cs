@@ -11,7 +11,5 @@ namespace TypeProofSql.Functions.SQLite
     public class LastInsertRowIdFunction : ISelectExpression
     {
         public LastInsertRowIdFunction() { }
-        {
-        }
     }
 }

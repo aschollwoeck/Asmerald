@@ -11,7 +11,5 @@ namespace TypeProofSql.Functions.SQLite
     public class RandomFunction : ISelectExpression
     {
         public RandomFunction() { }
-        {
-        }
     }
 }

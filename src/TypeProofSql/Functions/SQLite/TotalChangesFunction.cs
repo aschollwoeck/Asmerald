@@ -11,7 +11,5 @@ namespace TypeProofSql.Functions.SQLite
     public class TotalChangesFunction : ISelectExpression
     {
         public TotalChangesFunction() { }
-        {
-        }
     }
 }

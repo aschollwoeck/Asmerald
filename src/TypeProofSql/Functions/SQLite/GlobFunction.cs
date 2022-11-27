@@ -11,7 +11,5 @@ namespace TypeProofSql.Functions.SQLite
     public class GlobFunction : ISelectExpression
     {
         public GlobFunction() { }
-        {
-        }
     }
 }

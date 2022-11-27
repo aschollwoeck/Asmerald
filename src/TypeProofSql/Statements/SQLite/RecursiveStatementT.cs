@@ -12,7 +12,7 @@ namespace TypeProofSql.Statements.SQLite
         where T : ITable, new()
     {
         public RecursiveStatement() { }
-        public RecursiveStatement(IQueryBuilder queryBuilder, IEnumerable<ISelectColumn> selectColumns)
+        public RecursiveStatement(IQueryBuilder queryBuilder, IEnumerable<ISelectExpression> selectColumns)
             : base(queryBuilder, new T(), selectColumns)
         {
         }

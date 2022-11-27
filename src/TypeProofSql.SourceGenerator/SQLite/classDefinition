@@ -67,12 +67,12 @@ Strftime = Strftime(string format, ISelectExpression value, string[] modifier)
 Not = Not
 
 With = With
-WithTable = WithTable(ITable table, ISelectColumn[] selectColumns)
-WithTable<T> = WithTable<T>(ISelectColumn[] selectColumns) : WithTable(new T(), selectColumns)
-WithTableAdditional = WithTableAdditional(ITable table, ISelectColumn[] selectColumns)
-WithTableAdditional<T> = WithTableAdditional<T>(ISelectColumn[] selectColumns) : WithTableAdditional(new T(), selectColumns)
-Recursive = Recursive(ITable table, ISelectColumn[] selectColumns)
-Recursive<T> = Recursive<T>(ISelectColumn[] selectColumns) : Recursive(new T(), selectColumns)
+WithTable = WithTable(ITable table, ISelectExpression[] selectColumns)
+WithTable<T> = WithTable<T>(ISelectExpression[] selectColumns) : WithTable(new T(), selectColumns)
+WithTableAdditional = WithTableAdditional(ITable table, ISelectExpression[] selectColumns)
+WithTableAdditional<T> = WithTableAdditional<T>(ISelectExpression[] selectColumns) : WithTableAdditional(new T(), selectColumns)
+Recursive = Recursive(ITable table, ISelectExpression[] selectColumns)
+Recursive<T> = Recursive<T>(ISelectExpression[] selectColumns) : Recursive(new T(), selectColumns)
 
 Materialized = Materialized(IQueryBuilder subQuery)
 
@@ -87,9 +87,9 @@ WithAsSelect<T> = WithAsSelect<T>(IQueryBuilder subQuery) : WithAsSelect(new T()
 All = All
 
 Select = Select
-SelectColumns = SelectColumns(ISelectColumn[] columns)
+SelectColumns = SelectColumns(ISelectExpression[] columns)
 Distinct = Distinct
-DistinctColumns = DistinctColumns(ISelectColumn[] columns)
+DistinctColumns = DistinctColumns(ISelectExpression[] columns)
 
 From = From(ITable table)
 FromSubQuery = FromSubQuery(IQueryBuilder subQueryBuilder, ITable table)
@@ -105,14 +105,6 @@ Join = Join(ITable left, ITable right)
 Join<T, J> = Join<T, J>(T left, J right) : Join(left, right)
 JoinSubQuery = JoinSubQuery(IQueryBuilder subQueryBuilder)
 JoinAs = JoinAs(string alias)
-;ConditionalJoin<T, J> = ConditionalJoin<T, J>((ISelectColumn<T> col1, ISelectColumn<J> col2)[] on) : Join<T, J>(new T(), new J())
-;NonConditionalJoin = NonConditionalJoin(ITable left, ITable right) : Join(left, right)
-;NonConditionalJoin<T, J> = NonConditionalJoin<T, J>() : NonConditionalJoin(new T(), new J())
-;CrossJoin<T, J> = CrossJoin<T, J>() : NonConditionalJoin<T, J>()
-;FullOuterJoin<T, J> = FullOuterJoin<T, J>((ISelectColumn<T> col1, ISelectColumn<J> col2)[] on) : ConditionalJoin<T, J>(on)
-;InnerJoin<T, J> = InnerJoin<T, J>((ISelectColumn<T> col1, ISelectColumn<J> col2)[] on) : ConditionalJoin<T, J>(on)
-;LeftOuterJoin<T, J> = LeftOuterJoin<T, J>((ISelectColumn<T> col1, ISelectColumn<J> col2)[] on) : ConditionalJoin<T, J>(on)
-;RightOuterJoin<T, J> = RightOuterJoin<T, J>((ISelectColumn<T> col1, ISelectColumn<J> col2)[] on) : ConditionalJoin<T, J>(on)
 ConditionalJoin = ConditionalJoin(ITable t, ITable j) : Join(t, j)
 ConditionalJoin<T, J> = ConditionalJoin<T, J>() : Join<T, J>(new T(), new J())
 NonConditionalJoin = NonConditionalJoin(ITable left, ITable right) : ConditionalJoin(left, right)

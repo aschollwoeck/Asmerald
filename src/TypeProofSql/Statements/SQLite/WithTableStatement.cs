@@ -12,9 +12,9 @@ namespace TypeProofSql.Statements.SQLite
     {
         public IQueryBuilder QueryBuilder { get; private set; }
         public ITable Table { get; private set; }
-        public List<ISelectColumn> SelectColumns { get; private set; } = new List<ISelectColumn>();
+        public List<ISelectExpression> SelectColumns { get; private set; } = new List<ISelectExpression>();
         public WithTableStatement() { }
-        public WithTableStatement(IQueryBuilder queryBuilder, ITable table, IEnumerable<ISelectColumn> selectColumns)
+        public WithTableStatement(IQueryBuilder queryBuilder, ITable table, IEnumerable<ISelectExpression> selectColumns)
         {
             this.QueryBuilder = queryBuilder;
             this.QueryBuilder.AddStatment(this);

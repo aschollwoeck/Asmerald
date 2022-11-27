@@ -78,38 +78,38 @@ namespace TypeProofSql.SourceGenerator.Generators
                     )
                 );
                 w.WriteLine(")");
-            }
 
-            if (classObj.inherit_class != null)
-            {
+                if (classObj.inherit_class != null)
+                {
+                    w.Indent++;
+                    w.Write($": base({String.Join(", ", classObj.inherit_class.parameters)})");
+                    w.Indent--;
+                }
+
+                w.WriteLine("{");
                 w.Indent++;
-                w.Write($": base({String.Join(", ", classObj.inherit_class.parameters)})");
+
+                foreach (var prop in classObj.properties)
+                {
+                    if (classObj.inherit_class?.base_class != null && classObj.inherit_class.base_class.properties.Select(p => p.prop).Contains(prop.prop))
+                    {
+                        // When property already exists in inherited class, we don't add the property again
+                        continue;
+                    }
+
+                    if (prop.is_list)
+                    {
+                        w.WriteLine($"this.{prop.prop}.AddRange({prop.para});");
+                    }
+                    else
+                    {
+                        w.WriteLine($"this.{prop.prop} = {prop.para};");
+                    }
+                }
+
                 w.Indent--;
+                w.WriteLine("}");
             }
-
-            w.WriteLine("{");
-            w.Indent++;
-
-            foreach (var prop in classObj.properties)
-            {
-                if (classObj.inherit_class?.base_class != null && classObj.inherit_class.base_class.properties.Select(p => p.prop).Contains(prop.prop))
-                {
-                    // When property already exists in inherited class, we don't add the property again
-                    continue;
-                }
-
-                if (prop.is_list)
-                {
-                    w.WriteLine($"this.{prop.prop}.AddRange({prop.para});");
-                }
-                else
-                {
-                    w.WriteLine($"this.{prop.prop} = {prop.para};");
-                }
-            }
-
-            w.Indent--;
-            w.WriteLine("}");
 
             w.Indent--;
             w.WriteLine("}");

@@ -52,7 +52,7 @@ namespace TypeProofSql
                 builder.Append("RECURSIVE ");
                 builder.Append(recursiveStatement.Table.Name());
                 builder.Append("(");
-                builder.AppendJoin(',', recursiveStatement.SelectColumns.Select(c => c.Name));
+                builder.AppendJoin(',', recursiveStatement.SelectColumns.Select(c => this.GetValueName(c)));
                 builder.Append(")");
             }
             else if(statement is WithTableStatement withTableStatement)
@@ -60,7 +60,7 @@ namespace TypeProofSql
                 builder.Append("WITH ");
                 builder.Append(withTableStatement.Table.Name());
                 builder.Append("(");
-                builder.AppendJoin(',', withTableStatement.SelectColumns.Select(c => c.Name));
+                builder.AppendJoin(',', withTableStatement.SelectColumns.Select(c => this.GetValueName(c)));
                 builder.Append(")");
             }
             else if (statement is WithTableAdditionalStatement withTableAddStatement)
@@ -68,7 +68,7 @@ namespace TypeProofSql
                 builder.AppendLine(",");
                 builder.Append(withTableAddStatement.Table.Name());
                 builder.Append("(");
-                builder.AppendJoin(',', withTableAddStatement.SelectColumns.Select(c => c.Name));
+                builder.AppendJoin(',', withTableAddStatement.SelectColumns.Select(c => this.GetValueName(c)));
                 builder.Append(")");
             }
             else if(statement is AsStatement asStatement)
@@ -133,10 +133,10 @@ namespace TypeProofSql
 
                     if (col is AliasColumn alCol)
                     {
-                        return col.Name + " AS " + alCol.Alias;
+                        return this.GetValueName(col) + " AS " + alCol.Alias;
                     }
 
-                    return col.Name;
+                    return this.GetValueName(col);
                 }));
             }
             else if (statement is DistinctStatement distinctStatement)
@@ -151,10 +151,10 @@ namespace TypeProofSql
 
                     if (col is AliasColumn alCol)
                     {
-                        return col.Name + " AS " + alCol.Alias;
+                        return this.GetValueName(col) + " AS " + alCol.Alias;
                     }
 
-                    return col.Name;
+                    return this.GetValueName(col);
                 }));
             }
             else if (statement is AllStatement allStatement)
@@ -245,7 +245,7 @@ namespace TypeProofSql
             }
             else if(statement is ValueStatement valueStatement)
             {
-                var cols = valueStatement.ValueExpressions.Select(expr => expr.Column.Name());
+                var cols = valueStatement.ValueExpressions.Select(expr => this.GetValueName(expr.Column));
                 var vals = valueStatement.ValueExpressions.Select(expr => expr.Value);
 
                 builder.Append("(");
@@ -284,7 +284,7 @@ namespace TypeProofSql
                         builder.Append(", ");
                     }
 
-                    builder.Append(setStatement.ValueExpressions.ElementAt(i).Column.Name());
+                    builder.Append(this.GetValueName(setStatement.ValueExpressions.ElementAt(i).Column));
                     builder.Append(" = @" + paraCount);
                     parameters.Add(paraCount.ToString(), setStatement.ValueExpressions.ElementAt(i).Value);
                     paraCount++;
@@ -513,7 +513,7 @@ namespace TypeProofSql
             else if(statement is InsertValuesStatement insertValuesStatement)
             {
                 builder.Append("(");
-                builder.Append(String.Join(", ", insertValuesStatement.ValueExpressions.Select(v => v.Column.Name())));
+                builder.Append(String.Join(", ", insertValuesStatement.ValueExpressions.Select(v => this.GetValueName(v.Column))));
                 builder.Append(") VALUES (");
                 for (int i = 0; i < insertValuesStatement.ValueExpressions.Count; i++)
                 {
@@ -554,6 +554,16 @@ namespace TypeProofSql
             }
 
             return parameters;
+        }
+
+        private string GetValueName(ISelectExpression expression)
+        {
+            if(expression is ISelectColumn selColumn)
+            {
+                return selColumn.Name;
+            }
+
+            throw new NotImplementedException("Select expression not yet implemented!");
         }
 
         private (int paraCount, Dictionary<string, object> parameters) BuildStatementGroup(StringBuilder builder, ConditionalGroupStatement condGroupStmt, int paraCount)
@@ -598,7 +608,7 @@ namespace TypeProofSql
         {
             Dictionary<string, object> parameters = new Dictionary<string, object>();
 
-            builder.Append(condExpr.Column.Name());
+            builder.Append(this.GetValueName(condExpr.Column));
 
             string chrIdent = "";
 

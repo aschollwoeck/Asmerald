@@ -21,12 +21,12 @@ namespace TypeProofSql.SQLite
         {
             return new SelectStatement(stmt.QueryBuilder);
         }
-        public static SelectColumnsStatement Select<T>(this WithAsSelectStatement<T> stmt, params ISelectColumn[] columns)
+        public static SelectColumnsStatement Select<T>(this WithAsSelectStatement<T> stmt, params ISelectExpression[] columns)
             where T : ITable, new()
         {
             return new SelectColumnsStatement(stmt.QueryBuilder, columns);
         }
-        public static SelectColumnsStatement Select(this MaterializedStatement stmt, params ISelectColumn[] columns)
+        public static SelectColumnsStatement Select(this MaterializedStatement stmt, params ISelectExpression[] columns)
         {
             return new SelectColumnsStatement(stmt.QueryBuilder, columns);
         }
@@ -34,7 +34,7 @@ namespace TypeProofSql.SQLite
         {
             return new SelectStatement(stmt.QueryBuilder);
         }
-        public static SelectColumnsStatement Select(this SQLiteDSLContext stmt, params ISelectColumn[] columns)
+        public static SelectColumnsStatement Select(this SQLiteDSLContext stmt, params ISelectExpression[] columns)
         {
             return new SelectColumnsStatement(stmt.QueryBuilder, columns);
         }
