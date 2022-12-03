@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Text;
 using TypeProofSql.Columns;
 using TypeProofSql.Expressions;
@@ -47,14 +48,23 @@ namespace TypeProofSql
             else if (statement is WithStatement withStatement)
             {
                 builder.Append("WITH ");
-
             }
             else if (statement is RecursiveStatement recursiveStatement)
             {
                 builder.Append("RECURSIVE ");
                 builder.Append(recursiveStatement.Table.Name());
                 builder.Append("(");
-                builder.AppendJoin(',', recursiveStatement.SelectColumns.Select(c => this.GetValueName(c)));
+                for (int i = 0; i < recursiveStatement.SelectColumns.Count; i++)
+                {
+                    if (i > 0)
+                    {
+                        builder.Append(", ");
+                    }
+
+                    var res = this.GetValueName(builder, recursiveStatement.SelectColumns[i], paraCount);
+                    paraCount = res.paraCount;
+                    parameters.AddRange(res.parameters);
+                }
                 builder.Append(")");
             }
             else if(statement is WithTableStatement withTableStatement)
@@ -62,7 +72,17 @@ namespace TypeProofSql
                 builder.Append("WITH ");
                 builder.Append(withTableStatement.Table.Name());
                 builder.Append("(");
-                builder.AppendJoin(',', withTableStatement.SelectColumns.Select(c => this.GetValueName(c)));
+                for (int i = 0; i < withTableStatement.SelectColumns.Count; i++)
+                {
+                    if (i > 0)
+                    {
+                        builder.Append(", ");
+                    }
+
+                    var res = this.GetValueName(builder, withTableStatement.SelectColumns[i], paraCount);
+                    paraCount = res.paraCount;
+                    parameters.AddRange(res.parameters);
+                }
                 builder.Append(")");
             }
             else if (statement is WithTableAdditionalStatement withTableAddStatement)
@@ -70,7 +90,17 @@ namespace TypeProofSql
                 builder.AppendLine(",");
                 builder.Append(withTableAddStatement.Table.Name());
                 builder.Append("(");
-                builder.AppendJoin(',', withTableAddStatement.SelectColumns.Select(c => this.GetValueName(c)));
+                for (int i = 0; i < withTableAddStatement.SelectColumns.Count; i++)
+                {
+                    if (i > 0)
+                    {
+                        builder.Append(", ");
+                    }
+
+                    var res = this.GetValueName(builder, withTableAddStatement.SelectColumns[i], paraCount);
+                    paraCount = res.paraCount;
+                    parameters.AddRange(res.parameters);
+                }
                 builder.Append(")");
             }
             else if(statement is AsStatement asStatement)
@@ -130,16 +160,18 @@ namespace TypeProofSql
             else if (statement is SelectColumnsStatement selectColStatement)
             {
                 builder.Append("SELECT ");
-                builder.AppendJoin(", ", selectColStatement.Columns.Select(col =>
-                {
 
-                    if (col is AliasColumn alCol)
+                for (int i = 0; i < selectColStatement.Columns.Count; i++)
+                {
+                    if(i > 0)
                     {
-                        return this.GetValueName(col) + " AS " + alCol.Alias;
+                        builder.Append(", ");
                     }
 
-                    return this.GetValueName(col);
-                }));
+                    var res = this.GetValueName(builder, selectColStatement.Columns[i], paraCount);
+                    paraCount = res.paraCount;
+                    parameters.AddRange(res.parameters);
+                }
             }
             else if (statement is DistinctStatement distinctStatement)
             {
@@ -148,16 +180,17 @@ namespace TypeProofSql
             else if (statement is DistinctColumnsStatement distinctColStatement)
             {
                 builder.Append("DISTINCT ");
-                builder.AppendJoin(", ", distinctColStatement.Columns.Select(col =>
+                for (int i = 0; i < distinctColStatement.Columns.Count; i++)
                 {
-
-                    if (col is AliasColumn alCol)
+                    if (i > 0)
                     {
-                        return this.GetValueName(col) + " AS " + alCol.Alias;
+                        builder.Append(", ");
                     }
 
-                    return this.GetValueName(col);
-                }));
+                    var res = this.GetValueName(builder, distinctColStatement.Columns[i], paraCount);
+                    paraCount = res.paraCount;
+                    parameters.AddRange(res.parameters);
+                }
             }
             else if (statement is AllStatement allStatement)
             {
@@ -231,6 +264,12 @@ namespace TypeProofSql
             else if(statement is JoinSubQueryStatement joinSubQueryStatement)
             {
                 //builder.Append($"{joinSubQueryStatement.SubQueryBuilder.buil}");
+                builder.AppendLine();
+                var uPrepStmt = joinSubQueryStatement.SubQueryBuilder.BuildPreparedStatement();
+                builder.Append(uPrepStmt.Statement);
+
+                paraCount += uPrepStmt.Parameters.Count;
+                parameters.AddRange(uPrepStmt.Parameters);
             }
             else if(statement is InsertStatement insertStatement)
             {
@@ -247,22 +286,32 @@ namespace TypeProofSql
             }
             else if(statement is ValueStatement valueStatement)
             {
-                var cols = valueStatement.ValueExpressions.Select(expr => this.GetValueName(expr.Column));
-                var vals = valueStatement.ValueExpressions.Select(expr => expr.Value);
-
                 builder.Append("(");
-                builder.AppendJoin(", ", cols);
-                builder.Append(") VALUES (");
-
-                List<string> valIdx = new List<string>();
-                for (int i = 0; i < vals.Count(); i++)
+                for (int i = 0; i < valueStatement.ValueExpressions.Count(); i++)
                 {
-                    valIdx.Add("@" + paraCount);
-                    parameters.Add(paraCount.ToString(), vals.ElementAt(i));
-                    paraCount++;
+                    if (i > 0)
+                    {
+                        builder.Append(", ");
+                    }
+
+                    var res = this.GetValueName(builder, valueStatement.ValueExpressions.ElementAt(i).Column, paraCount);
+                    paraCount = res.paraCount;
+                    parameters.AddRange(res.parameters);
                 }
 
-                builder.AppendJoin(", ", valIdx);
+                builder.Append(") VALUES (");
+
+                for (int i = 0; i < valueStatement.ValueExpressions.Count(); i++)
+                {
+                    if (i > 0)
+                    {
+                        builder.Append(", ");
+                    }
+
+                    builder.Append("@" + paraCount);
+                    parameters.Add(paraCount.ToString(), valueStatement.ValueExpressions.ElementAt(i).Value);
+                    paraCount++;
+                }
 
                 builder.Append(")");
             }
@@ -286,7 +335,10 @@ namespace TypeProofSql
                         builder.Append(", ");
                     }
 
-                    builder.Append(this.GetValueName(setStatement.ValueExpressions.ElementAt(i).Column));
+                    var res = this.GetValueName(builder, setStatement.ValueExpressions.ElementAt(i).Column, paraCount);
+                    paraCount = res.paraCount;
+                    parameters.AddRange(res.parameters);
+
                     builder.Append(" = @" + paraCount);
                     parameters.Add(paraCount.ToString(), setStatement.ValueExpressions.ElementAt(i).Value);
                     paraCount++;
@@ -389,7 +441,6 @@ namespace TypeProofSql
                     var res = BuildExpression(builder, selectHavingStatement.ConditionalExpression, paraCount);
                     paraCount = res.paraCount;
                     parameters.AddRange(res.parameters);
-
                 }
 
                 //foreach (var condStmt in selectHavingStatement.conditionalStatements)
@@ -515,19 +566,33 @@ namespace TypeProofSql
             else if(statement is InsertValuesStatement insertValuesStatement)
             {
                 builder.Append("(");
-                builder.Append(String.Join(", ", insertValuesStatement.ValueExpressions.Select(v => this.GetValueName(v.Column))));
-                builder.Append(") VALUES (");
-                for (int i = 0; i < insertValuesStatement.ValueExpressions.Count; i++)
+                for (int i = 0; i < insertValuesStatement.ValueExpressions.Count(); i++)
                 {
-                    builder.Append($"@{paraCount}");
-                    paraCount++;
-                    parameters.Add(paraCount.ToString(), insertValuesStatement.ValueExpressions[i].Value);
-                    if(i < insertValuesStatement.ValueExpressions.Count - 1)
+                    if (i > 0)
                     {
                         builder.Append(", ");
                     }
+
+                    var res = this.GetValueName(builder, insertValuesStatement.ValueExpressions.ElementAt(i).Column, paraCount);
+                    paraCount = res.paraCount;
+                    parameters.AddRange(res.parameters);
                 }
-                builder.AppendLine(")");
+
+                builder.Append(") VALUES (");
+
+                for (int i = 0; i < insertValuesStatement.ValueExpressions.Count(); i++)
+                {
+                    if (i > 0)
+                    {
+                        builder.Append(", ");
+                    }
+
+                    builder.Append("@" + paraCount);
+                    parameters.Add(paraCount.ToString(), insertValuesStatement.ValueExpressions.ElementAt(i).Value);
+                    paraCount++;
+                }
+
+                builder.Append(")");
             }
             else if(statement is UpsertDoStatement upsertDoStatement)
             {
@@ -558,21 +623,35 @@ namespace TypeProofSql
             return parameters;
         }
 
-        private string GetValueName(ISelectExpression expression)
+        private (int paraCount, Dictionary<string, object> parameters) GetValueName(StringBuilder builder, ISelectExpression expression, int paraCount)
         {
-            if(expression is ISelectColumn selColumn)
+            Dictionary<string, object> parameters = new Dictionary<string, object>();
+
+            if (expression is ISelectColumn selColumn)
             {
-                return selColumn.Name;
+                if (selColumn is AliasColumn alCol)
+                {
+                    builder.Append($"{selColumn.Name} AS {alCol.Alias}");
+                }
+                else
+                {
+                    builder.Append(selColumn.Name);
+                }
             }
             else if(expression is IFunction function)
             {
                 if(function is AbsFunction absFunction)
                 {
-                    return $"abs({this.GetValueName(absFunction.X)})";
+                    builder.Append($"abs(");
+                    var res = this.GetValueName(builder, absFunction.X, paraCount);
+                    paraCount = res.paraCount;
+                    parameters.AddRange(res.parameters);
+
+                    builder.Append(")");
                 }
                 else if(function is ChangesFunction changesFunction)
                 {
-                    return "changes()";
+                    builder.Append("changes()");
                 }
                 else if(function is CharFuncFunction charFunction)
                 {
@@ -581,199 +660,558 @@ namespace TypeProofSql
                     if (charFunction.X2 != null) le.Add(charFunction.X2);
                     le.AddRange(charFunction.Xn);
 
-                    return $"char({String.Join(", ", le.Select(l => this.GetValueName(l)))})";
+                    builder.Append($"char(");
+                    for (int i = 0; i < le.Count; i++)
+                    {
+                        if(i > 0)
+                        {
+                            builder.Append(", ");
+                        }
+
+                        var res = this.GetValueName(builder, le[i], paraCount);
+                        paraCount = res.paraCount;
+                        parameters.AddRange(res.parameters);
+                    }
+                    builder.Append(")");
                 }
                 else if(function is CoalesceFunction coalesceFunction)
                 {
-                    return $"coalesece({this.GetValueName(coalesceFunction.X)})";
+                    builder.Append($"coalesece(");
+					var res = this.GetValueName(builder, coalesceFunction.X, paraCount);
+                    paraCount = res.paraCount;
+                    parameters.AddRange(res.parameters);
+
+                    builder.Append(")");
                 }
                 else if(function is DateFuncFunction dateFunction)
                 {
-                    return $"date({this.GetValueName(dateFunction.Value)}, {String.Join(", ", dateFunction.Modifier)})";
+                    builder.Append($"date(");
+					var res = this.GetValueName(builder, dateFunction.Value, paraCount);
+                    paraCount = res.paraCount;
+                    parameters.AddRange(res.parameters);
+
+                    builder.Append($"), { String.Join(", ", dateFunction.Modifier)})");
                 }
                 else if(function is DateTimeFuncFunction dateTimeFunction)
                 {
-                    return $"datetime({this.GetValueName(dateTimeFunction.Value)}, {String.Join(", ", dateTimeFunction.Modifier)})";
+                    builder.Append($"datetime(");
+					var res = this.GetValueName(builder, dateTimeFunction.Value, paraCount);
+                    paraCount = res.paraCount;
+                    parameters.AddRange(res.parameters);
+
+                    builder.Append($"), { String.Join(", ", dateTimeFunction.Modifier)})");
                 }
                 else if(function is FormatFunction formatFunction)
                 {
-                    return $"format({formatFunction.Format}, {String.Join(", ", formatFunction.Z.Select(f => this.GetValueName(f)))})";
+                    builder.Append($"format({formatFunction.Format}, ");
+                    for (int i = 0; i < formatFunction.Z.Count; i++)
+                    {
+                        builder.Append(", ");
+
+                        var res = this.GetValueName(builder, formatFunction.Z[i], paraCount);
+                        paraCount = res.paraCount;
+                        parameters.AddRange(res.parameters);
+                    }
+                    builder.Append(")");
                 }
                 else if(function is GlobFunction globFunction)
                 {
-                    return $"glob({this.GetValueName(globFunction.X)}, {this.GetValueName(globFunction.Y)})";
+                    builder.Append($"glob(");
+					var res = this.GetValueName(builder, globFunction.X, paraCount);
+                    paraCount = res.paraCount;
+                    parameters.AddRange(res.parameters);
+
+                    builder.Append(",");
+
+                    res = this.GetValueName(builder, globFunction.Y, paraCount);
+                    paraCount = res.paraCount;
+                    parameters.AddRange(res.parameters);
+
+                    builder.Append(")");
                 }
                 else if(function is HexFunction hexFunction)
                 {
-                    return $"hex({this.GetValueName(hexFunction.Z)})";
+                    builder.Append($"hex(");
+					var res = this.GetValueName(builder, hexFunction.Z, paraCount);
+                    paraCount = res.paraCount;
+                    parameters.AddRange(res.parameters);
+
+                    builder.Append(")");
                 }
                 else if(function is IfNullFunction ifNullFunction)
                 {
-                    return $"ifnull({this.GetValueName(ifNullFunction.X)}, {this.GetValueName(ifNullFunction.Y)})";
+                    builder.Append($"ifnull(");
+					var res = this.GetValueName(builder, ifNullFunction.X, paraCount);
+                    paraCount = res.paraCount;
+                    parameters.AddRange(res.parameters);
+                    
+                    builder.Append(", ");
+					res = this.GetValueName(builder, ifNullFunction.Y, paraCount);
+                    paraCount = res.paraCount;
+                    parameters.AddRange(res.parameters);
+
+                    builder.Append(")");
                 }
                 else if(function is IifFunction iifFunction)
                 {
-                    return $"iif({iifFunction.X}, {this.GetValueName(iifFunction.Y)}, {this.GetValueName(iifFunction.Z)})";
+                    var res = BuildExpression(builder, iifFunction.X, paraCount);
+                    paraCount = res.paraCount;
+                    parameters.AddRange(res.parameters);
+
+                    builder.Append(", ");
+
+                    builder.Append($"iif({iifFunction.X}, ");
+					res = this.GetValueName(builder, iifFunction.Y, paraCount);
+                    paraCount = res.paraCount;
+                    parameters.AddRange(res.parameters);
+
+                    builder.Append(", ");
+
+                    res = this.GetValueName(builder, iifFunction.Z, paraCount);
+                    paraCount = res.paraCount;
+                    parameters.AddRange(res.parameters);
+
+                    builder.Append(")");
                 }
                 else if(function is InstrFunction instrFunction)
                 {
-                    return $"instr({this.GetValueName(instrFunction.X)}, {this.GetValueName(instrFunction.Y)})";
+                    builder.Append($"instr(");
+					var res = this.GetValueName(builder, instrFunction.X, paraCount);
+                    paraCount = res.paraCount;
+                    parameters.AddRange(res.parameters);
+
+                    builder.Append(", ");
+
+                    res = this.GetValueName(builder, instrFunction.Y, paraCount);
+                    paraCount = res.paraCount;
+                    parameters.AddRange(res.parameters);
+
+                    builder.Append(")");
                 }
                 else if(function is JulianDayFunction julianDayFunction)
                 {
-                    return $"julianday({this.GetValueName(julianDayFunction.Value)}, {String.Join(", ", julianDayFunction.Modifier)})";
+                    builder.Append($"julianday(");
+					var res = this.GetValueName(builder, julianDayFunction.Value, paraCount);
+                    paraCount = res.paraCount;
+                    parameters.AddRange(res.parameters);
+                    
+                    builder.Append($", { String.Join(", ", julianDayFunction.Modifier)})");
                 }
                 else if(function is LastInsertRowIdFunction lastInsertRowIdFunction)
                 {
-                    return "last_insert_rowid()";
+                    builder.Append("last_insert_rowid()");
                 }
                 else if(function is LengthFunction lengthFunction)
                 {
-                    return $"length({this.GetValueName(lengthFunction.X)})";
+                    builder.Append($"length(");
+					var res = this.GetValueName(builder, lengthFunction.X, paraCount);
+                    paraCount = res.paraCount;
+                    parameters.AddRange(res.parameters);
+
+                    builder.Append(")");
                 }
                 else if(function is LikeFunction likeFunction)
                 {
-                    return $"like({this.GetValueName(likeFunction.X)}, {this.GetValueName(likeFunction.Y)})";
+                    builder.Append($"like(");
+					var res = this.GetValueName(builder, likeFunction.X, paraCount);
+                    paraCount = res.paraCount;
+                    parameters.AddRange(res.parameters);
+
+                    builder.Append(", ");
+
+                    res = this.GetValueName(builder, likeFunction.Y, paraCount);
+                    paraCount = res.paraCount;
+                    parameters.AddRange(res.parameters);
+
+                    builder.Append(")");
                 }
                 else if(function is LikeEscapeFunction likeEscapeFunction)
                 {
-                    return $"like({this.GetValueName(likeEscapeFunction.X)}, {this.GetValueName(likeEscapeFunction.Y)}, {this.GetValueName(likeEscapeFunction.Z)})";
+                    builder.Append($"like(");
+					var res = this.GetValueName(builder, likeEscapeFunction.X, paraCount);
+                    paraCount = res.paraCount;
+                    parameters.AddRange(res.parameters);
+
+                    builder.Append(", ");
+
+                    res = this.GetValueName(builder, likeEscapeFunction.Y, paraCount);
+                    paraCount = res.paraCount;
+                    parameters.AddRange(res.parameters);
+
+                    builder.Append(", ");
+
+                    res = this.GetValueName(builder, likeEscapeFunction.Z, paraCount);
+                    paraCount = res.paraCount;
+                    parameters.AddRange(res.parameters);
+
+                    builder.Append(")");
                 }
                 else if(function is LikelihoodFunction likelihoodFunction)
                 {
-                    return $"likelihood({this.GetValueName(likelihoodFunction.X)}, {this.GetValueName(likelihoodFunction.Y)})";
+                    builder.Append($"likelihood(");
+					var res = this.GetValueName(builder, likelihoodFunction.X, paraCount);
+                    paraCount = res.paraCount;
+                    parameters.AddRange(res.parameters);
+
+                    res = this.GetValueName(builder, likelihoodFunction.Y, paraCount);
+                    paraCount = res.paraCount;
+                    parameters.AddRange(res.parameters);
+
+                    builder.Append(")");
                 }
                 else if(function is LikelyFunction likelyFunction)
                 {
-                    return $"likely({this.GetValueName(likelyFunction.X)})";
+                    builder.Append($"likely(");
+					var res = this.GetValueName(builder, likelyFunction.X, paraCount);
+                    paraCount = res.paraCount;
+                    parameters.AddRange(res.parameters);
+
+                    builder.Append(")");
                 }
                 else if(function is LowerFunction lowerFunction)
                 {
-                    return $"lower({this.GetValueName(lowerFunction.X)})";
+                    builder.Append($"lower(");
+					var res = this.GetValueName(builder, lowerFunction.X, paraCount);
+                    paraCount = res.paraCount;
+                    parameters.AddRange(res.parameters);
+
+                    builder.Append(")");
                 }
                 else if(function is LTrimFunction lTrimFunction)
                 {
-                    return $"ltrim({this.GetValueName(lTrimFunction.X)})";
+                    builder.Append($"ltrim(");
+					var res = this.GetValueName(builder, lTrimFunction.X, paraCount);
+                    paraCount = res.paraCount;
+                    parameters.AddRange(res.parameters);
+
+                    builder.Append(")");
                 }
                 else if(function is LTrimYFunction lTrimYFunction)
                 {
-                    return $"ltrim({this.GetValueName(lTrimYFunction.X)}, {this.GetValueName(lTrimYFunction.Y)})";
+                    builder.Append($"ltrim(");
+					var res = this.GetValueName(builder, lTrimYFunction.X, paraCount);
+                    paraCount = res.paraCount;
+                    parameters.AddRange(res.parameters);
+
+                    builder.Append(", ");
+
+                    res = this.GetValueName(builder, lTrimYFunction.Y, paraCount);
+                    paraCount = res.paraCount;
+                    parameters.AddRange(res.parameters);
+
+                    builder.Append(")");
                 }
                 else if(function is MaxFunction maxFunction)
                 {
-                    return $"max({this.GetValueName(maxFunction.X)})";
+                    builder.Append($"max(");
+					var res = this.GetValueName(builder, maxFunction.X, paraCount);
+                    paraCount = res.paraCount;
+                    parameters.AddRange(res.parameters);
+
+                    builder.Append(")");
                 }
                 else if(function is MinFunction minFunction)
                 {
-                    return $"min({this.GetValueName(minFunction.X)})";
+                    builder.Append($"min(");
+					var res = this.GetValueName(builder, minFunction.X, paraCount);
+                    paraCount = res.paraCount;
+                    parameters.AddRange(res.parameters);
+
+                    builder.Append(")");
                 }
                 else if(function is NullIfFunction nullIfFunction)
                 {
-                    return $"nullif({this.GetValueName(nullIfFunction.X)}, {this.GetValueName(nullIfFunction.Y)})";
+                    builder.Append($"nullif(");
+					var res = this.GetValueName(builder, nullIfFunction.X, paraCount);
+                    paraCount = res.paraCount;
+                    parameters.AddRange(res.parameters);
+
+                    builder.Append(", ");
+
+                    res = this.GetValueName(builder, nullIfFunction.Y, paraCount);
+                    paraCount = res.paraCount;
+                    parameters.AddRange(res.parameters);
+
+                    builder.Append(")");
                 }
                 else if(function is QuoteFunction quoteFunction)
                 {
-                    return $"quote({this.GetValueName(quoteFunction.X)})";
+                    builder.Append($"quote(");
+					var res = this.GetValueName(builder, quoteFunction.X, paraCount);
+                    paraCount = res.paraCount;
+                    parameters.AddRange(res.parameters);
+
+                    builder.Append(")");
                 }
                 else if(function is RandomblobFunction randomblobFunction)
                 {
-                    return $"randomblob({randomblobFunction.N})";
+                    builder.Append($"randomblob({randomblobFunction.N})");
                 }
                 else if(function is RandomFunction randomFunction)
                 {
-                    return $"random()";
+                    builder.Append($"random()");
                 }
                 else if(function is ReplaceFunction replaceFunction)
                 {
-                    return $"replace({this.GetValueName(replaceFunction.X)}, {this.GetValueName(replaceFunction.Y)}, {this.GetValueName(replaceFunction.Z)})";
+                    builder.Append($"replace(");
+					var res = this.GetValueName(builder, replaceFunction.X, paraCount);
+                    paraCount = res.paraCount;
+                    parameters.AddRange(res.parameters);
+
+                    builder.Append(", ");
+
+                    res = this.GetValueName(builder, replaceFunction.Y, paraCount);
+                    paraCount = res.paraCount;
+                    parameters.AddRange(res.parameters);
+
+                    builder.Append(", ");
+
+                    res = this.GetValueName(builder, replaceFunction.Z, paraCount);
+                    paraCount = res.paraCount;
+                    parameters.AddRange(res.parameters);
+
+                    builder.Append(")");
                 }
                 else if(function is RoundDigitsFunction roundDigitsFunction)
                 {
-                    return $"round({this.GetValueName(roundDigitsFunction.X)}, {this.GetValueName(roundDigitsFunction.Y)})";
+                    builder.Append($"round(");
+					var res = this.GetValueName(builder, roundDigitsFunction.X, paraCount);
+                    paraCount = res.paraCount;
+                    parameters.AddRange(res.parameters);
+
+                    builder.Append(", ");
+
+                    res = this.GetValueName(builder, roundDigitsFunction.Y, paraCount);
+                    paraCount = res.paraCount;
+                    parameters.AddRange(res.parameters);
+
+                    builder.Append(")");
                 }
                 else if(function is RoundFunction roundFunction)
                 {
-                    return $"round({this.GetValueName(roundFunction.X)})";
+                    builder.Append($"round(");
+					var res = this.GetValueName(builder, roundFunction.X, paraCount);
+                    paraCount = res.paraCount;
+                    parameters.AddRange(res.parameters);
+
+                    builder.Append(")");
                 }
                 else if(function is RTrimFunction rTrimFunction)
                 {
-                    return $"rtrim({this.GetValueName(rTrimFunction.X)})";
+                    builder.Append($"rtrim(");
+					var res = this.GetValueName(builder, rTrimFunction.X, paraCount);
+                    paraCount = res.paraCount;
+                    parameters.AddRange(res.parameters);
+
+                    builder.Append(")");
                 }
                 else if(function is RTrimYFunction rTrimYFunction)
                 {
-                    return $"rtrim({this.GetValueName(rTrimYFunction.X)}, {this.GetValueName(rTrimYFunction.Y)})";
+                    builder.Append($"rtrim(");
+					var res = this.GetValueName(builder, rTrimYFunction.X, paraCount);
+                    paraCount = res.paraCount;
+                    parameters.AddRange(res.parameters);
+
+                    builder.Append(", ");
+
+                    res = this.GetValueName(builder, rTrimYFunction.Y, paraCount);
+                    paraCount = res.paraCount;
+                    parameters.AddRange(res.parameters);
+
+                    builder.Append(")");
                 }
                 else if(function is SignFunction signFunction)
                 {
-                    return $"sign({this.GetValueName(signFunction.X)})";
+                    builder.Append($"sign(");
+					var res = this.GetValueName(builder, signFunction.X, paraCount);
+                    paraCount = res.paraCount;
+                    parameters.AddRange(res.parameters);
+
+                    builder.Append(")");
                 }
                 else if(function is SoundexFunction soundexFunction)
                 {
-                    return $"soundex({this.GetValueName(soundexFunction.X)})";
+                    builder.Append($"soundex(");
+					var res = this.GetValueName(builder, soundexFunction.X, paraCount);
+                    paraCount = res.paraCount;
+                    parameters.AddRange(res.parameters);
+
+                    builder.Append(")");
                 }
                 else if(function is StrftimeFunction strftimeFunction)
                 {
-                    return $"strftime({strftimeFunction.Format}, {this.GetValueName(strftimeFunction.Value)}, {String.Join(", ", strftimeFunction.Modifier)})";
+                    builder.Append($"strftime({strftimeFunction.Format}, ");
+					var res = this.GetValueName(builder, strftimeFunction.Value, paraCount);
+                    paraCount = res.paraCount;
+                    parameters.AddRange(res.parameters);
+
+                    builder.Append($", { String.Join(", ", strftimeFunction.Modifier)})");
                 }
                 else if(function is SubstrFunction substrFunction)
                 {
-                    return $"substr({this.GetValueName(substrFunction.X)}, {this.GetValueName(substrFunction.Y)})";
+                    builder.Append($"substr(");
+					var res = this.GetValueName(builder, substrFunction.X, paraCount);
+                    paraCount = res.paraCount;
+                    parameters.AddRange(res.parameters);
+
+                    builder.Append(", ");
+
+                    res = this.GetValueName(builder, substrFunction.Y, paraCount);
+                    paraCount = res.paraCount;
+                    parameters.AddRange(res.parameters);
+
+                    builder.Append(")");
                 }
                 else if(function is SubstrLengthFunction substrLengthFunction)
                 {
-                    return $"substr({this.GetValueName(substrLengthFunction.X)}, {this.GetValueName(substrLengthFunction.Y)}, {this.GetValueName(substrLengthFunction.Z)})";
+                    builder.Append($"substr(");
+					var res = this.GetValueName(builder, substrLengthFunction.X, paraCount);
+                    paraCount = res.paraCount;
+                    parameters.AddRange(res.parameters);
+
+                    builder.Append(", ");
+
+                    res = this.GetValueName(builder, substrLengthFunction.Y, paraCount);
+                    paraCount = res.paraCount;
+                    parameters.AddRange(res.parameters);
+
+                    builder.Append(", ");
+
+                    res = this.GetValueName(builder, substrLengthFunction.Z, paraCount);
+                    paraCount = res.paraCount;
+                    parameters.AddRange(res.parameters);
+
+                    builder.Append(")");
                 }
                 else if (function is SubstringFunction substringFunction)
                 {
-                    return $"substring({this.GetValueName(substringFunction.X)}, {this.GetValueName(substringFunction.Y)})";
+                    builder.Append($"substring(");
+					var res = this.GetValueName(builder, substringFunction.X, paraCount);
+                    paraCount = res.paraCount;
+                    parameters.AddRange(res.parameters);
+
+                    builder.Append(", ");
+
+                    res = this.GetValueName(builder, substringFunction.Y, paraCount);
+                    paraCount = res.paraCount;
+                    parameters.AddRange(res.parameters);
+
+                    builder.Append(")");
                 }
                 else if (function is SubstringLengthFunction substringLengthFunction)
                 {
-                    return $"substring({this.GetValueName(substringLengthFunction.X)}, {this.GetValueName(substringLengthFunction.Y)}, {this.GetValueName(substringLengthFunction.Z)})";
+                    builder.Append($"substring(");
+					var res = this.GetValueName(builder, substringLengthFunction.X, paraCount);
+                    paraCount = res.paraCount;
+                    parameters.AddRange(res.parameters);
+
+                    builder.Append(", ");
+
+                    res = this.GetValueName(builder, substringLengthFunction.Y, paraCount);
+                    paraCount = res.paraCount;
+                    parameters.AddRange(res.parameters);
+
+                    builder.Append(", ");
+
+                    res = this.GetValueName(builder, substringLengthFunction.Z, paraCount);
+                    paraCount = res.paraCount;
+                    parameters.AddRange(res.parameters);
+
+                    builder.Append(")");
                 }
                 else if(function is TimeFuncFunction timeFunction)
                 {
-                    return $"time({this.GetValueName(timeFunction.Value)}, {String.Join(", ", timeFunction.Modifier)})";
+                    builder.Append($"time(");
+					var res = this.GetValueName(builder, timeFunction.Value, paraCount);
+                    paraCount = res.paraCount;
+                    parameters.AddRange(res.parameters);
+
+                    builder.Append($", { String.Join(", ", timeFunction.Modifier)})");
                 }
                 else if(function is TotalChangesFunction totalChangesFunction)
                 {
-                    return "total_changes()";
+                    builder.Append("total_changes()");
                 }
                 else if(function is TrimFunction trimFunction)
                 {
-                    return $"trim({this.GetValueName(trimFunction.X)})";
+                    builder.Append($"trim(");
+					var res = this.GetValueName(builder, trimFunction.X, paraCount);
+                    paraCount = res.paraCount;
+                    parameters.AddRange(res.parameters);
+
+                    builder.Append(")");
                 }
                 else if(function is TrimYFunction trimYFunction)
                 {
-                    return $"trim({this.GetValueName(trimYFunction.X)}, {this.GetValueName(trimYFunction.Y)})";
+                    builder.Append($"trim(");
+					var res = this.GetValueName(builder, trimYFunction.X, paraCount);
+                    paraCount = res.paraCount;
+                    parameters.AddRange(res.parameters);
+
+                    builder.Append(", ");
+
+                    res = this.GetValueName(builder, trimYFunction.Y, paraCount);
+                    paraCount = res.paraCount;
+                    parameters.AddRange(res.parameters);
+
+                    builder.Append(")");
                 }
                 else if(function is TypeofFunction typeofFunction)
                 {
-                    return $"typeof({this.GetValueName(typeofFunction.X)})";
+                    builder.Append($"typeof(");
+					var res = this.GetValueName(builder, typeofFunction.X, paraCount);
+                    paraCount = res.paraCount;
+                    parameters.AddRange(res.parameters);
+
+                    builder.Append(")");
                 }
                 else if(function is UnicodeFunction unicodeFunction)
                 {
-                    return $"unicode({this.GetValueName(unicodeFunction.X)})";
+                    builder.Append($"unicode(");
+					var res = this.GetValueName(builder, unicodeFunction.X, paraCount);
+                    paraCount = res.paraCount;
+                    parameters.AddRange(res.parameters);
+
+                    builder.Append(")");
                 }
                 else if(function is UnlikelyFunction unlikelyFunction)
                 {
-                    return $"unlikely({this.GetValueName(unlikelyFunction.X)})";
+                    builder.Append($"unlikely(");
+					var res = this.GetValueName(builder, unlikelyFunction.X, paraCount);
+                    paraCount = res.paraCount;
+                    parameters.AddRange(res.parameters);
+
+                    builder.Append(")");
                 }
                 else if(function is UpperFunction upperFunction)
                 {
-                    return $"upper({this.GetValueName(upperFunction.X)})";
+                    builder.Append($"upper(");
+					var res = this.GetValueName(builder, upperFunction.X, paraCount);
+                    paraCount = res.paraCount;
+                    parameters.AddRange(res.parameters);
+
+                    builder.Append(")");
                 }
                 else if(function is ZeroblobFunction zeroblobFunction)
                 {
-                    return $"zeroblob({this.GetValueName(zeroblobFunction.X)})";
+                    builder.Append($"zeroblob(");
+					var res = this.GetValueName(builder, zeroblobFunction.X, paraCount);
+                    paraCount = res.paraCount;
+                    parameters.AddRange(res.parameters);
+
+                    builder.Append(")");
                 }
                 else
                 {
                     throw new NotImplementedException($"Function '{function}' not implemented!");
                 }
             }
+            else
+            {
+                throw new NotImplementedException("Select expression not yet implemented!");
+            }
 
-            throw new NotImplementedException("Select expression not yet implemented!");
+            return (paraCount, parameters);
         }
 
         private (int paraCount, Dictionary<string, object> parameters) BuildStatementGroup(StringBuilder builder, ConditionalGroupStatement condGroupStmt, int paraCount)
@@ -818,20 +1256,22 @@ namespace TypeProofSql
         {
             Dictionary<string, object> parameters = new Dictionary<string, object>();
 
-            builder.Append(this.GetValueName(condExpr.Column));
+            var res = this.GetValueName(builder, condExpr.Column, paraCount);
+            paraCount = res.paraCount;
+            parameters.AddRange(res.parameters);
 
-            string chrIdent = "";
+            //string chrIdent = "";
 
-            switch (condExpr.Column)
-            {
-                case StringColumn column:
-                    chrIdent = "'";
-                    break;
-                case IntegerColumn column:
-                    break;
-                default:
-                    throw new NotImplementedException($"Column of type '{condExpr.Column.GetType().Name}' is not yet implemented for where clauses!");
-            }
+            //switch (condExpr.Column)
+            //{
+            //    case StringColumn column:
+            //        chrIdent = "'";
+            //        break;
+            //    case IntegerColumn column:
+            //        break;
+            //    default:
+            //        throw new NotImplementedException($"Column of type '{condExpr.Column.GetType().Name}' is not yet implemented for where clauses!");
+            //}
 
             switch (condExpr)
             {
@@ -840,45 +1280,36 @@ namespace TypeProofSql
                     builder.Append(paraCount);
                     parameters.Add(paraCount.ToString(), condExpr.Value);
                     paraCount++;
-                    //builder.Append($"{chrIdent}{condStmt.ConditionalExpression.Value}{chrIdent}");
                     break;
                 case InConditionalExpression expr:
                     builder.Append(" IN @");
                     builder.Append(paraCount);
                     parameters.Add(paraCount.ToString(), condExpr.Value);
                     paraCount++;
-                    //builder.Append(" IN (");
-                    //var l = ((System.Collections.IEnumerable)condStmt.ConditionalExpression.Value);
-                    //builder.AppendJoin(", ", l.Cast<object>().Select(c => $"{chrIdent}{c}{chrIdent}"));
-                    //builder.Append(")");
                     break;
                 case GreaterConditionalExpression expr:
                     builder.Append(" > @");
                     builder.Append(paraCount);
                     parameters.Add(paraCount.ToString(), condExpr.Value);
                     paraCount++;
-                    //builder.Append($"{chrIdent}{condStmt.ConditionalExpression.Value}{chrIdent}");
                     break;
                 case GreaterOrEqualConditionalExpression expr:
                     builder.Append(" >= @");
                     builder.Append(paraCount);
                     parameters.Add(paraCount.ToString(), condExpr.Value);
                     paraCount++;
-                    //builder.Append($"{chrIdent}{condStmt.ConditionalExpression.Value}{chrIdent}");
                     break;
                 case LesserConditionalExpression expr:
                     builder.Append(" < @");
                     builder.Append(paraCount);
                     parameters.Add(paraCount.ToString(), condExpr.Value);
                     paraCount++;
-                    //builder.Append($"{chrIdent}{condStmt.ConditionalExpression.Value}{chrIdent}");
                     break;
                 case LesserOrEqualConditionalExpression expr:
                     builder.Append(" <= @");
                     builder.Append(paraCount);
                     parameters.Add(paraCount.ToString(), condExpr.Value);
                     paraCount++;
-                    //builder.Append($"{chrIdent}{condStmt.ConditionalExpression.Value}{chrIdent}");
                     break;
                 case IsNullConditionalExpression expr:
                     builder.Append(" IS NULL");
