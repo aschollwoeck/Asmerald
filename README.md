@@ -6,6 +6,9 @@ It provides:
 - support of major database providers
 - low runtime overhead
 
+## Task list
+- [ ] Add delight to the experience when all tasks are complete
+- [ ] Source generators to transform queries during compilation to SQL strings. This approach would not cause any performance impact at runtime at all - type safety for free.
 
 ## Example
 Simple query using TypesafeSql and Dapper:
@@ -70,9 +73,7 @@ Recommendation for querying data: https://github.com/DapperLib/Dapper
 2. Include TypesafeSql library in your project
 
 ### Prerequisite
-TypesafeSql builds upon 
-- an existing database scheme
-and makes the output available for databases providers to query from the database.
+TypesafeSql builds upon an existing database scheme and makes the output available for databases providers to query from the database.
 
 
 ## Performance impact
@@ -104,9 +105,6 @@ Running those queries against a SQLite database in combination with Dapper retur
 
 TypesafeSql adds about 7% overhead.
 
-What to check out next:
-- Source generators to transform queries during compilation to SQL strings
-  This approach would not cause any performance impact at runtime at all - type safety for free.
 
 ## What kind of potential errors can be avoided?
 A very good answer on Stackoverflow: https://stackoverflow.com/questions/22860167/what-exactly-does-type-safe-queries-means
