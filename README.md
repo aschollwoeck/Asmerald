@@ -7,7 +7,6 @@ It provides:
 - low runtime overhead
 
 ## Task list
-- [ ] Add delight to the experience when all tasks are complete
 - [ ] Source generators to transform queries during compilation to SQL strings. This approach would not cause any performance impact at runtime at all - type safety for free.
 
 ## Example
