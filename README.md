@@ -1,6 +1,12 @@
 # TypeSafeSql
 A library for writing type safe SQL statements in code - based on DSL basics.
 
+It provides:
+- type safety where possible
+- support of major database providers
+- low runtime overhead
+
+
 ## Example
 Simple query using TypesafeSql and Dapper:
 ```C#
@@ -39,7 +45,7 @@ var stmt = dslCtxt
     .BuildPreparedStatement();
 ```
 
-##Why?
+## Why?
 Don't limit yourself to abstracted libraries / frameworks and utilize the potential databases provide.
 Enjoy writing SQL - with armor.
 
@@ -56,14 +62,14 @@ In the end hand-written SQL queries are required again.
 So let's make sure that we get more safety when writing SQL queries and utilize the power of typed programming languages like C#.
 
 
-##How does it work?
+## How does it work?
 For the query itself to the database you need to use an provider - this library only helps you by creating SQL query strings.
 Recommendation for querying data: https://github.com/DapperLib/Dapper
 
 1. Use binary (.exe) of TypesafeSql.Generate to create classes from database
 2. Include TypesafeSql library in your project
 
-###Prerequisite
+### Prerequisite
 TypesafeSql builds upon 
 - an existing database scheme
 and makes the output available for databases providers to query from the database.
@@ -102,10 +108,10 @@ What to check out next:
 - Source generators to transform queries during compilation to SQL strings
   This approach would not cause any performance impact at runtime at all - type safety for free.
 
-##What kind of potential errors can be avoided?
+## What kind of potential errors can be avoided?
 A very good answer on Stackoverflow: https://stackoverflow.com/questions/22860167/what-exactly-does-type-safe-queries-means
 
-##What type of errors are still possible?
+## What type of errors are still possible?
 
 
 ## Project setup
