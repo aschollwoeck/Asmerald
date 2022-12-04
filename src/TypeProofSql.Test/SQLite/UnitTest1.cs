@@ -203,17 +203,21 @@ namespace TypeProofSql.Test
                 .Build();
             Console.WriteLine(sql);
 
-            sql = dslCtxt
+            var stmt = dslCtxt
                 .Select()
                 .All()
-                .From<Table1>()
-                .InnerJoin<Table1, Table2>()
-                .On(new Table1.Column1(), new Table2.Column2())
-                .Where(new Table1.Column1().Equal("sdf"))
+                .From<TblCards>()
+                .InnerJoin<TblCards, TblPacks>()
+                .On(TblCards.Pack_id(), TblPacks.Id())
+                .Where(TblCards.Attribute().Equal("s")
+                    .And(TblCards.Form().Equal("c"))
+                    .Group()
+                    .And(TblCards.Id().Equal(1)
+                    .And(TblCards.Id().Equal(2))))
                 .Limit(20)
                 .Offset(5)
                 .QueryBuilder
-                .Build();
+                .BuildPreparedStatement();
             Console.WriteLine(sql);
 
             sql = dslCtxt
@@ -266,9 +270,18 @@ namespace TypeProofSql.Test
                 .Or(TblCards.Attribute().Equal("s").Or(TblCards.Attribute().Equal("c")).Group()
                     .And(TblCards.Attribute().Equal("s").Or(TblCards.Attribute().Equal("s")).Group()))).QueryBuilder.Build();
 
-            var g = dslCtxt.Select().All().From<TblCards>().Where(
-                TblCards.Attribute().Equal("s").And(TblCards.Form().Equal("c")).Group()
-                .And(TblCards.Id().Equal(1).And(TblCards.Id().Equal(2)))).QueryBuilder.Build();
+            var g = dslCtxt
+                .Select()
+                .All()
+                .From<TblCards>()
+                .Where(
+                    TblCards.Attribute().Equal("s")
+                    .And(TblCards.Form().Equal("c"))
+                    .Group()
+                    .And(TblCards.Id().Equal(1)
+                    .And(TblCards.Id().Equal(2))))
+                .QueryBuilder
+                .Build();
 
 
             sql = dslCtxt

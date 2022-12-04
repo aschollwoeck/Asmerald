@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using TypeProofSql.Columns;
 using TypeProofSql.QueryBuilders;
 using TypeProofSql.Expressions;
+using System.Linq;
 
 namespace TypeProofSql.Statements.SQLite
 {
@@ -11,7 +12,7 @@ namespace TypeProofSql.Statements.SQLite
     {
         public OnMultiStatement() { }
         public OnMultiStatement(IQueryBuilder queryBuilder, IEnumerable<(ISelectColumn<T> left, ISelectColumn<J> right)> on)
-            : base(queryBuilder, new T(), new J(), on)
+            : base(queryBuilder, new T(), new J(), on.Select(s => ((ISelectColumn)s.left, (ISelectColumn)s.right)))
         {
         }
     }
