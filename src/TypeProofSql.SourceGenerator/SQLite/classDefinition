@@ -2,6 +2,7 @@
 ;Directory=C:\Users\Alexander\Source\Repos\TypeSafeSql\src\TypeProofSql
 Directory=..\..\..\..\TypeProofSql
 TestDirectory=..\..\..\..\TypeProofSql.Test
+Root = SQLiteDSLContext
 
 [COMMON_CLASSES]
 SQLiteDSLContext = SQLiteDSLContext

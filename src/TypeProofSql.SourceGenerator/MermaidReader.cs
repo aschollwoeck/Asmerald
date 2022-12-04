@@ -28,11 +28,11 @@ namespace TypeProofSql.SourceGenerator
             }
         }
 
-        private const string Root = "SQLiteDSLContext";
+        private readonly string Root;
 
-        public MermaidReader()
+        public MermaidReader(string root)
         {
-            
+            this.Root = root;
         }
 
         public List<(string baseClass, string method, string retClass)> Parse(StreamReader streamReader)

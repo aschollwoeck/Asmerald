@@ -26,18 +26,11 @@ foreach (var provider in providers)
     var tDir = iniData.Global["TestDirectory"];
 
     // Get the current SQL dialect, e.g. SQLite, etc. for namespace and folder name
-    if (System.IO.Directory.Exists(Path.Combine(dir, "Statements")) == false) System.IO.Directory.CreateDirectory(Path.Combine(dir, "Statements"));
-    if (System.IO.Directory.Exists(Path.Combine(dir, "Extensions")) == false) System.IO.Directory.CreateDirectory(Path.Combine(dir, "Extensions"));
-    if (System.IO.Directory.Exists(Path.Combine(dir, "Functions")) == false) System.IO.Directory.CreateDirectory(Path.Combine(dir, "Functions"));
-    var stmtDir = System.IO.Directory.CreateDirectory(Path.Combine(dir, "Statements", iniData.Global["sqlDialect"]));
-    stmtDir.GetFiles().ToList().ForEach(f => f.Delete());
-    var stmtExtDir = System.IO.Directory.CreateDirectory(Path.Combine(dir, "Extensions", iniData.Global["sqlDialect"], "Statements"));
-    stmtExtDir.GetFiles().ToList().ForEach(f => f.Delete());
-    var funcDir = System.IO.Directory.CreateDirectory(Path.Combine(dir, "Functions", iniData.Global["sqlDialect"]));
-    funcDir.GetFiles().ToList().ForEach(f => f.Delete());
-    var funcExtDir = System.IO.Directory.CreateDirectory(Path.Combine(dir, "Extensions", iniData.Global["sqlDialect"], "Functions"));
-    funcExtDir.GetFiles().ToList().ForEach(f => f.Delete());
-    var testDir = new System.IO.DirectoryInfo(tDir);
+    var stmtDir = PrepareDirectory(Path.Combine(dir, "Statements", iniData.Global["sqlDialect"]), true);
+    var funcDir = PrepareDirectory(Path.Combine(dir, "Functions", iniData.Global["sqlDialect"]), true);
+    var stmtExtDir = PrepareDirectory(Path.Combine(dir, "Extensions", iniData.Global["sqlDialect"], "Statements"), true);
+    var funcExtDir = PrepareDirectory(Path.Combine(dir, "Extensions", iniData.Global["sqlDialect"], "Functions"), true);
+    var testDir = PrepareDirectory(Path.Combine(tDir, iniData.Global["sqlDialect"]), false);
 
     Dictionary<string, GenerateCodeClass> commonClassNames = new();
     Dictionary<string, GenerateCodeClass> statementClassNames = new();
@@ -69,7 +62,7 @@ foreach (var provider in providers)
     }
 
     //Now do create extension methods for chaining
-    var funcExt = GetExtensions(iniData, Path.Combine(provider, "FunctionExtensionDefinition"), functionClassNames);
+    var funcExt = BuildExtensions(iniData, Path.Combine(provider, "FunctionExtensionDefinition"), functionClassNames);
     foreach (var genCode in funcExt)
     {
         var generatedCode = new TypeProofSql.SourceGenerator.Generators.FunctionExtensionGenerator().Generate(genCode);
@@ -105,7 +98,7 @@ foreach (var provider in providers)
     File.WriteAllText(System.IO.Path.Combine(testDir.FullName, "NotImplementedTest") + ".cs", genImplTest);
 
     //Now do create extension methods for chaining
-    var ext = GetExtensions(iniData, Path.Combine(provider, "StatementExtensionDefinition"), statementClassNames);
+    var ext = BuildExtensions(iniData, Path.Combine(provider, "StatementExtensionDefinition"), statementClassNames);
     foreach (var genCode in ext)
     {
         var generatedCode = new TypeProofSql.SourceGenerator.Generators.StatementExtensionGenerator().Generate(genCode);
@@ -115,9 +108,22 @@ foreach (var provider in providers)
     }
 }
 
-IEnumerable<GenerateExtensionCodeStatement> GetExtensions(IniData iniData, string extDefPath, Dictionary<string, GenerateCodeClass> classNames)
+DirectoryInfo PrepareDirectory(string dir, bool deleteAllFiles)
 {
-    MermaidReader mermaidReader = new MermaidReader();
+    if (System.IO.Directory.Exists(dir) == false) System.IO.Directory.CreateDirectory(dir);
+    var res = System.IO.Directory.CreateDirectory(dir);
+
+    if(deleteAllFiles)
+    {
+        res.GetFiles().ToList().ForEach(f => f.Delete());
+    }
+
+    return res;
+}
+
+IEnumerable<GenerateExtensionCodeStatement> BuildExtensions(IniData iniData, string extDefPath, Dictionary<string, GenerateCodeClass> classNames)
+{
+    MermaidReader mermaidReader = new MermaidReader(iniData.Global["Root"]);
     var mermaidRes = mermaidReader.Parse(new StreamReader(extDefPath));
 
     return mermaidRes.GroupBy(ext => ext.method)
