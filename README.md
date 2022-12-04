@@ -7,6 +7,7 @@ It provides:
 - low runtime overhead
 
 ## Task list
+- [ ] Implement functional tests to verify generated SQL string
 - [ ] Source generators to transform queries during compilation to SQL strings. This approach would not cause any performance impact at runtime at all - type safety for free.
 
 ## Example
@@ -52,6 +53,7 @@ Don't limit yourself to abstracted libraries / frameworks and utilize the potent
 Enjoy writing SQL - with armor.
 
 **"Why not use a ORM?"**
+
 I used ORMs in multiple projects and have not had good experiences using them.
 Most of them forced me to do a "code first" approach which never worked for me as I design my database schemes first.
 Besides there were issues with errors during setup I spent hours fixing and figuering out cryptic error messages.
