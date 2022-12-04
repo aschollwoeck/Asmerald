@@ -9,49 +9,129 @@ using Dapper;
 
 namespace TypeProofSql.Generate.Generators
 {
+    /// <summary>
+    /// Source code generator for a SQLite database.
+    /// </summary>
     public class SQLiteGenerator : IGenerator
     {
+        /// <summary>
+        /// Container for database specific data used for generating necessary classes.
+        /// </summary>
         public class DatabaseSchema
         {
-            internal string type { get; set; }
-            internal string name { get; set; }
-            internal string tbl_name { get; set; }
-            internal int rootpage { get; set; }
-            internal string sql { get; set; }
+            /// <summary>
+            /// Type of the database object, e.g. table or view.
+            /// </summary>
+            internal string Type { get; set; }
+            /// <summary>
+            /// Name of the database object.
+            /// </summary>
+            internal string Name { get; set; }
+            /// <summary>
+            /// Name of the database object.
+            /// </summary>
+            internal string Tbl_name { get; set; }
+            /// <summary>
+            /// Root of database schema.
+            /// </summary>
+            internal int Rootpage { get; set; }
+            /// <summary>
+            /// Sql which was used to create the database object.
+            /// </summary>
+            internal string Sql { get; set; }
         }
 
+        /// <summary>
+        /// Container for column specific data.
+        /// </summary>
         public class TableSchema
         {
-            public int cid { get; set; }
-            public string name { get; set; }
-            public string type { get; set; }
-            public int notnull { get; set; }
-            public string dflt_value { get; set; }
-            public int pk { get; set; }
+            /// <summary>
+            /// Internal id of column.
+            /// </summary>
+            public int Cid { get; set; }
+            /// <summary>
+            /// Name of column.
+            /// </summary>
+            public string Name { get; set; }
+            /// <summary>
+            /// Data type of column.
+            /// </summary>
+            public string Type { get; set; }
+            /// <summary>
+            /// Flag if column has to be filled with data.
+            /// </summary>
+            public int Notnull { get; set; }
+            /// <summary>
+            /// Default value of column.
+            /// </summary>
+            public string DfltValue { get; set; }
+            /// <summary>
+            /// Flag if column is a primary key.
+            /// </summary>
+            public int Pk { get; set; }
         }
 
+        /// <summary>
+        /// Class used for generating source code presenting necessary data for a table.
+        /// </summary>
         internal class TableGenerate
         {
+            /// <summary>
+            /// Class used for generating source code representing necessary data for a column.
+            /// </summary>
             internal class ColumnGenerate
             {
-                public string name_class { get; set; }
-                public string name { get; set; }
-                public string name_method { get; set; }
-                public string type { get; set; }
+                /// <summary>
+                /// Class name of column.
+                /// </summary>
+                public string Name_class { get; set; }
+                /// <summary>
+                /// Name of column.
+                /// </summary>
+                public string Name { get; set; }
+                /// <summary>
+                /// Method name of column.
+                /// </summary>
+                public string Name_method { get; set; }
+                /// <summary>
+                /// Data type of column.
+                /// </summary>
+                public string Type { get; set; }
             }
 
-            public string name_class { get; set; }
-            public string name { get; set; }
-            public IEnumerable<ColumnGenerate> columns { get; set; } = new List<ColumnGenerate>();
+            /// <summary>
+            /// Class name of table.
+            /// </summary>
+            public string Name_class { get; set; }
+            /// <summary>
+            /// Name of table.
+            /// </summary>
+            public string Name { get; set; }
+            /// <summary>
+            /// Columns of table.
+            /// </summary>
+            public IEnumerable<ColumnGenerate> Columns { get; set; } = new List<ColumnGenerate>();
         }
 
+        /// <summary>
+        /// Containing configurable parts for source code generation.
+        /// </summary>
         private readonly GenerateConfiguration _generateConfiguration;
 
+        /// <summary>
+        /// New SQLite generator of a database.
+        /// </summary>
+        /// <param name="config"></param>
         public SQLiteGenerator(GenerateConfiguration config)
         {
             this._generateConfiguration = config;
         }
 
+        /// <summary>
+        /// Generate source code.
+        /// </summary>
+        /// <returns></returns>
         public async Task<Dictionary<string, string>> Generate()
         {
             return await this.Generate("");
@@ -77,22 +157,22 @@ namespace TypeProofSql.Generate.Generators
 
                 foreach (var t in tables)
                 {
-                    if (t.tbl_name == "sqlite_sequence") continue;
+                    if (t.Tbl_name == "sqlite_sequence") continue;
 
-                    var columns = await sqliteConnection.QueryAsync<TableSchema>("pragma table_info(" + t.tbl_name + ")");
+                    var columns = await sqliteConnection.QueryAsync<TableSchema>("pragma table_info(" + t.Tbl_name + ")");
 
                     var ctxtColumns = columns.Select(c => new TableGenerate.ColumnGenerate
                     {
-                        name_class = this._generateConfiguration.ColPrefixFunc() + codeProvider.CreateValidIdentifier(c.name.FirstCharToUpper()),
-                        name = c.name,
-                        name_method = c.name.FirstCharToUpper(),
-                        type = getColumnType(c.type).Name
+                        Name_class = this._generateConfiguration.ColPrefixFunc() + codeProvider.CreateValidIdentifier(c.Name.FirstCharToUpper()),
+                        Name = c.Name,
+                        Name_method = c.Name.FirstCharToUpper(),
+                        Type = getColumnType(c.Type).Name
                     });
                     var ctxtTable = new TableGenerate
                     {
-                        name_class = this._generateConfiguration.PrefixFunc(t) + codeProvider.CreateValidIdentifier(t.tbl_name.FirstCharToUpper()),
-                        name = t.tbl_name,
-                        columns = ctxtColumns
+                        Name_class = this._generateConfiguration.PrefixFunc(t) + codeProvider.CreateValidIdentifier(t.Tbl_name.FirstCharToUpper()),
+                        Name = t.Tbl_name,
+                        Columns = ctxtColumns
                     };
 
                     templateTables.Add(ctxtTable);
@@ -105,7 +185,7 @@ namespace TypeProofSql.Generate.Generators
                 foreach (var tbl in templateTables)
                 {
                     var generatedCode = BuildCode(nspace, tbl);
-                    dicRes.Add(tbl.name_class, generatedCode);
+                    dicRes.Add(tbl.Name_class, generatedCode);
                 }
 
                 return dicRes;
@@ -129,32 +209,32 @@ namespace TypeProofSql.Generate.Generators
                 w.Indent++;
             }
 
-            w.Write($"public class {table.name_class} : ITable");
+            w.Write($"public class {table.Name_class} : ITable");
             w.WriteLine("{");
             w.Indent++;
 
-            w.WriteLine($"string ITable.Name() => \"{table.name}\";");
+            w.WriteLine($"string ITable.Name() => \"{table.Name}\";");
 
-            foreach (var column in table.columns)
+            foreach (var column in table.Columns)
             {
-                w.WriteLine($"public static {column.name_class} {column.name_method}() => new {column.name_class}();");
-                w.WriteLine($"public static {column.name_class} {column.name_method}(string tableAlias) => new {column.name_class}(tableAlias);");
+                w.WriteLine($"public static {column.Name_class} {column.Name_method}() => new {column.Name_class}();");
+                w.WriteLine($"public static {column.Name_class} {column.Name_method}(string tableAlias) => new {column.Name_class}(tableAlias);");
             }
 
-            foreach (var column in table.columns)
+            foreach (var column in table.Columns)
             {
-                w.WriteLine($"public class {column.name_class} : {column.type}<{table.name_class}>, ISelectColumn<{table.name_class}>, ISelectColumnAlias<{table.name_class}>");
+                w.WriteLine($"public class {column.Name_class} : {column.Type}<{table.Name_class}>, ISelectColumn<{table.Name_class}>, ISelectColumnAlias<{table.Name_class}>");
                 w.WriteLine("{");
                 w.Indent++;
 
-                w.WriteLine($"private readonly string _name = \"{column.name}\";");
+                w.WriteLine($"private readonly string _name = \"{column.Name}\";");
                 w.WriteLine($"string ISelectColumn.Name => String.IsNullOrEmpty(TableAlias) ? _name : $\"{{TableAlias}}.{{_name}}\";");
                 w.WriteLine($"readonly string? TableAlias;");
-                w.WriteLine($"public {column.name_class}() {{ }}");
-                w.WriteLine($"public {column.name_class}(string tableAlias) {{ this.TableAlias = tableAlias; }}");
+                w.WriteLine($"public {column.Name_class}() {{ }}");
+                w.WriteLine($"public {column.Name_class}(string tableAlias) {{ this.TableAlias = tableAlias; }}");
                 w.WriteLine($"public override string Name() => String.IsNullOrEmpty(TableAlias) ? _name : $\"{{TableAlias}}.{{_name}}\";");
-                w.WriteLine($"public override ISelectColumnAlias<{table.name_class}> As(string name) => new AliasColumn<{table.name_class}>(this, name);");
-                w.WriteLine($"public override ISelectColumn<{table.name_class}> Count() => new CountColumn<{table.name_class}>(this);");
+                w.WriteLine($"public override ISelectColumnAlias<{table.Name_class}> As(string name) => new AliasColumn<{table.Name_class}>(this, name);");
+                w.WriteLine($"public override ISelectColumn<{table.Name_class}> Count() => new CountColumn<{table.Name_class}>(this);");
 
                 w.Indent--;
                 w.WriteLine("}");

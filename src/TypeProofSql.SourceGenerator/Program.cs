@@ -88,7 +88,7 @@ foreach (var provider in providers)
         File.WriteAllText(System.IO.Path.Combine(stmtDir.FullName, filename + ".cs"), generatedCode);
     }
 
-    var genImplTest = new TestGenerator().Generate(
+    var genImplTest = new StatementTestGenerator().Generate(
         "NotImplementedTest",
         statementClassNames
             .Where(c => commonClassNames.ContainsKey(c.Key) == false)

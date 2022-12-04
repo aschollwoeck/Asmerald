@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace TypeProofSql.Generate.Generators
 {
+    /// <summary>
+    /// Source code generator for a Postgres database.
+    /// </summary>
     internal class PostgreSQLGenerator : IGenerator
     {
         public Task<Dictionary<string, string>> Generate()

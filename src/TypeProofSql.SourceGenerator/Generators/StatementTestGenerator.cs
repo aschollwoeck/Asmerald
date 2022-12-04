@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace TypeProofSql.SourceGenerator.Generators
 {
-    internal class TestGenerator
+    internal class StatementTestGenerator
     {
         internal string Generate(string testClass, IEnumerable<GenerateCodeClass> classObjs)
         {
@@ -18,10 +18,10 @@ namespace TypeProofSql.SourceGenerator.Generators
             w.WriteLine("using Dapper;");
             w.WriteLine("using System.Linq;");
             w.WriteLine("using System.Diagnostics;");
-            w.WriteLine("using TypeProofSql.SQLite;");
+            w.WriteLine($"using TypeProofSql.{classObjs.First().nspace};");
             w.WriteLine("using System;");
-            w.WriteLine("using TypeProofSql.Statements.SQLite;");
-            w.WriteLine("namespace TypeProofSql.Test");
+            w.WriteLine($"using TypeProofSql.Statements.{classObjs.First().nspace};");
+            w.WriteLine($"namespace TypeProofSql.Test.{classObjs.First().nspace}");
             w.WriteLine("{");
             w.Indent++;
             w.WriteLine("[TestClass]");
@@ -38,7 +38,7 @@ namespace TypeProofSql.SourceGenerator.Generators
                     w.WriteLine($"public void {classObj.class_name}ImplementTest()");
                     w.WriteLine("{");
                     w.Indent++;
-                    w.WriteLine("var qb = new SQLiteDSLContext().QueryBuilder;");
+                    w.WriteLine($"var qb = new {classObj.nspace}DSLContext().QueryBuilder;");
                     w.WriteLine($"qb.AddStatment(new {classObj.class_name}());");
                     w.WriteLine("AssertEx.DoesNotThrow<NotImplementedException>(() => qb.Build());");
                     w.Indent--;

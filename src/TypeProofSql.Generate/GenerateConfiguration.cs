@@ -16,7 +16,7 @@ namespace TypeProofSql.Generate
 
         private static string GetPrefix(DatabaseSchema schema)
         {
-            if (schema.type == "view")
+            if (schema.Type == "view")
             {
                 return "Vw";
             }

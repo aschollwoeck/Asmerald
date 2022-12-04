@@ -18,22 +18,13 @@ public class Program
         {
 
         };
+
         return new AppRunner<Program>(appSett).Run(args);
-
-        Console.WriteLine("Hello, World!");
-
-        try
-        {
-            //SQLiteGenerator generator = new SQLiteGenerator(@"Data Source=C:\Users\Alexander\Desktop\Digillection\digillection.sqlite3;");
-            //generator.Generate();
-        }
-        catch (Exception ex) { }
-
-        
-
-        return 0;
     }
 
+    /// <summary>
+    /// Supported databases for code generation.
+    /// </summary>
     public enum DataBase
     {
         SQLite
