@@ -14,11 +14,11 @@ namespace TypeProofSql.SourceGenerator.Generators
             var sw = new StringWriter();
             IndentedTextWriter w = new IndentedTextWriter(sw);
 
-            w.WriteLine("using System;");
+            //w.WriteLine("using System;");
             w.WriteLine("using System.Collections.Generic;");
-            w.WriteLine("using System.Text;");
+            //w.WriteLine("using System.Text;");
             w.WriteLine("using TypeProofSql.Columns;");
-            w.WriteLine("using TypeProofSql.Statements;");
+            //w.WriteLine("using TypeProofSql.Statements;");
             w.WriteLine("using TypeProofSql.QueryBuilders;");
             w.WriteLine("using TypeProofSql.Expressions;");
             w.WriteLine();

@@ -1,10 +1,9 @@
 using System;
 using System.Collections.Generic;
-using System.Text;
+using System.Linq;
+using TypeProofSql.Columns;
 using TypeProofSql.Expressions;
 using TypeProofSql.QueryBuilders;
-using TypeProofSql.Columns;
-using System.Linq;
 using TypeProofSql.Statements;
 using TypeProofSql.Statements.SQLite;
 

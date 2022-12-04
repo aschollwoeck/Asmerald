@@ -17,13 +17,13 @@ namespace TypeProofSql.SourceGenerator.Generators
 
             w.WriteLine("using System;");
             w.WriteLine("using System.Collections.Generic;");
-            w.WriteLine("using System.Text;");
-            w.WriteLine("using TypeProofSql.Expressions;");
-            w.WriteLine("using TypeProofSql.QueryBuilders;");
-            w.WriteLine("using TypeProofSql.Columns;");
             w.WriteLine("using System.Linq;");
-            w.WriteLine("using TypeProofSql.Statements;");
+            //w.WriteLine("using System.Text;");
+            w.WriteLine("using TypeProofSql.Columns;");
+            w.WriteLine("using TypeProofSql.Expressions;");
             w.WriteLine($"using TypeProofSql.Functions.{generateExtension.nspace};");
+            //w.WriteLine("using TypeProofSql.QueryBuilders;");
+            w.WriteLine("using TypeProofSql.Statements;");
             w.WriteLine();
             w.WriteLine($"namespace TypeProofSql.{generateExtension.nspace}");
             w.WriteLine("{");

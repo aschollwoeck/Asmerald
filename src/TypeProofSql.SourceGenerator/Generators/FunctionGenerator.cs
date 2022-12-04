@@ -16,10 +16,10 @@ namespace TypeProofSql.SourceGenerator.Generators
 
             w.WriteLine("using System;");
             w.WriteLine("using System.Collections.Generic;");
-            w.WriteLine("using System.Text;");
-            w.WriteLine("using TypeProofSql.Columns;");
-            w.WriteLine("using TypeProofSql.Statements;");
-            w.WriteLine("using TypeProofSql.QueryBuilders;");
+            //w.WriteLine("using System.Text;");
+            //w.WriteLine("using TypeProofSql.Columns;");
+            //w.WriteLine("using TypeProofSql.Statements;");
+            //w.WriteLine("using TypeProofSql.QueryBuilders;");
             w.WriteLine("using TypeProofSql.Expressions;");
             w.WriteLine();
             w.WriteLine($"namespace TypeProofSql.Functions.{classObj.nspace}");
