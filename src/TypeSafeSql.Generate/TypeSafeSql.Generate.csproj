@@ -15,12 +15,12 @@
     <PackageReference Include="CommandDotNet" Version="7.0.1" />
     <PackageReference Include="ConsoleTables" Version="2.4.2" />
     <PackageReference Include="Dapper" Version="2.0.123" />
-    <PackageReference Include="Microsoft.Data.Sqlite" Version="6.0.8" />
-    <PackageReference Include="System.CodeDom" Version="6.0.0" />
+    <PackageReference Include="Microsoft.Data.Sqlite" Version="7.0.0" />
+    <PackageReference Include="System.CodeDom" Version="7.0.0" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\TypeProofSql\TypeProofSql.csproj" />
+    <ProjectReference Include="..\TypeSafeSql\TypeSafeSql.csproj" />
   </ItemGroup>
 
 </Project>
