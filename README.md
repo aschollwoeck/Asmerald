@@ -1,6 +1,8 @@
 # Amorphous
 A library for writing type safe SQL statements in code - based on DSL basics.
 
+![CI](https://github.com/aschollwoeck/Amorphous/workflows/CI/badge.svg)
+
 It provides:
 - type safety where possible
 - support of major database providers
