@@ -1,7 +1,7 @@
 # Amorphous
 A library for writing type safe SQL statements in code - based on DSL basics.
 
-![CI](https://github.com/aschollwoeck/Amorphous/workflows/CI/badge.svg)
+[![CI](https://github.com/aschollwoeck/Amorphous/actions/workflows/ci.yml/badge.svg)](https://github.com/aschollwoeck/Amorphous/actions/workflows/ci.yml)
 
 It provides:
 - type safety where possible
