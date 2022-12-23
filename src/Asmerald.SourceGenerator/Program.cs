@@ -10,7 +10,7 @@ using Asmerald;
 using Asmerald.SourceGenerator;
 using Asmerald.SourceGenerator.Generators;
 
-var providers = new string[] { "SQLite", "PostgreSQL" };
+var providers = new string[] { "SQLite", "PostgreSQL", "MySQL", "MariaDB", "MSSQL", "Oracle" };
 
 var parser = new IniParser.Parser.IniDataParser(new IniParser.Model.Configuration.IniParserConfiguration()
 {

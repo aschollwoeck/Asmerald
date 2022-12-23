@@ -12,7 +12,7 @@ namespace Asmerald.Statements.SQLite
     {
         public OnMultiStatement() { }
         public OnMultiStatement(IQueryBuilder queryBuilder, IEnumerable<(ISelectColumn<T> left, ISelectColumn<J> right)> on)
-            : base(queryBuilder, new T(), new J(), on.Select(s => ((ISelectColumn)s.left, (ISelectColumn)s.right)))
+            : base(queryBuilder, new T(), new J(), on.Select(o => ((ISelectColumn)o.left, (ISelectColumn)o.right)))
         {
         }
     }

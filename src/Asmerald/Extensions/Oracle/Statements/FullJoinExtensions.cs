@@ -1,0 +1,33 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using Asmerald.Columns;
+using Asmerald.Expressions;
+using Asmerald.QueryBuilders;
+using Asmerald.Statements;
+using Asmerald.Statements.Oracle;
+
+namespace Asmerald.Oracle
+{
+    public static partial class AsmeraldFullJoinExtensions
+    {
+        public static FullOuterJoinStatement<T, J> FullJoin<T, J>(this SelectFromStatement<T> stmt)
+            where T : ITable, new()
+            where J : ITable, new()
+        {
+            return new FullOuterJoinStatement<T, J>(stmt.QueryBuilder);
+        }
+        public static UpdateConditionalJoinStatement<T, J> FullJoin<T, J>(this UpdateFromStatement<T> stmt)
+            where T : ITable, new()
+            where J : ITable, new()
+        {
+            return new UpdateConditionalJoinStatement<T, J>(stmt.QueryBuilder);
+        }
+        public static UpdateConditionalJoinStatement<T, J> FullJoin<T, J>(this UpdateFromSubQueryStatement<T> stmt)
+            where T : ITable, new()
+            where J : ITable, new()
+        {
+            return new UpdateConditionalJoinStatement<T, J>(stmt.QueryBuilder);
+        }
+    }
+}

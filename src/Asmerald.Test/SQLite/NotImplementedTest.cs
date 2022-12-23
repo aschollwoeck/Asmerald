@@ -5,7 +5,7 @@ using System.Diagnostics;
 using Asmerald.SQLite;
 using System;
 using Asmerald.Statements.SQLite;
-namespace Asmerald.Test
+namespace Asmerald.Test.SQLite
 {
     [TestClass]
     public class NotImplementedTest

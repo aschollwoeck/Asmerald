@@ -1,0 +1,265 @@
+﻿sqlDialect=MySQL
+Directory=..\..\..\..\Asmerald
+TestDirectory=..\..\..\..\Asmerald.Test
+Root = MySQLDSLContext
+
+[COMMON_CLASSES]
+MySQLDSLContext = MySQLDSLContext
+ConditionalGroupStatement = ConditionalGroupStatement
+ConditionalStatement = ConditionalStatement
+Int16 = Int16
+Int32 = Int32
+Int64 = Int64
+UInt16 = UInt16
+UInt32 = UInt32
+UInt64 = UInt64
+Decimal = Decimal
+Double = Double
+String = String
+Char = Char
+Boolean = Boolean
+Byte = Byte
+DateTime = DateTime
+Single = Single
+ISelectColumn = ISelectColumn
+
+
+[FUNCTIONS]
+Abs = Abs(ISelectExpression x)
+Changes = Changes()
+CharFunc = CharFunc(ISelectExpression x1, ISelectExpression x2, ISelectExpression[] xn)
+Coalesce = Coalesce(ISelectExpression x, ISelectExpression y, ISelectExpression[] z)
+Format = Format(string format, ISelectExpression[] z)
+Glob = Glob(ISelectExpression x, ISelectExpression y)
+Hex = Hex(ISelectExpression z)
+IfNull = IfNull(ISelectExpression x, ISelectExpression y)
+Iif = Iif(ConditionalExpression x, ISelectExpression y, ISelectExpression z)
+Instr = Instr(ISelectExpression x, ISelectExpression y)
+LastInsertRowId = LastInsertRowId()
+Length = Length(ISelectExpression x)
+Like = Like(ISelectExpression x, ISelectExpression y)
+LikeEscape = LikeEscape(ISelectExpression x, ISelectExpression y, ISelectExpression z)
+Likelihood = Likelihood(ISelectExpression x, ISelectExpression y)
+Likely = Likely(ISelectExpression x)
+Lower = Lower(ISelectExpression x)
+LTrim = LTrim(ISelectExpression x)
+LTrimY = LTrimY(ISelectExpression x, ISelectExpression y)
+Max = Max(ISelectExpression x)
+Min = Min(ISelectExpression x)
+MaxAggregate = MaxAggregate(ISelectExpression[] x)
+MinAggregate = MinAggregate(ISelectExpression[] x)
+NullIf = NullIf(ISelectExpression x, ISelectExpression y)
+Quote = Quote(ISelectExpression x)
+Random = Random()
+Randomblob = Randomblob(int n)
+Replace = Replace(ISelectExpression x, ISelectExpression y, ISelectExpression z)
+Round = Round(ISelectExpression x)
+RoundDigits = RoundDigits(ISelectExpression x, ISelectExpression y)
+RTrim = RTrim(ISelectExpression x)
+RTrimY = RTrimY(ISelectExpression x, ISelectExpression y)
+Sign = Sign(ISelectExpression x)
+Soundex = Soundex(ISelectExpression x)
+SubstrLength = SubstrLength(ISelectExpression x, ISelectExpression y, ISelectExpression z)
+Substr = Substr(ISelectExpression x, ISelectExpression y)
+SubstringLength = SubstringLength(ISelectExpression x, ISelectExpression y, ISelectExpression z)
+Substring = Substring(ISelectExpression x, ISelectExpression y)
+TotalChanges = TotalChanges()
+Trim = Trim(ISelectExpression x)
+TrimY = TrimY(ISelectExpression x, ISelectExpression y)
+Typeof = Typeof(ISelectExpression x)
+Unicode = Unicode(ISelectExpression x)
+Unlikely = Unlikely(ISelectExpression x)
+Upper = Upper(ISelectExpression x)
+Zeroblob = Zeroblob(ISelectExpression x)
+
+DateFunc = DateFunc(ISelectExpression value, string[] modifier)
+TimeFunc = TimeFunc(ISelectExpression value, string[] modifier)
+DateTimeFunc = DateTimeFunc(ISelectExpression value, string[] modifier)
+JulianDay = JulianDay(ISelectExpression value, string[] modifier)
+Unixepoch = Unixepoch(ISelectExpression value, string[] modifier)
+Strftime = Strftime(string format, ISelectExpression value, string[] modifier)
+
+
+[CLASSES]
+Not = Not
+
+With = With
+WithTable = WithTable(ITable table, ISelectExpression[] selectColumns)
+WithTable<T> = WithTable<T>(ISelectExpression[] selectColumns) : WithTable(new T(), selectColumns)
+WithTableAdditional = WithTableAdditional(ITable table, ISelectExpression[] selectColumns)
+WithTableAdditional<T> = WithTableAdditional<T>(ISelectExpression[] selectColumns) : WithTableAdditional(new T(), selectColumns)
+Recursive = Recursive(ITable table, ISelectExpression[] selectColumns)
+Recursive<T> = Recursive<T>(ISelectExpression[] selectColumns) : Recursive(new T(), selectColumns)
+
+Materialized = Materialized(IQueryBuilder subQuery)
+
+As = As
+WithAs = WithAs : As
+WithNot = WithNot() : Not()
+AsSelect = AsSelect(IQueryBuilder subQuery)
+WithAsSelect = WithAsSelect(ITable table, IQueryBuilder subQuery)
+WithAsSelect<T> = WithAsSelect<T>(IQueryBuilder subQuery) : WithAsSelect(new T(), subQuery)
+
+
+All = All
+
+Select = Select
+SelectColumns = SelectColumns(ISelectExpression[] columns)
+Distinct = Distinct
+DistinctColumns = DistinctColumns(ISelectExpression[] columns)
+
+From = From(ITable table)
+FromSubQuery = FromSubQuery(IQueryBuilder subQueryBuilder, ITable table)
+From<T> = From<T>() : From(new T())
+FromSubQuery<T> = FromSubQuery<T>(IQueryBuilder subQueryBuilder) : FromSubQuery(subQueryBuilder, new T())
+
+SelectFrom<T> = SelectFrom<T>() : From<T>()
+SelectFromSubQuery<T> = SelectFromSubQuery<T>(IQueryBuilder subQueryBuilder) : FromSubQuery<T>(subQueryBuilder)
+
+;TableAs = TableAs(string alias)
+
+Join = Join(ITable left, ITable right)
+Join<T, J> = Join<T, J>(T left, J right) : Join(left, right)
+JoinSubQuery = JoinSubQuery(IQueryBuilder subQueryBuilder)
+JoinAs = JoinAs(string alias)
+ConditionalJoin = ConditionalJoin(ITable t, ITable j) : Join(t, j)
+ConditionalJoin<T, J> = ConditionalJoin<T, J>() : Join<T, J>(new T(), new J())
+NonConditionalJoin = NonConditionalJoin(ITable left, ITable right) : Join(left, right)
+NonConditionalJoin<T, J> = NonConditionalJoin<T, J>() : NonConditionalJoin(new T(), new J())
+CrossJoin = CrossJoin(ITable t, ITable j) : NonConditionalJoin(t, j)
+CrossJoin<T, J> = CrossJoin<T, J>() : CrossJoin(new T(), new J())
+FullOuterJoin = FullOuterJoin(ITable t, ITable j) : ConditionalJoin(t, j)
+FullOuterJoin<T, J> = FullOuterJoin<T, J>() : FullOuterJoin(new T(), new J())
+InnerJoin = InnerJoin(ITable t, ITable j) : ConditionalJoin(t, j)
+InnerJoin<T, J> = InnerJoin<T, J>() : InnerJoin(new T(), new J())
+LeftOuterJoin = LeftOuterJoin(ITable t, ITable j) : ConditionalJoin(t, j)
+LeftOuterJoin<T, J> = LeftOuterJoin<T, J>() : LeftOuterJoin(new T(), new J())
+RightOuterJoin = RightOuterJoin(ITable t, ITable j) : ConditionalJoin(t, j)
+RightOuterJoin<T, J> = RightOuterJoin<T, J>() : RightOuterJoin(new T(), new J())
+
+On = On(ITable tleft, ITable tright, ISelectColumn left, ISelectColumn right)
+OnMulti = OnMulti(ITable tLeft, ITable tRight, (ISelectColumn left, ISelectColumn right)[] on)
+On<T, J> = On<T, J>(ISelectColumn<T> left, ISelectColumn<J> right) : On(new T(), new J(), left, right)
+OnMulti<T, J> = OnMulti<T, J>((ISelectColumn<T> left, ISelectColumn<J> right)[] on) : OnMulti(new T(), new J(), on)
+
+WhereGroup = WhereGroup(ConditionalGroupStatement groupExpr)
+WhereGroupMulti = WhereGroupMulti(List<ConditionalGroupStatement> conditionalGroupStatements)
+Where = Where(ConditionalExpression conditionalExpression)
+WhereMulti = WhereMulti(List<ConditionalStatement> conditionalStatements)
+
+SelectWhereGroup = SelectWhereGroup(ConditionalGroupStatement groupExpr) : WhereGroup(groupExpr)
+SelectWhereGroupMulti = SelectWhereGroupMulti(List<ConditionalGroupStatement> conditionalGroupStatements) : WhereGroupMulti(conditionalGroupStatements)
+SelectWhere = SelectWhere(ConditionalExpression conditionalExpression) : Where(conditionalExpression)
+SelectWhereMulti = SelectWhereMulti(List<ConditionalStatement> conditionalStatements) : WhereMulti(conditionalStatements)
+
+
+SelectHavingGroup = SelectHavingGroup(ConditionalGroupStatement groupExpr)
+SelectHavingGroupMulti = SelectHavingGroupMulti(List<ConditionalGroupStatement> conditionalGroupStatements) : WhereGroupMulti(conditionalGroupStatements)
+SelectHaving = SelectHaving(ConditionalExpression conditionalExpression)
+SelectHavingMulti = SelectHavingMulti(List<ConditionalStatement> conditionalStatements)
+
+GroupBy = GroupBy(IColumn[] groupByColumns)
+OrderBy = OrderBy(IOrderByColumn[] orderByColumns)
+Collate = Collate
+Asc = Asc
+Desc = Desc
+Nulls = Nulls
+First = First
+Last = Last
+
+Limit = Limit(int limit)
+Offset = Offset(int offset)
+
+Insert = Insert
+Replace = Replace
+InsertReplace = InsertReplace() : Replace()
+InsertOr = InsertOr
+Abort = Abort
+InsertAbort = InsertAbort() : Abort()
+Fail = Fail
+InsertFail = InsertFail() : Fail()
+Ignore = Ignore
+InsertIgnore = InsertIgnore() : Ignore()
+Rollback = Rollback
+InsertRollback = InsertRollback() : Rollback()
+Into = Into(ITable table)
+Into<T> = Into<T>() : Into(new T())
+IntoAs = IntoAs(string alias)
+
+InsertSelect = InsertSelect(ISelectColumn[] columns) : SelectColumns(columns)
+InsertSelect<T> = InsertSelect<T>(ISelectColumn<T>[] columns) : InsertSelect(columns)
+InsertValues = InsertValues(ValueExpression[] valueExpressions)
+
+Default = Default
+DefaultValues = DefaultValues
+
+Update = Update(ITable table)
+Update<T> = Update<T>() : Update(new T())
+
+UpdateSet = UpdateSet(ITable table, ValueExpression[] valueExpressions) : Set(valueExpressions)
+UpdateSet<T> = UpdateSet<T>(ValueExpression[] valueExpressions) : UpdateSet(new T(), valueExpressions)
+UpdateOr = UpdateOr(ITable table)
+UpdateOr<T> = UpdateOr<T>() : UpdateOr(new T())
+
+UpdateAbort = UpdateAbort(ITable table) : Abort()
+UpdateAbort<T> = UpdateAbort<T>() : UpdateAbort(new T())
+UpdateFail = UpdateFail(ITable table) : Fail()
+UpdateFail<T> = UpdateFail<T>() : UpdateAbort(new T())
+UpdateIgnore = UpdateIgnore(ITable table) : Ignore()
+UpdateIgnore<T> = UpdateIgnore<T>() : UpdateIgnore(new T())
+UpdateReplace = UpdateReplace(ITable table) : Replace()
+UpdateReplace<T> = UpdateReplace<T>() : UpdateReplace(new T())
+UpdateRollback = UpdateRollback(ITable table) : Rollback()
+UpdateRollback<T> = UpdateRollback<T>() : UpdateRollback(new T())
+
+;UpdateFrom = UpdateFrom(ITable table) : From(table)
+UpdateFrom<T> = UpdateFrom<T>() : From(new T())
+UpdateFromSubQuery<T> = UpdateFromSubQuery<T>(IQueryBuilder subQueryBuilder) : FromSubQuery(subQueryBuilder, new T())
+
+UpdateWhere = UpdateWhere(ConditionalExpression conditionalExpression) : Where(conditionalExpression)
+UpdateWhereGroup = UpdateWhereGroup(ConditionalGroupStatement groupExpr) : WhereGroup(groupExpr)
+UpdateWhereMulti = UpdateWhereMulti(List<ConditionalStatement> conditionalStatements) : WhereMulti(conditionalStatements)
+UpdateWhereGroupMulti = UpdateWhereGroupMulti(List<ConditionalGroupStatement> conditionalGroupStatements) : WhereGroupMulti(conditionalGroupStatements)
+
+UpdateConditionalJoin<T, J> = UpdateConditionalJoin<T, J>() : ConditionalJoin<T, J>()
+
+Conflict = Conflict
+
+UpsertOn = UpsertOn
+UpsertConflict = UpsertConflict() : Conflict()
+UpsertConflictSelect = UpsertConflictSelectColumns(ISelectColumn[] columns) : SelectColumns(columns)
+UpsertDo = UpsertDo
+UpsertNothing = UpsertNothing
+UpsertUpdate = UpsertUpdate
+UpsertSet = UpsertSet(ValueExpression[] valueExpressions) : Set(valueExpressions)
+UpsertWhere = UpsertWhere(ConditionalExpression conditionalExpression) : Where(conditionalExpression)
+UpsertWhereGroup = UpsertWhereGroup(ConditionalGroupStatement groupExpr) : WhereGroup(groupExpr)
+UpsertWhereGroupMulti = UpsertWhereGroupMulti(List<ConditionalGroupStatement> conditionalGroupStatements) : WhereGroupMulti(conditionalGroupStatements)
+UpsertWhereMulti = UpsertWhereMulti(List<ConditionalStatement> conditionalStatements) : WhereMulti(conditionalStatements)
+UpsertConflictWhere = UpsertConflictWhere(ConditionalExpression conditionalExpression) : Where(conditionalExpression)
+UpsertConflictWhereGroup = UpsertConflictWhereGroup(ConditionalGroupStatement groupExpr) : WhereGroup(groupExpr)
+UpsertConflictWhereGroupMulti = UpsertConflictWhereGroupMulti(List<ConditionalGroupStatement> conditionalGroupStatements) : WhereGroupMulti(conditionalGroupStatements)
+UpsertConflictWhereMulti = UpsertConflictWhereMulti(List<ConditionalStatement> conditionalStatements) : WhereMulti(conditionalStatements)
+UpsertOn = UpsertOn
+
+Returning = Returning
+ReturningSelect = ReturningSelect(ISelectColumn[] columns) : SelectColumns(columns)
+ReturningSelect<T> = ReturningSelect<T>(ISelectColumn<T>[] columns) : SelectColumns(columns)
+ReturningAll = ReturningAll
+
+Delete = Delete
+DeleteFrom = DeleteFrom(ITable table) : From(table)
+DeleteFrom<T> = DeleteFrom<T>() : From<T>()
+DeleteWhere = DeleteWhere(ConditionalExpression conditionalExpression) : Where(conditionalExpression)
+DeleteWhereGroup = DeleteWhereGroup(ConditionalGroupStatement groupExpr) : WhereGroup(groupExpr)
+DeleteWhereGroupMulti = DeleteWhereGroupMulti(List<ConditionalGroupStatement> conditionalGroupStatements) : WhereGroupMulti(conditionalGroupStatements)
+DeleteWhereMulti = DeleteWhereMulti(List<ConditionalStatement> conditionalStatements) : WhereMulti(conditionalStatements)
+
+Set = Set(ValueExpression[] valueExpressions)
+Value = Value(ValueExpression[] valueExpressions)
+
+Compound = Compound(IQueryBuilder subQueryBuilder)
+Union = Union(IQueryBuilder subQueryBuilder) : Compound(subQueryBuilder)
+UnionAll = UnionAll(IQueryBuilder subQueryBuilder) : Compound(subQueryBuilder)
+Intersect = Intersect(IQueryBuilder subQueryBuilder) : Compound(subQueryBuilder)
+Except = Except(IQueryBuilder subQueryBuilder) : Compound(subQueryBuilder)

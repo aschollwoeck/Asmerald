@@ -6,9 +6,9 @@ using System.Text;
 using Asmerald.Columns;
 using Asmerald.Expressions;
 using Asmerald.Functions;
-using Asmerald.Functions.SQLite;
+using Asmerald.Functions.MSSQL;
 using Asmerald.Statements;
-using Asmerald.Statements.SQLite;
+using Asmerald.Statements.MSSQL;
 
 namespace Asmerald
 {

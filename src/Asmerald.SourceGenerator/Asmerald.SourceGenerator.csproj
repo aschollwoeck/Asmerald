@@ -12,6 +12,33 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Update="MariaDB\ClassDefinition">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="MariaDB\FunctionExtensionDefinition">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="MariaDB\StatementExtensionDefinition">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="MySQL\ClassDefinition">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="MySQL\FunctionExtensionDefinition">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="MySQL\StatementExtensionDefinition">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="MSSQL\ClassDefinition">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="MSSQL\FunctionExtensionDefinition">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="MSSQL\StatementExtensionDefinition">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="SqlDefault\ClassDefinition">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
@@ -28,6 +55,15 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="PostgreSQL\StatementExtensionDefinition">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Oracle\ClassDefinition">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Oracle\FunctionExtensionDefinition">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Oracle\StatementExtensionDefinition">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="SQLite\StatementExtensionDefinition">

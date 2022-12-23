@@ -4,7 +4,6 @@ using System.Linq;
 using Asmerald.Columns;
 using Asmerald.Expressions;
 using Asmerald.Functions.PostgreSQL;
-using Asmerald.SQLite;
 using Asmerald.Statements;
 
 namespace Asmerald.PostgreSQL
