@@ -1,5 +1,4 @@
 ﻿sqlDialect=<xxx>
-;Directory=C:\Users\Alexander\Source\Repos\TypeSafeSql\src\Asmerald
 Directory=..\..\..\..\Asmerald
 TestDirectory=..\..\..\..\Asmerald.Test
 Root = <xxx>

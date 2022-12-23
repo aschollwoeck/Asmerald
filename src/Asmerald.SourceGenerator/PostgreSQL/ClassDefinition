@@ -1,10 +1,10 @@
-﻿sqlDialect=SQLite
+﻿sqlDialect=PostgreSQL
 Directory=..\..\..\..\Asmerald
 TestDirectory=..\..\..\..\Asmerald.Test
-Root = SQLiteDSLContext
+Root = PostgreSQLDSLContext
 
 [COMMON_CLASSES]
-SQLiteDSLContext = SQLiteDSLContext
+PostgreSQLDSLContext = PostgreSQLDSLContext
 ConditionalGroupStatement = ConditionalGroupStatement
 ConditionalStatement = ConditionalStatement
 Int16 = Int16

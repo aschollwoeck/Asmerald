@@ -1,0 +1,311 @@
+﻿flowchart LR
+
+Root -->|With| WithTable[WithTable<T>]
+Root -->|With| With
+
+subgraph SGWith
+    With -->|Recursive| Recursive[Recursive<T>]
+    Recursive[Recursive<T>] -->|As| WithAs
+    WithTable[WithTable<T>] -->|As| WithAs
+    Recursive[Recursive<T>] -->|AsSelect| WithAsSelect[WithAsSelect<T>]
+    WithTable[WithTable<T>] -->|AsSelect| WithAsSelect[WithAsSelect<T>]
+    WithAs --> |Not| WithNot
+    WithNot --> |Materialized| Materialized
+    WithAs --> |Materialized| Materialized
+
+    WithAs --> |With| WithTableAdditional[WithTableAdditional<T>]
+    WithAsSelect[WithAsSelect<T>] --> |With| WithTable[WithTable<T>] 
+    Materialized -->|With| WithTableAdditional[WithTableAdditional<T>]
+
+    WithAsSelect[WithAsSelect<T>] --> SGWithEnd
+    Materialized --> SGWithEnd
+end
+
+SGWithEnd -->|Select| Select
+SGWithEnd -->|Select| SelectColumns
+Root -->|Select| Select
+Root -->|Select| SelectColumns
+
+subgraph SGSelect
+    
+    Select -->|All| All
+    Distinct --> |All| All
+
+    Select -->|Distinct| Distinct
+    Select -->|Distinct| DistinctColumns
+
+    SelectColumns -->|From| SelectFrom[SelectFrom<T>]
+    All --> |From| SelectFrom[SelectFrom<T>]
+    DistinctColumns --> |From| SelectFrom[SelectFrom<T>]
+
+    subgraph SGJoin
+        ConditionalJoin[ConditionalJoin<T, J>] -->|On| On[On<T, J>]
+        ConditionalJoin[ConditionalJoin<T, J>] -->|On| OnMulti[OnMulti<T, J>]
+        ConditionalJoin -->|On| On[On<T, J>]
+        ConditionalJoin -->|On| OnMulti[OnMulti<T, J>]
+
+        NonConditionalJoin[NonConditionalJoin<T, J>] --> SGJoinEnd
+        On[On<T, J>] --> SGJoinEnd
+        OnMulti[OnMulti<T, J>] --> SGJoinEnd
+    end
+    
+    SelectFrom[SelectFrom<T>] -->|InnerJoin| InnerJoin[InnerJoin<T, J>]
+    SelectFrom[SelectFrom<T>] -->|LeftJoin| LeftOuterJoin[LeftOuterJoin<T, J>]
+    SelectFrom[SelectFrom<T>] -->|RightJoin| RightOuterJoin[RightOuterJoin<T, J>]
+    SelectFrom[SelectFrom<T>] -->|FullJoin| FullOuterJoin[FullOuterJoin<T, J>]
+    SelectFrom[SelectFrom<T>] -->|CrossJoin| CrossJoin[CrossJoin<T, J>]
+
+    subgraph SGWhere
+        SelectWhere --> SGWhereStart
+        SelectWhereMulti --> SGWhereStart
+        SelectWhereGroup --> SGWhereStart
+        SelectWhereGroupMulti --> SGWhereStart
+
+        SelectWhere --> SGWhereEnd
+        SelectWhereMulti --> SGWhereEnd
+        SelectWhereGroup --> SGWhereEnd
+        SelectWhereGroupMulti --> SGWhereEnd
+    end
+
+    SelectFrom[SelectFrom<T>] -->|Where| SGWhereStart
+    SGJoinEnd -->|Where| SGWhereStart
+
+
+    SGJoinEnd -->|GroupBy| GroupBy
+    SGWhereEnd -->|GroupBy| GroupBy
+
+    subgraph SGHaving
+        SelectHaving --> SGHavingStart
+        SelectHavingMulti --> SGHavingStart
+        SelectHavingGroup --> SGHavingStart
+        SelectHavingGroupMulti --> SGHavingStart
+
+        SelectHaving --> SGHavingEnd
+        SelectHavingMulti --> SGHavingEnd
+        SelectHavingGroup --> SGHavingEnd
+        SelectHavingGroupMulti --> SGHavingEnd
+    end
+
+    GroupBy -->|Having| SGHavingStart
+    SGWhereEnd -->|Having| SGHavingStart
+
+    SelectFrom[SelectFrom<T>] --> SGSelectEnd
+    SGJoinEnd --> SGSelectEnd
+    SGWhereEnd --> SGSelectEnd
+    GroupBy --> SGSelectEnd
+    SGHavingEnd --> SGSelectEnd
+end
+
+SGSelectEnd -->|Union| Union
+SGSelectEnd -->|UnionAll| UnionAll
+SGSelectEnd -->|Intersect| Intersect
+SGSelectEnd -->|Except| Except
+
+Union -->|Select| Select
+UnionAll -->|Select| Select
+Intersect -->|Select| Select
+Except -->|Select| Select
+
+subgraph SGOrderBy
+    OrderBy --> SGOrderByStart
+    OrderBy --> SGOrderByEnd
+    OrderBy -->|Collate| Collate
+    Collate --> SGOrderByEnd
+    OrderBy -->|Asc| Asc
+    Collate -->|Asc| Asc
+    Asc --> SGOrderByEnd
+    OrderBy -->|Desc| Desc
+    Collate -->|Desc| Desc
+    Desc --> SGOrderByEnd
+    OrderBy -->|Nulls| Nulls
+    Collate -->|Nulls| Nulls
+    Asc -->|Nulls| Nulls
+    Desc --> |Nulls| Nulls
+    Nulls -->|First| First
+    First --> SGOrderByEnd
+    Nulls -->|Last| Last
+    Last --> SGOrderByEnd
+end
+
+SGSelectEnd -->|OrderBy| SGOrderByStart
+SGSelectEnd -->|Limit| Limit
+SGOrderByEnd -->|Limit| Limit
+Limit -->|Offset| Offset
+
+
+
+Root -->|Insert| Insert
+Root -->|Replace| InsertReplace
+
+subgraph SGInsert
+    Insert -->|Into| Into[Into<T>]
+    InsertReplace -->|Into| Into[Into<T>]
+    Insert[Into<T>] -->|Or| InsertOr
+    InsertOr -->|Abort| InsertAbort
+    InsertOr -->|Fail| InsertFail
+    InsertOr -->|Ignore| InsertIgnore
+    InsertOr -->|Replace| InsertReplace
+    InsertOr -->|Rollback| InsertRollback
+    InsertAbort -->|Into| Into[Into<T>]
+    InsertFail -->|Into| Into[Into<T>]
+    InsertIgnore -->|Into| Into[Into<T>]
+    InsertRollback -->|Into| Into[Into<T>]
+
+    Into[Into<T>] -->|As| IntoAs
+    Into[Into<T>] -->|Values| InsertValues
+    IntoAs -->|Values| InsertValues
+    Into[Into<T>] -->|Select| InsertSelect[InsertSelect<T>]
+    IntoAs -->|Select| InsertSelect[InsertSelect<T>]
+    Into[Into<T>] -->|Default| Default
+    IntoAs -->|Default| Default
+    Default -->|Values| DefaultValues
+
+    InsertValues --> SGInsertEnd
+    InsertSelect[InsertSelect<T>] --> SGInsertEnd
+    DefaultValues --> SGInsertEnd
+    SGUpsert --> SGInsertEnd
+end
+
+Root --> |Update| Update[Update<T>]
+subgraph SGUpdate
+    Update[Update<T>] -->|Set| UpdateSet[UpdateSet<T>]
+    Update[Update<T>] -->|Or| UpdateOr[UpdateOr<T>]
+
+    UpdateOr[UpdateOr<T>] -->|Abort| UpdateAbort[UpdateAbort<T>]
+    UpdateOr[UpdateOr<T>] -->|Fail| UpdateFail[UpdateFail<T>]
+    UpdateOr[UpdateOr<T>] -->|Ignore| UpdateIgnore[UpdateIgnore<T>]
+    UpdateOr[UpdateOr<T>] -->|Replace| UpdateReplace[UpdateReplace<T>]
+    UpdateOr[UpdateOr<T>] -->|Rollback| UpdateRollback[UpdateRollback<T>]
+
+    UpdateAbort[UpdateAbort<T>] -->|Set| UpdateSet[UpdateSet<T>]
+    UpdateFail[UpdateFail<T>] -->|Set| UpdateSet[UpdateSet<T>]
+    UpdateIgnore[UpdateIgnore<T>] -->|Set| UpdateSet[UpdateSet<T>]
+    UpdateReplace[UpdateReplace<T>] -->|Set| UpdateSet[UpdateSet<T>]
+    UpdateRollback[UpdateRollback<T>] -->|Set| UpdateSet[UpdateSet<T>]
+
+    UpdateSet[UpdateSet<T>] -->|From| SGUpdateFromStart
+    UpdateSet[UpdateSet<T>] -->|Returning| SGUpdateReturningStart
+
+    subgraph SGUpdateFrom
+
+        UpdateFrom[UpdateFrom<T>] --> SGUpdateStart
+        UpdateFromSubQuery[UpdateFromSubQuery<T>] --> SGUpdateStart
+
+        UpdateFrom[UpdateFrom<T>] --> SGUpdateFromEnd
+        UpdateFromSubQuery[UpdateFromSubQuery<T>] --> SGUpdateFromEnd
+    end
+
+    subgraph SGUpdateJoin
+        SGUpdateFromEnd -->|InnerJoin| UpdateConditionalJoin[UpdateConditionalJoin<T, J>]
+        SGUpdateFromEnd -->|LeftJoin| UpdateConditionalJoin[UpdateConditionalJoin<T, J>]
+        SGUpdateFromEnd -->|RightJoin| UpdateConditionalJoin[UpdateConditionalJoin<T, J>]
+        SGUpdateFromEnd -->|FullJoin| UpdateConditionalJoin[UpdateConditionalJoin<T, J>]
+    end
+
+    
+    subgraph SGUpdateWhere
+        UpdateWhere --> SGUpdateWhereStart
+        UpdateWhereMulti --> SGUpdateWhereStart
+        UpdateWhereGroup --> SGUpdateWhereStart
+        UpdateWhereGroupMulti --> SGUpdateWhereStart
+
+
+        UpdateWhere --> SGUpdateWhereEnd
+        UpdateWhereMulti --> SGUpdateWhereEnd
+        UpdateWhereGroup --> SGUpdateWhereEnd
+        UpdateWhereGroupMulti --> SGUpdateWhereEnd
+    end
+
+    
+    UpdateSet[UpdateSet<T>] -->|Where| SGUpdateWhereStart
+    SGUpdateFromStart --> |Where| SGUpdateWhereStart
+    SGUpdateFromStart --> |Returning| SGUpdateReturningStart
+    SGUpdateWhereEnd --> |Returning| SGUpdateReturningStart
+
+    UpdateSet[UpdateSet<T>] --> SGUpdateEnd
+    SGUpdateFromStart --> SGUpdateEnd
+    SGUpdateWhereEnd --> SGUpdateEnd
+    SGUpdateReturningEnd --> SGUpdateEnd
+end
+
+InsertSelect[InsertSelect<T>] -->|On| UpsertOn
+InsertValues -->|On| UpsertOn
+
+subgraph SGUpsert
+    UpsertOn -->|Conflict| Conflict
+    UpsertOn -->|Conflict| UpsertConflictSelect
+
+    subgraph SGUpsertConflictWhere
+        UpsertConflictWhere --> SGUpsertConflictWhereStart
+        UpsertConflictWhereMulti --> SGUpsertConflictWhereStart
+        UpsertConflictWhereGroup --> SGUpsertConflictWhereStart
+        UpsertConflictWhereGroupMulti --> SGUpsertConflictWhereStart
+
+
+        UpsertConflictWhere --> SGUpsertConflictWhereEnd
+        UpsertConflictWhereMulti --> SGUpsertConflictWhereEnd
+        UpsertConflictWhereGroup --> SGUpsertConflictWhereEnd
+        UpsertConflictWhereGroupMulti --> SGUpsertConflictWhereEnd
+    end
+
+    UpsertConflictSelect --> |Where| SGUpsertConflictWhereStart
+    
+    Conflict -->|Do| UpsertDo
+    SGUpsertConflictWhereEnd -->|Do|UpsertDo
+    UpsertDo -->|Nothing| UpsertNothing
+    UpsertDo -->|Update| UpsertUpdate
+    UpsertUpdate -->|Set| UpsertSet
+
+    subgraph SGUpsertWhere
+        UpsertWhere --> SGUpsertWhereStart
+        UpsertWhereMulti --> SGUpsertWhereStart
+        UpsertWhereGroup --> SGUpsertWhereStart
+        UpsertWhereGroupMulti --> SGUpsertWhereStart
+
+        UpsertWhere --> SGUpsertWhereEnd
+        UpsertWhereMulti --> SGUpsertWhereEnd
+        UpsertWhereGroup --> SGUpsertWhereEnd
+        UpsertWhereGroupMulti --> SGUpsertWhereEnd
+    end
+
+    UpsertSet -->|Where| SGUpsertWhereStart
+    UpsertNothing -->|On|UpsertOn
+    UpsertSet -->|On|UpsertOn
+
+    UpsertNothing --> SGUpsertEnd
+    UpsertSet --> SGUpsertEnd
+    SGUpsertWhereEnd --> SGUpsertEnd
+end
+
+
+Returning -->|All|ReturningAll
+
+SGUpsertEnd -->|Returning| Returning
+SGUpdateEnd -->|Returning| Returning
+SGUpsertEnd -->|Returning| ReturningSelect
+SGUpdateEnd -->|Returning| ReturningSelect
+
+
+Root -->|Delete| Delete
+
+subgraph SGDelete
+    Delete -->|From| DeleteFrom[DeleteFrom<T>]
+
+    subgraph SGDeleteWhere
+        DeleteWhere --> SGDeleteWhereStart
+        DeleteWhereMulti --> SGDeleteWhereStart
+        DeleteWhereGroup --> SGDeleteWhereStart
+        DeleteWhereGroupMulti --> SGDeleteWhereStart
+        
+        DeleteWhere --> SGDeleteWhereEnd
+        DeleteWhereMulti --> SGDeleteWhereEnd
+        DeleteWhereGroup --> SGDeleteWhereEnd
+        DeleteWhereGroupMulti --> SGDeleteWhereEnd
+    end
+    
+    DeleteFrom[DeleteFrom<T>] -->|Where| SGDeleteWhereStart
+    DeleteFrom[DeleteFrom<T>] --> SGDeleteEnd
+    SGDeleteWhereEnd --> SGDeleteEnd
+end
+
+DeleteWhere -->|Returning| Returning
