@@ -9,22 +9,11 @@ It provides:
 - low runtime overhead
 
 ## Supported database providers
-- [x] SQLite
-- [ ] Postgres
-    - [ ] SQL standard
-    - [ ] Postgres specifics
-- [ ] MySql
-    - [ ] SQL standard
-    - [ ] MySql specifics
-- [ ] MariaDb
-    - [ ] SQL standard
-    - [ ] MariaDb specifics
-- [ ] MSSql
-    - [ ] SQL standard
-    - [ ] MSSql specifics
-- [ ] Oracle
-    - [ ] SQL standard
-    - [ ] Oracle specifics
+
+|                   |    SQLite |   MySql   |  MariaDb  | MSSql | Oracle  |
+|------------       |---------: |--------:  |--------:  |------:|--------:|
+| SQL standard      | [x]       | [ ]       | [ ]       |  [ ]  |    [ ]  |
+| Provider specific | [x]       | [ ]       | [ ]       |  [ ]  |    [ ]  |
 
 ## Task list
 - [ ] Add SQLite custom function / procedure support
