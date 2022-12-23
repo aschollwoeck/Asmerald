@@ -1,4 +1,4 @@
-# Asmerald
+﻿# Asmerald
 A library for writing type safe SQL statements in code.
 
 [![CI](https://github.com/aschollwoeck/Amorphous/actions/workflows/ci.yml/badge.svg)](https://github.com/aschollwoeck/Amorphous/actions/workflows/ci.yml)
@@ -13,8 +13,9 @@ See this very good answer on Stackoverflow: https://stackoverflow.com/questions/
 ## Supported database providers
 |                   |    SQLite |  Postgres |   MySql   |  MariaDb  | MSSql | Oracle  |
 |------------       |---------  |--------   |--------   |--------  |------  |-------- |
-| SQL standard      | [x]       | [ ]       | [ ]       | [ ]       |  [ ]  |    [ ]  |
-| Provider specific | [x]       | [ ]       | [ ]       | [ ]       |  [ ]  |    [ ]  |
+| SQL standard      | ✓       |        |        |        |    |      |
+| Provider specific | ✓       |        |        |        |    |      |
+
 SQL standard = Most common statements such as "SELECT", "WHERE", "JOIN"s, "HAVING", etc. (mostly SQL-92)
 Provider specific = Specific database statements (e.g. materialized views), stored procedures, etc.
 
