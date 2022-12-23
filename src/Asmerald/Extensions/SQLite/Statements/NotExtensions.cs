@@ -9,7 +9,7 @@ using Asmerald.Statements.SQLite;
 
 namespace Asmerald.SQLite
 {
-    public static partial class TypeProofSqlNotExtensions
+    public static partial class AsmeraldNotExtensions
     {
         public static WithNotStatement Not(this WithAsStatement stmt)
         {

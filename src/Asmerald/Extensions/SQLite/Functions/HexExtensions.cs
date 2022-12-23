@@ -8,7 +8,7 @@ using Asmerald.Statements;
 
 namespace Asmerald.SQLite
 {
-    public static partial class TypeProofSqlHexExtensions
+    public static partial class AsmeraldHexExtensions
     {
         public static HexFunction Hex(this SQLiteDSLContext stmt, ISelectExpression z)
         {

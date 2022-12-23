@@ -9,7 +9,7 @@ using Asmerald.Statements.SQLite;
 
 namespace Asmerald.SQLite
 {
-    public static partial class TypeProofSqlHavingExtensions
+    public static partial class AsmeraldHavingExtensions
     {
         public static SelectHavingStatement Having(this GroupByStatement stmt, ConditionalExpression conditionalExpression)
         {

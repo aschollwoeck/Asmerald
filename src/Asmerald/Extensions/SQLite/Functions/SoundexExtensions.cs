@@ -8,7 +8,7 @@ using Asmerald.Statements;
 
 namespace Asmerald.SQLite
 {
-    public static partial class TypeProofSqlSoundexExtensions
+    public static partial class AsmeraldSoundexExtensions
     {
         public static SoundexFunction Soundex(this SQLiteDSLContext stmt, ISelectExpression x)
         {

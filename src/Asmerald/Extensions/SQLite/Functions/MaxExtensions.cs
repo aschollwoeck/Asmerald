@@ -8,7 +8,7 @@ using Asmerald.Statements;
 
 namespace Asmerald.SQLite
 {
-    public static partial class TypeProofSqlMaxExtensions
+    public static partial class AsmeraldMaxExtensions
     {
         public static MaxAggregateFunction Max(this SQLiteDSLContext stmt, params ISelectExpression[] x)
         {

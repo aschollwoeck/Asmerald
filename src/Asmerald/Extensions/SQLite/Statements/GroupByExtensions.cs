@@ -9,7 +9,7 @@ using Asmerald.Statements.SQLite;
 
 namespace Asmerald.SQLite
 {
-    public static partial class TypeProofSqlGroupByExtensions
+    public static partial class AsmeraldGroupByExtensions
     {
         public static GroupByStatement GroupBy<T, J>(this NonConditionalJoinStatement<T, J> stmt, params IColumn[] groupByColumns)
             where T : ITable, new()

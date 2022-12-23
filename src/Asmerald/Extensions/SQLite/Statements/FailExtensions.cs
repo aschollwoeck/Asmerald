@@ -9,7 +9,7 @@ using Asmerald.Statements.SQLite;
 
 namespace Asmerald.SQLite
 {
-    public static partial class TypeProofSqlFailExtensions
+    public static partial class AsmeraldFailExtensions
     {
         public static InsertFailStatement Fail(this InsertOrStatement stmt)
         {

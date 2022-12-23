@@ -9,7 +9,7 @@ using Asmerald.Statements.SQLite;
 
 namespace Asmerald.SQLite
 {
-    public static partial class TypeProofSqlRollbackExtensions
+    public static partial class AsmeraldRollbackExtensions
     {
         public static InsertRollbackStatement Rollback(this InsertOrStatement stmt)
         {

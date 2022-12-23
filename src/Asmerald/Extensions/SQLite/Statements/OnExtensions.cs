@@ -9,7 +9,7 @@ using Asmerald.Statements.SQLite;
 
 namespace Asmerald.SQLite
 {
-    public static partial class TypeProofSqlOnExtensions
+    public static partial class AsmeraldOnExtensions
     {
         public static OnStatement<T, J> On<T, J>(this ConditionalJoinStatement<T, J> stmt, ISelectColumn<T> left, ISelectColumn<J> right)
             where T : ITable, new()

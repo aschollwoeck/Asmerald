@@ -9,7 +9,7 @@ using Asmerald.Statements.SQLite;
 
 namespace Asmerald.SQLite
 {
-    public static partial class TypeProofSqlLeftJoinExtensions
+    public static partial class AsmeraldLeftJoinExtensions
     {
         public static LeftOuterJoinStatement<T, J> LeftJoin<T, J>(this SelectFromStatement<T> stmt)
             where T : ITable, new()

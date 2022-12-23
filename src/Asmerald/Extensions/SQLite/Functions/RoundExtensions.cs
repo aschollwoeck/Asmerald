@@ -8,7 +8,7 @@ using Asmerald.Statements;
 
 namespace Asmerald.SQLite
 {
-    public static partial class TypeProofSqlRoundExtensions
+    public static partial class AsmeraldRoundExtensions
     {
         public static RoundFunction Round(this SQLiteDSLContext stmt, ISelectExpression x)
         {

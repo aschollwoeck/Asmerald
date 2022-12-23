@@ -10,10 +10,10 @@ using Asmerald.SQLite;
 
 namespace Asmerald.Benchmark
 {
-    public class TypeProofSqlTests
+    public class AsmeraldTests
     {
 
-        public TypeProofSqlTests()
+        public AsmeraldTests()
         {
         }
 

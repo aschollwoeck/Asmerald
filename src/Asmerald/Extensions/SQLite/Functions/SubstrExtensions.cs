@@ -8,7 +8,7 @@ using Asmerald.Statements;
 
 namespace Asmerald.SQLite
 {
-    public static partial class TypeProofSqlSubstrExtensions
+    public static partial class AsmeraldSubstrExtensions
     {
         public static SubstrLengthFunction Substr(this SQLiteDSLContext stmt, ISelectExpression x, ISelectExpression y, ISelectExpression z)
         {

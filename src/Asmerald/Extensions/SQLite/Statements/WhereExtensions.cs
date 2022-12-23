@@ -9,7 +9,7 @@ using Asmerald.Statements.SQLite;
 
 namespace Asmerald.SQLite
 {
-    public static partial class TypeProofSqlWhereExtensions
+    public static partial class AsmeraldWhereExtensions
     {
         public static SelectWhereStatement Where<T>(this SelectFromStatement<T> stmt, ConditionalExpression conditionalExpression)
             where T : ITable, new()

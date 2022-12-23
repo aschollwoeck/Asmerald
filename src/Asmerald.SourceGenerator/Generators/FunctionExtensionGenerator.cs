@@ -19,17 +19,17 @@ namespace Asmerald.SourceGenerator.Generators
             w.WriteLine("using System.Collections.Generic;");
             w.WriteLine("using System.Linq;");
             //w.WriteLine("using System.Text;");
-            w.WriteLine("using TypeProofSql.Columns;");
-            w.WriteLine("using TypeProofSql.Expressions;");
-            w.WriteLine($"using TypeProofSql.Functions.{generateExtension.nspace};");
-            //w.WriteLine("using TypeProofSql.QueryBuilders;");
-            w.WriteLine("using TypeProofSql.Statements;");
+            w.WriteLine("using Asmerald.Columns;");
+            w.WriteLine("using Asmerald.Expressions;");
+            w.WriteLine($"using Asmerald.Functions.{generateExtension.nspace};");
+            //w.WriteLine("using Asmerald.QueryBuilders;");
+            w.WriteLine("using Asmerald.Statements;");
             w.WriteLine();
-            w.WriteLine($"namespace TypeProofSql.{generateExtension.nspace}");
+            w.WriteLine($"namespace Asmerald.{generateExtension.nspace}");
             w.WriteLine("{");
             w.Indent++;
 
-            w.WriteLine($"public static partial class TypeProofSql{generateExtension.extension_name}Extensions");
+            w.WriteLine($"public static partial class Asmerald{generateExtension.extension_name}Extensions");
             w.WriteLine("{");
             w.Indent++;
 

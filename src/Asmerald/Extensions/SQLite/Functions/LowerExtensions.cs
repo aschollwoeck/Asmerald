@@ -8,7 +8,7 @@ using Asmerald.Statements;
 
 namespace Asmerald.SQLite
 {
-    public static partial class TypeProofSqlLowerExtensions
+    public static partial class AsmeraldLowerExtensions
     {
         public static LowerFunction Lower(this SQLiteDSLContext stmt, ISelectExpression x)
         {

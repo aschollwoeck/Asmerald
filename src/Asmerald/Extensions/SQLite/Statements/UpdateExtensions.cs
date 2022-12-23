@@ -9,7 +9,7 @@ using Asmerald.Statements.SQLite;
 
 namespace Asmerald.SQLite
 {
-    public static partial class TypeProofSqlUpdateExtensions
+    public static partial class AsmeraldUpdateExtensions
     {
         public static UpdateStatement<T> Update<T>(this SQLiteDSLContext stmt)
             where T : ITable, new()

@@ -8,7 +8,7 @@ using Asmerald.Statements;
 
 namespace Asmerald.SQLite
 {
-    public static partial class TypeProofSqlLengthExtensions
+    public static partial class AsmeraldLengthExtensions
     {
         public static LengthFunction Length(this SQLiteDSLContext stmt, ISelectExpression x)
         {

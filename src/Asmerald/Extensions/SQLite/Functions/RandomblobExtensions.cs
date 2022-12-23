@@ -8,7 +8,7 @@ using Asmerald.Statements;
 
 namespace Asmerald.SQLite
 {
-    public static partial class TypeProofSqlRandomblobExtensions
+    public static partial class AsmeraldRandomblobExtensions
     {
         public static RandomblobFunction Randomblob(this SQLiteDSLContext stmt, int n)
         {

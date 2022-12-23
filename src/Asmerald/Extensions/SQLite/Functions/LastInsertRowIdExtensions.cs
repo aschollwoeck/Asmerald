@@ -8,7 +8,7 @@ using Asmerald.Statements;
 
 namespace Asmerald.SQLite
 {
-    public static partial class TypeProofSqlLastInsertRowIdExtensions
+    public static partial class AsmeraldLastInsertRowIdExtensions
     {
         public static LastInsertRowIdFunction LastInsertRowId(this SQLiteDSLContext stmt)
         {

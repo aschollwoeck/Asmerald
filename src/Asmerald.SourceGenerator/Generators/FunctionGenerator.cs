@@ -17,12 +17,12 @@ namespace Asmerald.SourceGenerator.Generators
             w.WriteLine("using System;");
             w.WriteLine("using System.Collections.Generic;");
             //w.WriteLine("using System.Text;");
-            //w.WriteLine("using TypeProofSql.Columns;");
-            //w.WriteLine("using TypeProofSql.Statements;");
-            //w.WriteLine("using TypeProofSql.QueryBuilders;");
-            w.WriteLine("using TypeProofSql.Expressions;");
+            //w.WriteLine("using Asmerald.Columns;");
+            //w.WriteLine("using Asmerald.Statements;");
+            //w.WriteLine("using Asmerald.QueryBuilders;");
+            w.WriteLine("using Asmerald.Expressions;");
             w.WriteLine();
-            w.WriteLine($"namespace TypeProofSql.Functions.{classObj.nspace}");
+            w.WriteLine($"namespace Asmerald.Functions.{classObj.nspace}");
             w.WriteLine("{");
             w.Indent++;
             

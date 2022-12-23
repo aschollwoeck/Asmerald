@@ -9,7 +9,7 @@ using Asmerald.Statements.SQLite;
 
 namespace Asmerald.SQLite
 {
-    public static partial class TypeProofSqlNothingExtensions
+    public static partial class AsmeraldNothingExtensions
     {
         public static UpsertNothingStatement Nothing(this UpsertDoStatement stmt)
         {

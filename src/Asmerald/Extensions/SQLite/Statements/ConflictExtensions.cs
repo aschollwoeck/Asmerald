@@ -9,7 +9,7 @@ using Asmerald.Statements.SQLite;
 
 namespace Asmerald.SQLite
 {
-    public static partial class TypeProofSqlConflictExtensions
+    public static partial class AsmeraldConflictExtensions
     {
         public static ConflictStatement Conflict(this UpsertOnStatement stmt)
         {

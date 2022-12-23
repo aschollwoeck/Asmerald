@@ -9,7 +9,7 @@ using Asmerald.Statements.SQLite;
 
 namespace Asmerald.SQLite
 {
-    public static partial class TypeProofSqlAscExtensions
+    public static partial class AsmeraldAscExtensions
     {
         public static AscStatement Asc(this OrderByStatement stmt)
         {

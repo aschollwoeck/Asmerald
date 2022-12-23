@@ -8,7 +8,7 @@ using Asmerald.Statements;
 
 namespace Asmerald.SQLite
 {
-    public static partial class TypeProofSqlSignExtensions
+    public static partial class AsmeraldSignExtensions
     {
         public static SignFunction Sign(this SQLiteDSLContext stmt, ISelectExpression x)
         {

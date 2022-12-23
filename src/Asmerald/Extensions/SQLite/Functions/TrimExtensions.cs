@@ -8,7 +8,7 @@ using Asmerald.Statements;
 
 namespace Asmerald.SQLite
 {
-    public static partial class TypeProofSqlTrimExtensions
+    public static partial class AsmeraldTrimExtensions
     {
         public static TrimFunction Trim(this SQLiteDSLContext stmt, ISelectExpression x)
         {

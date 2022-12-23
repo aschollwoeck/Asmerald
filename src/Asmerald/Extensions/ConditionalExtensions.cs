@@ -10,7 +10,7 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace Asmerald.SQLite
 {
-    public static partial class TypeProofSqlExtensions
+    public static partial class AsmeraldExtensions
     {
         // Expression --> List<Statement>
         public static List<ConditionalStatement> And(this ConditionalExpression expression, ConditionalExpression conditionalExpression)

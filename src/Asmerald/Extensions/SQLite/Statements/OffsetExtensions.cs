@@ -9,7 +9,7 @@ using Asmerald.Statements.SQLite;
 
 namespace Asmerald.SQLite
 {
-    public static partial class TypeProofSqlOffsetExtensions
+    public static partial class AsmeraldOffsetExtensions
     {
         public static OffsetStatement Offset(this LimitStatement stmt, int offset)
         {

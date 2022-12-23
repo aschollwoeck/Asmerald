@@ -8,7 +8,7 @@ using Asmerald.Statements;
 
 namespace Asmerald.SQLite
 {
-    public static partial class TypeProofSqlChangesExtensions
+    public static partial class AsmeraldChangesExtensions
     {
         public static ChangesFunction Changes(this SQLiteDSLContext stmt)
         {

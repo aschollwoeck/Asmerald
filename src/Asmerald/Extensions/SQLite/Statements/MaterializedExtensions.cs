@@ -9,7 +9,7 @@ using Asmerald.Statements.SQLite;
 
 namespace Asmerald.SQLite
 {
-    public static partial class TypeProofSqlMaterializedExtensions
+    public static partial class AsmeraldMaterializedExtensions
     {
         public static MaterializedStatement Materialized(this WithNotStatement stmt, IQueryBuilder subQuery)
         {

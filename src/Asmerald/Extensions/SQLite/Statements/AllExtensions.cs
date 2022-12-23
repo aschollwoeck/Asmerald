@@ -9,7 +9,7 @@ using Asmerald.Statements.SQLite;
 
 namespace Asmerald.SQLite
 {
-    public static partial class TypeProofSqlAllExtensions
+    public static partial class AsmeraldAllExtensions
     {
         public static AllStatement All(this SelectStatement stmt)
         {

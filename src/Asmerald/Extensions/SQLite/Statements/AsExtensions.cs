@@ -9,7 +9,7 @@ using Asmerald.Statements.SQLite;
 
 namespace Asmerald.SQLite
 {
-    public static partial class TypeProofSqlAsExtensions
+    public static partial class AsmeraldAsExtensions
     {
         public static WithAsStatement As<T>(this RecursiveStatement<T> stmt)
             where T : ITable, new()

@@ -8,7 +8,7 @@ using Asmerald.Statements;
 
 namespace Asmerald.SQLite
 {
-    public static partial class TypeProofSqlLikeExtensions
+    public static partial class AsmeraldLikeExtensions
     {
         public static LikeFunction Like(this SQLiteDSLContext stmt, ISelectExpression x, ISelectExpression y)
         {

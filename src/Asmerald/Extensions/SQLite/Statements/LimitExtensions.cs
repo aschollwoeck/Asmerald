@@ -9,7 +9,7 @@ using Asmerald.Statements.SQLite;
 
 namespace Asmerald.SQLite
 {
-    public static partial class TypeProofSqlLimitExtensions
+    public static partial class AsmeraldLimitExtensions
     {
         public static LimitStatement Limit<T>(this SelectFromStatement<T> stmt, int limit)
             where T : ITable, new()

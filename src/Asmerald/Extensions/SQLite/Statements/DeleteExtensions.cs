@@ -9,7 +9,7 @@ using Asmerald.Statements.SQLite;
 
 namespace Asmerald.SQLite
 {
-    public static partial class TypeProofSqlDeleteExtensions
+    public static partial class AsmeraldDeleteExtensions
     {
         public static DeleteStatement Delete(this SQLiteDSLContext stmt)
         {

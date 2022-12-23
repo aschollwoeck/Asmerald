@@ -8,7 +8,7 @@ using Asmerald.Statements;
 
 namespace Asmerald.SQLite
 {
-    public static partial class TypeProofSqlCoalesceExtensions
+    public static partial class AsmeraldCoalesceExtensions
     {
         public static CoalesceFunction Coalesce(this SQLiteDSLContext stmt, ISelectExpression x, ISelectExpression y, params ISelectExpression[] z)
         {

@@ -9,7 +9,7 @@ using Asmerald.Statements.SQLite;
 
 namespace Asmerald.SQLite
 {
-    public static partial class TypeProofSqlIgnoreExtensions
+    public static partial class AsmeraldIgnoreExtensions
     {
         public static InsertIgnoreStatement Ignore(this InsertOrStatement stmt)
         {

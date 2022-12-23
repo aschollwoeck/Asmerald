@@ -9,7 +9,7 @@ using Asmerald.Statements.SQLite;
 
 namespace Asmerald.SQLite
 {
-    public static partial class TypeProofSqlUnionAllExtensions
+    public static partial class AsmeraldUnionAllExtensions
     {
         public static UnionAllStatement UnionAll<T>(this SelectFromStatement<T> stmt, IQueryBuilder subQueryBuilder)
             where T : ITable, new()

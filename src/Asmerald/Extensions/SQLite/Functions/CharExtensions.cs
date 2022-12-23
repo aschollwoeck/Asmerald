@@ -8,7 +8,7 @@ using Asmerald.Statements;
 
 namespace Asmerald.SQLite
 {
-    public static partial class TypeProofSqlCharExtensions
+    public static partial class AsmeraldCharExtensions
     {
         public static CharFuncFunction Char(this SQLiteDSLContext stmt, ISelectExpression x1, ISelectExpression x2, params ISelectExpression[] xn)
         {

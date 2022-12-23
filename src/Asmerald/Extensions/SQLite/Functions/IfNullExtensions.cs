@@ -8,7 +8,7 @@ using Asmerald.Statements;
 
 namespace Asmerald.SQLite
 {
-    public static partial class TypeProofSqlIfNullExtensions
+    public static partial class AsmeraldIfNullExtensions
     {
         public static IfNullFunction IfNull(this SQLiteDSLContext stmt, ISelectExpression x, ISelectExpression y)
         {

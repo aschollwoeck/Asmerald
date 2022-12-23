@@ -9,7 +9,7 @@ using Asmerald.Statements.SQLite;
 
 namespace Asmerald.SQLite
 {
-    public static partial class TypeProofSqlSelectExtensions
+    public static partial class AsmeraldSelectExtensions
     {
         public static SelectStatement Select<T>(this WithAsSelectStatement<T> stmt)
             where T : ITable, new()

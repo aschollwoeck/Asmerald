@@ -8,7 +8,7 @@ using Asmerald.Statements;
 
 namespace Asmerald.SQLite
 {
-    public static partial class TypeProofSqlRTrimExtensions
+    public static partial class AsmeraldRTrimExtensions
     {
         public static RTrimFunction RTrim(this SQLiteDSLContext stmt, ISelectExpression x)
         {

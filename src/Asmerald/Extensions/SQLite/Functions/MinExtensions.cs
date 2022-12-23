@@ -8,7 +8,7 @@ using Asmerald.Statements;
 
 namespace Asmerald.SQLite
 {
-    public static partial class TypeProofSqlMinExtensions
+    public static partial class AsmeraldMinExtensions
     {
         public static MinAggregateFunction Min(this SQLiteDSLContext stmt, params ISelectExpression[] x)
         {

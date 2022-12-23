@@ -9,7 +9,7 @@ using Asmerald.Statements.SQLite;
 
 namespace Asmerald.SQLite
 {
-    public static partial class TypeProofSqlCollateExtensions
+    public static partial class AsmeraldCollateExtensions
     {
         public static CollateStatement Collate(this OrderByStatement stmt)
         {

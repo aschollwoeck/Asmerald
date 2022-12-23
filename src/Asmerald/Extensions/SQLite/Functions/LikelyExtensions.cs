@@ -8,7 +8,7 @@ using Asmerald.Statements;
 
 namespace Asmerald.SQLite
 {
-    public static partial class TypeProofSqlLikelyExtensions
+    public static partial class AsmeraldLikelyExtensions
     {
         public static LikelyFunction Likely(this SQLiteDSLContext stmt, ISelectExpression x)
         {

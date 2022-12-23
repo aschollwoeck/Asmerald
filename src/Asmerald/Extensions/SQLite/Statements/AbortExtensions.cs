@@ -9,7 +9,7 @@ using Asmerald.Statements.SQLite;
 
 namespace Asmerald.SQLite
 {
-    public static partial class TypeProofSqlAbortExtensions
+    public static partial class AsmeraldAbortExtensions
     {
         public static InsertAbortStatement Abort(this InsertOrStatement stmt)
         {

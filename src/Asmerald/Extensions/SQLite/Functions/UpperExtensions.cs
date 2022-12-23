@@ -8,7 +8,7 @@ using Asmerald.Statements;
 
 namespace Asmerald.SQLite
 {
-    public static partial class TypeProofSqlUpperExtensions
+    public static partial class AsmeraldUpperExtensions
     {
         public static UpperFunction Upper(this SQLiteDSLContext stmt, ISelectExpression x)
         {

@@ -11,7 +11,7 @@ using Asmerald.Extensions;
 
 namespace Asmerald.SQLite
 {
-    public static partial class TypeProofSqlExtensions
+    public static partial class AsmeraldExtensions
     {
         public static ISelectExpression Expr(this Int16 v)
         {

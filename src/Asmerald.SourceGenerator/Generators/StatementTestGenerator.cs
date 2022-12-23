@@ -18,10 +18,10 @@ namespace Asmerald.SourceGenerator.Generators
             w.WriteLine("using Dapper;");
             w.WriteLine("using System.Linq;");
             w.WriteLine("using System.Diagnostics;");
-            w.WriteLine($"using TypeProofSql.{classObjs.First().nspace};");
+            w.WriteLine($"using Asmerald.{classObjs.First().nspace};");
             w.WriteLine("using System;");
-            w.WriteLine($"using TypeProofSql.Statements.{classObjs.First().nspace};");
-            w.WriteLine($"namespace TypeProofSql.Test.{classObjs.First().nspace}");
+            w.WriteLine($"using Asmerald.Statements.{classObjs.First().nspace};");
+            w.WriteLine($"namespace Asmerald.Test.{classObjs.First().nspace}");
             w.WriteLine("{");
             w.Indent++;
             w.WriteLine("[TestClass]");

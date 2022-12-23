@@ -9,7 +9,7 @@ using Asmerald.Statements.SQLite;
 
 namespace Asmerald.SQLite
 {
-    public static partial class TypeProofSqlOrExtensions
+    public static partial class AsmeraldOrExtensions
     {
         public static InsertOrStatement Or<T>(this IntoStatement<T> stmt)
             where T : ITable, new()

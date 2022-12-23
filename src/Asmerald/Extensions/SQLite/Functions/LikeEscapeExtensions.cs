@@ -8,7 +8,7 @@ using Asmerald.Statements;
 
 namespace Asmerald.SQLite
 {
-    public static partial class TypeProofSqlLikeEscapeExtensions
+    public static partial class AsmeraldLikeEscapeExtensions
     {
         public static LikeEscapeFunction LikeEscape(this SQLiteDSLContext stmt, ISelectExpression x, ISelectExpression y, ISelectExpression z)
         {

@@ -8,7 +8,7 @@ using Asmerald.Statements;
 
 namespace Asmerald.SQLite
 {
-    public static partial class TypeProofSqlReplaceExtensions
+    public static partial class AsmeraldReplaceExtensions
     {
         public static ReplaceFunction Replace(this SQLiteDSLContext stmt, ISelectExpression x, ISelectExpression y, ISelectExpression z)
         {

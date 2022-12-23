@@ -8,7 +8,7 @@ using Asmerald.Statements;
 
 namespace Asmerald.SQLite
 {
-    public static partial class TypeProofSqlFormatExtensions
+    public static partial class AsmeraldFormatExtensions
     {
         public static FormatFunction Format(this SQLiteDSLContext stmt, string format, params ISelectExpression[] z)
         {

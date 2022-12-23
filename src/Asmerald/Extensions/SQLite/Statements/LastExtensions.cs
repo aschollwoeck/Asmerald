@@ -9,7 +9,7 @@ using Asmerald.Statements.SQLite;
 
 namespace Asmerald.SQLite
 {
-    public static partial class TypeProofSqlLastExtensions
+    public static partial class AsmeraldLastExtensions
     {
         public static LastStatement Last(this NullsStatement stmt)
         {

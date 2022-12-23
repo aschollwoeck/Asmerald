@@ -8,7 +8,7 @@ using Asmerald.Statements;
 
 namespace Asmerald.SQLite
 {
-    public static partial class TypeProofSqlGlobExtensions
+    public static partial class AsmeraldGlobExtensions
     {
         public static GlobFunction Glob(this SQLiteDSLContext stmt, ISelectExpression x, ISelectExpression y)
         {

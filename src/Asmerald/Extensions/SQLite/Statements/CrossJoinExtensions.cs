@@ -9,7 +9,7 @@ using Asmerald.Statements.SQLite;
 
 namespace Asmerald.SQLite
 {
-    public static partial class TypeProofSqlCrossJoinExtensions
+    public static partial class AsmeraldCrossJoinExtensions
     {
         public static CrossJoinStatement<T, J> CrossJoin<T, J>(this SelectFromStatement<T> stmt)
             where T : ITable, new()

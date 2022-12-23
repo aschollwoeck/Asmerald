@@ -9,7 +9,7 @@ using Asmerald.Statements.SQLite;
 
 namespace Asmerald.SQLite
 {
-    public static partial class TypeProofSqlInnerJoinExtensions
+    public static partial class AsmeraldInnerJoinExtensions
     {
         public static InnerJoinStatement<T, J> InnerJoin<T, J>(this SelectFromStatement<T> stmt)
             where T : ITable, new()
