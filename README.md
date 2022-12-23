@@ -26,9 +26,8 @@ For example, there is *no* check in place wether
 - ...
 
 ## Task list
-- [ ] Add SQLite custom function / procedure support
-- [ ] Add PostgreSQL support
-- [ ] Add SQL standard support for all database providers
+- [x] Add PostgreSQL support
+- [x] Add SQL standard support for all database providers
 - [ ] Implement functional tests to verify generated SQL string
 - [ ] Source generators to transform queries during compilation to SQL strings. This approach would not cause any performance impact at runtime at all - type safety for free.
 
