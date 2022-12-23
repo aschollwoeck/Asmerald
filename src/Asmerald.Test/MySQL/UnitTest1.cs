@@ -2,12 +2,11 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Dapper;
 using System.Linq;
 using System.Diagnostics;
-using Asmerald.PostgreSQL;
+using Asmerald.MySQL;
 using System;
-using Asmerald.Statements.PostgreSQL;
 using test.testna;
 
-namespace Asmerald.Test.PostgreSQL
+namespace Asmerald.Test.MySQL
 {
     [TestClass]
     public class UnitTest1
@@ -62,7 +61,7 @@ namespace Asmerald.Test.PostgreSQL
         [TestMethod]
         public void QueriesTest()
         {
-            Asmerald.PostgreSQLDSLContext dslCtxt = new PostgreSQLDSLContext();
+            Asmerald.MySQLDSLContext dslCtxt = new MySQLDSLContext();
 
             // Functions
             dslCtxt.Abs((-2).Expr());

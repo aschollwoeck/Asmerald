@@ -13,8 +13,8 @@ See this very good answer on Stackoverflow: https://stackoverflow.com/questions/
 ## Supported database providers
 |                   |    SQLite |  PostgreSQL |   MySql   |  MariaDb  | MSSql | Oracle  |
 |------------       |---------  |--------   |--------   |--------  |------  |-------- |
-| SQL standard      | ✓       |        |        |        |    |      |
-| Provider specific | ✓       |        |        |        |    |      |
+| SQL standard      | ✓       |   ✓     |     ✓   |     ✓   |  ✓  |   ✓   |
+| Provider specific | ✓       |        |         |        |    |      |
 
 SQL standard = Most common statements such as "SELECT", "WHERE", "JOIN"s, "HAVING", etc. (mostly SQL-92)
 Provider specific = Specific database statements (e.g. materialized views), stored procedures, etc.

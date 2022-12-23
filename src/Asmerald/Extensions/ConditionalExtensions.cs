@@ -2,13 +2,10 @@
 using System.Collections.Generic;
 using System.Text;
 using Asmerald.Expressions;
-using Asmerald.QueryBuilders;
 using Asmerald.Statements;
 using System.Linq;
-using Asmerald.Statements.SQLite;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
 
-namespace Asmerald.SQLite
+namespace Asmerald
 {
     public static partial class AsmeraldExtensions
     {
