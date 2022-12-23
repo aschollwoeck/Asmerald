@@ -9,7 +9,7 @@ using Asmerald.Statements.SQLite;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Asmerald.Extensions;
 
-namespace Asmerald.SQLite
+namespace Asmerald
 {
     public static partial class AsmeraldExtensions
     {
