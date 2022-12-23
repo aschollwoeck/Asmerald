@@ -10,10 +10,10 @@ It provides:
 
 ## Supported database providers
 
-|                   |    SQLite |   MySql   |  MariaDb  | MSSql | Oracle  |
-|------------       |---------: |--------:  |--------:  |------:|--------:|
-| SQL standard      | [x]       | [ ]       | [ ]       |  [ ]  |    [ ]  |
-| Provider specific | [x]       | [ ]       | [ ]       |  [ ]  |    [ ]  |
+|                   |    SQLite |  Postgres |   MySql   |  MariaDb  | MSSql | Oracle  |
+|------------       |---------  |--------   |--------   |--------  |------  |-------- |
+| SQL standard      | [x]       | [ ]       | [ ]       | [ ]       |  [ ]  |    [ ]  |
+| Provider specific | [x]       | [ ]       | [ ]       | [ ]       |  [ ]  |    [ ]  |
 
 ## Task list
 - [ ] Add SQLite custom function / procedure support
