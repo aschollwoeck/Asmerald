@@ -12,6 +12,15 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Update="SqlDefault\ClassDefinition">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="SqlDefault\FunctionExtensionDefinition">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="SqlDefault\StatementExtensionDefinition">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="SQLite\StatementExtensionDefinition">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
