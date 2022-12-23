@@ -8,9 +8,28 @@ It provides:
 - support of major database providers
 - low runtime overhead
 
+## Supported database providers
+- [x] SQLite
+- [ ] Postgres
+    - [ ] SQL standard
+    - [ ] Postgres specifics
+- [ ] MySql
+    - [ ] SQL standard
+    - [ ] MySql specifics
+- [ ] MariaDb
+    - [ ] SQL standard
+    - [ ] MariaDb specifics
+- [ ] MSSql
+    - [ ] SQL standard
+    - [ ] MSSql specifics
+- [ ] Oracle
+    - [ ] SQL standard
+    - [ ] Oracle specifics
+
 ## Task list
 - [ ] Add SQLite custom function / procedure support
 - [ ] Add Postgres support
+- [ ] Add SQL standard support for all database providers
 - [ ] Implement functional tests to verify generated SQL string
 - [ ] Source generators to transform queries during compilation to SQL strings. This approach would not cause any performance impact at runtime at all - type safety for free.
 
