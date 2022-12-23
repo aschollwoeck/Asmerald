@@ -12,7 +12,7 @@ It provides:
 
 |                   |    SQLite |  Postgres |   MySql   |  MariaDb  | MSSql | Oracle  |
 |------------       |---------  |--------   |--------   |--------  |------  |-------- |
-| SQL standard      | [x]       | [ ]       | [ ]       | [ ]       |  [ ]  |    [ ]  |
+| SQL standard      | - [x]       | [ ]       | [ ]       | [ ]       |  [ ]  |    [ ]  |
 | Provider specific | [x]       | [ ]       | [ ]       | [ ]       |  [ ]  |    [ ]  |
 
 ## Task list
