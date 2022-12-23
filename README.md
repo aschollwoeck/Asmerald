@@ -1,5 +1,5 @@
 # Asmerald
-A library for writing type safe SQL statements in code - based on DSL basics.
+A library for writing type safe SQL statements in code.
 
 [![CI](https://github.com/aschollwoeck/Amorphous/actions/workflows/ci.yml/badge.svg)](https://github.com/aschollwoeck/Amorphous/actions/workflows/ci.yml)
 
@@ -8,12 +8,21 @@ It provides:
 - support of major database providers
 - low runtime overhead
 
-## Supported database providers
+See this very good answer on Stackoverflow: https://stackoverflow.com/questions/22860167/what-exactly-does-type-safe-queries-means
 
+## Supported database providers
 |                   |    SQLite |  Postgres |   MySql   |  MariaDb  | MSSql | Oracle  |
 |------------       |---------  |--------   |--------   |--------  |------  |-------- |
 | SQL standard      | [x]       | [ ]       | [ ]       | [ ]       |  [ ]  |    [ ]  |
 | Provider specific | [x]       | [ ]       | [ ]       | [ ]       |  [ ]  |    [ ]  |
+SQL standard = Most common statements such as "SELECT", "WHERE", "JOIN"s, "HAVING", etc. (mostly SQL-92)
+Provider specific = Specific database statements (e.g. materialized views), stored procedures, etc.
+
+## Limitations
+Because of SQL being a declarative language, not everything can be checked in code by a compiler without introducing new complexity or deviating from SQL.
+For example, there is *no* check in place wether 
+- tables of columns mentioned in SELECT, HAVING, GROUP By, etc. statements are added as "FROM" or "JOIN" statements.
+- ...
 
 ## Task list
 - [ ] Add SQLite custom function / procedure support
@@ -111,18 +120,9 @@ dslCtxt
 .BuildPreparedStatement();
 ```
 Running those queries against a SQLite database in combination with Dapper returns following results
-|      Method |     Mean |   Error |  StdDev | Ratio | RatioSD |
-|------------ |---------:|--------:|--------:|------:|--------:|
-| DapperRaw | 179.4 us | 1.48 us | 1.38 us |  1.00 |    0.00 |
-| Asmerald | 191.4 us | 2.28 us | 2.02 us |  1.07 |    0.02 |
+|      Method |     Mean |   Error |  StdDev | Ratio |
+|------------ |---------:|--------:|--------:|------:|
+| DapperRaw | 179.4 us | 1.48 us | 1.38 us |  1.00 |
+| Asmerald | 191.4 us | 2.28 us | 2.02 us |  1.07 |
 
 Asmerald adds about 7% overhead.
-
-
-## What kind of potential errors can be avoided?
-A very good answer on Stackoverflow: https://stackoverflow.com/questions/22860167/what-exactly-does-type-safe-queries-means
-
-## What type of errors are still possible?
-
-
-## Project setup
