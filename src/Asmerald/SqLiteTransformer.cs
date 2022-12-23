@@ -231,30 +231,44 @@ namespace Asmerald
                 builder.Append(String.Join(" AND ", onMultiStatement.On.Select(o => $"{o.left.Name} = {o.right.Name}")));
                 builder.Append(")");
             }
-            else if(statement is InnerJoinStatement innerJoinStatement)
+            else if(statement is ConditionalJoinStatement conditionalJoinStatement)
             {
-                builder.AppendLine();
-                builder.Append($"INNER JOIN {innerJoinStatement.J.Name()} ");
+                if (statement is InnerJoinStatement innerJoinStatement)
+                {
+                    builder.AppendLine();
+                    builder.Append($"INNER JOIN {innerJoinStatement.J.Name()} ");
+                }
+                else if (statement is FullOuterJoinStatement fullOuterJoinStatement)
+                {
+                    builder.AppendLine();
+                    builder.Append($"FULL OUTER JOIN {fullOuterJoinStatement.J.Name()} ");
+                }
+                else if (statement is LeftOuterJoinStatement leftOuterJoinStatement)
+                {
+                    builder.AppendLine();
+                    builder.Append($"LEFT OUTER JOIN {leftOuterJoinStatement.J.Name()} ");
+                }
+                else if (statement is RightOuterJoinStatement rightOuterJoinStatement)
+                {
+                    builder.AppendLine();
+                    builder.Append($"RIGHT OUTER JOIN {rightOuterJoinStatement.J.Name()} ");
+                }
+                else
+                {
+                    throw new NotImplementedException($"ConditionalJoinStatement of type '{statement.GetType().Name}' not yet implemented!");
+                }
             }
-            else if(statement is CrossJoinStatement crossJoinStatement)
+            else if (statement is NonConditionalJoinStatement nonConditionalJoinStatement)
             {
-                builder.AppendLine();
-                builder.Append($"CROSS JOIN {crossJoinStatement.J.Name()} ");
-            }
-            else if (statement is FullOuterJoinStatement fullOuterJoinStatement)
-            {
-                builder.AppendLine();
-                builder.Append($"FULL OUTER JOIN {fullOuterJoinStatement.J.Name()} ");
-            }
-            else if (statement is LeftOuterJoinStatement leftOuterJoinStatement)
-            {
-                builder.AppendLine();
-                builder.Append($"LEFT OUTER JOIN {leftOuterJoinStatement.J.Name()} ");
-            }
-            else if (statement is RightOuterJoinStatement rightOuterJoinStatement)
-            {
-                builder.AppendLine();
-                builder.Append($"RIGHT OUTER JOIN {rightOuterJoinStatement.J.Name()} ");
+                if (statement is CrossJoinStatement crossJoinStatement)
+                {
+                    builder.AppendLine();
+                    builder.Append($"CROSS JOIN {crossJoinStatement.J.Name()} ");
+                }
+                else
+                {
+                    throw new NotImplementedException($"NonConditionalJoinStatement of type '{statement.GetType().Name}' not yet implemented!");
+                }
             }
             else if(statement is JoinAsStatement joinAsStatement)
             {
@@ -382,11 +396,30 @@ namespace Asmerald
                     parameters.AddRange(res.parameters);
                 }
             }
+            else if (statement is SelectHavingMultiStatement selectHavingMultiStatement)
+            {
+                builder.AppendLine();
+                builder.AppendLine("HAVING ");
+                foreach (var condStmt in selectHavingMultiStatement.ConditionalStatements)
+                {
+                    var res = BuildStatement(builder, condStmt, paraCount);
+                    paraCount = res.paraCount;
+                    parameters.AddRange(res.parameters);
+                }
+            }
             else if (statement is WhereGroupStatement whereGroupStatement)
             {
                 builder.AppendLine();
                 builder.Append("WHERE ");
                 var res = BuildStatementGroup(builder, whereGroupStatement.GroupExpr, paraCount);
+                paraCount = res.paraCount;
+                parameters.AddRange(res.parameters);
+            }
+            else if (statement is SelectHavingGroupStatement selectHavingGroupStatement)
+            {
+                builder.AppendLine();
+                builder.Append("HAVING ");
+                var res = BuildStatementGroup(builder, selectHavingGroupStatement.GroupExpr, paraCount);
                 paraCount = res.paraCount;
                 parameters.AddRange(res.parameters);
             }

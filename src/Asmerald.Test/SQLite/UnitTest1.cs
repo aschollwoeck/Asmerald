@@ -60,14 +60,6 @@ namespace Asmerald.Test
         }
 
         [TestMethod]
-        public void StmtClassNameImplementTest()
-        {
-            var qb = new SQLiteDSLContext().QueryBuilder;
-            qb.AddStatment(new FromStatement());
-            qb.Build();
-        }
-
-        [TestMethod]
         public void QueriesTest()
         {
             Asmerald.SQLiteDSLContext dslCtxt = new SQLiteDSLContext();

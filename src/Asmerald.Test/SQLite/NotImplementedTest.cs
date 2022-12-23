@@ -137,13 +137,6 @@ namespace Asmerald.Test
             AssertEx.DoesNotThrow<NotImplementedException>(() => qb.Build());
         }
         [TestMethod]
-        public void JoinStatementImplementTest()
-        {
-            var qb = new SQLiteDSLContext().QueryBuilder;
-            qb.AddStatment(new JoinStatement());
-            AssertEx.DoesNotThrow<NotImplementedException>(() => qb.Build());
-        }
-        [TestMethod]
         public void JoinSubQueryStatementImplementTest()
         {
             var qb = new SQLiteDSLContext().QueryBuilder;
@@ -155,20 +148,6 @@ namespace Asmerald.Test
         {
             var qb = new SQLiteDSLContext().QueryBuilder;
             qb.AddStatment(new JoinAsStatement());
-            AssertEx.DoesNotThrow<NotImplementedException>(() => qb.Build());
-        }
-        [TestMethod]
-        public void ConditionalJoinStatementImplementTest()
-        {
-            var qb = new SQLiteDSLContext().QueryBuilder;
-            qb.AddStatment(new ConditionalJoinStatement());
-            AssertEx.DoesNotThrow<NotImplementedException>(() => qb.Build());
-        }
-        [TestMethod]
-        public void NonConditionalJoinStatementImplementTest()
-        {
-            var qb = new SQLiteDSLContext().QueryBuilder;
-            qb.AddStatment(new NonConditionalJoinStatement());
             AssertEx.DoesNotThrow<NotImplementedException>(() => qb.Build());
         }
         [TestMethod]
