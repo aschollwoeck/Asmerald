@@ -119,7 +119,8 @@ dslCtxt
 .QueryBuilder
 .BuildPreparedStatement();
 ```
-Running those queries against a SQLite database in combination with Dapper returns following results
+Running those queries against a SQLite database in combination with Dapper returns following results:
+
 |      Method |     Mean |   Error |  StdDev | Ratio |
 |------------ |---------:|--------:|--------:|------:|
 | DapperRaw | 179.4 us | 1.48 us | 1.38 us |  1.00 |
