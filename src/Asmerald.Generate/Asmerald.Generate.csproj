@@ -17,10 +17,23 @@
     <PackageReference Include="Dapper" Version="2.0.123" />
     <PackageReference Include="Microsoft.Data.Sqlite" Version="7.0.0" />
     <PackageReference Include="System.CodeDom" Version="7.0.0" />
+    <PackageReference Include="TinyCsvParser" Version="2.7.0" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Asmerald\Asmerald.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Generators\mssql_type_mapping.csv">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Generators\postgresql_type_mapping.csv">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Generators\oracle_type_mapping.csv">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>

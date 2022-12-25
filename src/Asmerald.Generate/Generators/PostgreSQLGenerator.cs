@@ -20,5 +20,7 @@ namespace Asmerald.Generate.Generators
         {
             throw new NotImplementedException();
         }
+
+        // https://www.npgsql.org/doc/types/basic.html
     }
 }

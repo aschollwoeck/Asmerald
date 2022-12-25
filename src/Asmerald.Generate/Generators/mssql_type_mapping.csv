@@ -1,0 +1,55 @@
+﻿DbType;CSharpType;AsmeraldType
+SQL Server Database Engine type	.NET Framework type	SqlDbType enumeration
+bigint	Int64	BigInt
+binary	Byte[]	VarBinary
+bit	Boolean	Bit
+char	String	Char
+		
+	Char[]	
+date 1	DateTime	Date 1
+		
+(SQL Server 2008 and later)		
+datetime	DateTime	DateTime
+datetime2	DateTime	DateTime2
+		
+(SQL Server 2008 and later)		
+datetimeoffset	DateTimeOffset	DateTimeOffset
+		
+(SQL Server 2008 and later)		
+decimal	Decimal	Decimal
+FILESTREAM attribute (varbinary(max))	Byte[]	VarBinary
+float	Double	Float
+image	Byte[]	Binary
+int	Int32	Int
+money	Decimal	Money
+nchar	String	NChar
+		
+	Char[]	
+ntext	String	NText
+		
+	Char[]	
+numeric	Decimal	Decimal
+nvarchar	String	NVarChar
+		
+	Char[]	
+real	Single	Real
+rowversion	Byte[]	Timestamp
+smalldatetime	DateTime	DateTime
+smallint	Int16	SmallInt
+smallmoney	Decimal	SmallMoney
+sql_variant	Object 2	Variant
+text	String	Text
+		
+	Char[]	
+time	TimeSpan	Time
+		
+(SQL Server 2008 and later)		
+timestamp	Byte[]	Timestamp
+tinyint	Byte	TinyInt
+uniqueidentifier	Guid	UniqueIdentifier
+varbinary	Byte[]	VarBinary
+varchar	String	VarChar
+		
+	Char[]	
+xml	Xml	Xml
+

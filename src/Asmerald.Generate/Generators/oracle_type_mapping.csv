@@ -1,0 +1,24 @@
+﻿DbType;CSharpType;AsmeraldType
+BFILE;Byte[];BlobColumn
+BLOB;Byte[];BlobColumn
+CHAR;String;StringColumn
+CLOB;String;StringColumn
+DATE;DateTime;DateTimeColumn
+FLOAT;Decimal;DecimalColumn
+INTEGER;Decimal;DecimalColumn
+INTERVAL YEAR TO MONTH;Int32;IntegerColumn
+INTERVAL DAY TO SECOND;TimeSpan;TimeSpanColumn
+LONG;String;StringColumn
+LONG RAW;Byte[];BlobColumn
+NCHAR;String;StringColumn
+NCLOB;String;StringColumn
+NUMBER;Decimal;DecimalColumn
+NVARCHAR2;String;StringColumn
+RAW;Byte[];BlobColumn
+REF CURSOR;
+ROWID;String;StringColumn
+TIMESTAMP;DateTime;DateTimeColumn
+TIMESTAMP WITH LOCAL TIME ZONE;DateTime;DateTimeColumn
+TIMESTAMP WITH TIME ZONE;DateTime;DateTimeColumn
+UNSIGNED INTEGER;Number;DecimalColumn
+VARCHAR2;String;StringColumn
