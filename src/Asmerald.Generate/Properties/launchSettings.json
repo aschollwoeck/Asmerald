@@ -2,7 +2,7 @@
   "profiles": {
     "Asmerald.Generate": {
       "commandName": "Project",
-      "commandLineArgs": "generate SQLite \"Data Source=C:\\Users\\Alexander\\Desktop\\Digillection\\digillection.sqlite3;\" \"C:\\temp\\sqlgen\" --nspace=test.testna"
+      "commandLineArgs": "scheme SQLite \"Data Source=C:\\Users\\Alexander\\Desktop\\Digillection\\digillection.sqlite3;\""
     }
   }
 }

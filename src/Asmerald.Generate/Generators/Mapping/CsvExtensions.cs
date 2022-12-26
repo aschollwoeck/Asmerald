@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using TinyCsvParser.Mapping;
 
-namespace Asmerald.Generate.Generators
+namespace Asmerald.Generate.Generators.Mapping
 {
     /// <summary>
     /// Mapping of database type to CSharp and Asmerald types.

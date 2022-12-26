@@ -9,6 +9,15 @@ using Asmerald.Generate.Generators;
 using CommandDotNet;
 using Asmerald.Columns;
 using Asmerald.Statements.SQLite;
+using System.Numerics;
+using System.Collections;
+using ConsoleTables;
+using System.Data;
+using Microsoft.Data.Sqlite;
+using Asmerald.Generate.Generators.Mapping;
+using Asmerald.Generate.Generators.Database;
+using System.Reflection.Emit;
+using static Org.BouncyCastle.Math.EC.ECCurve;
 
 public class Program
 {
@@ -27,7 +36,7 @@ public class Program
     /// </summary>
     public enum DataBase
     {
-        SQLite
+        SQLite, PostgreSQL, MySQL, MariaDB, MSSQL, Oracle
     }
 
     // generate SQLite "Data Source=C:\Users\Alexander\Desktop\Digillection\digillection.sqlite3;" "C:\temp\sqlgen"
@@ -40,15 +49,38 @@ public class Program
         string connectionString)
     {
         // Get generator based on database provider
-        IGenerator generator;
-        switch (dataBase)
+        var config = new GenerateConfiguration() { DataBase = dataBase, ConnectionString = connectionString };
+        IGenerator generator = GetGenerator(config, dataBase);
+
+        // Get to be created classes
+        var tables = generator.Generate();
+        ConsoleTable ct = new ConsoleTable("Table");
+        foreach (var table in tables)
         {
-            case DataBase.SQLite:
-                generator = new SQLiteGenerator(new GenerateConfiguration() { ConnectionString = connectionString });
-                break;
-            default:
-                throw new NotImplementedException($"Database provider '{dataBase}' not yet implemented!");
+            ct.AddRow(table.Name);
         }
+
+        ct.Write();
+
+        ConsoleTable cc = new ConsoleTable("Table", "Column", "Type");
+        string t = "";
+        foreach (var table in tables)
+        {
+            foreach (var column in table.Columns)
+            {
+                if(t != table.Name)
+                {
+                    cc.AddRow(table.Name, column.Name, column.Type);
+                }
+                else
+                {
+                    cc.AddRow("", column.Name, column.Type);
+                }
+                t = table.Name;
+            }
+        }
+
+        cc.Write();
     }
 
     [Command("generate", Description = "Generates code based on database details to use with Typesafe library.")]
@@ -63,18 +95,20 @@ public class Program
         string nspace = "")
     {
         // Get generator based on database provider
-        IGenerator generator;
-        switch (dataBase)
-        {
-            case DataBase.SQLite:
-                generator = new SQLiteGenerator(new GenerateConfiguration() { ConnectionString =  connectionString });
-                break;
-            default:
-                throw new NotImplementedException($"Database provider '{dataBase}' not yet implemented!");
-        }
+        var config = new GenerateConfiguration() { DataBase = dataBase, Namespace = nspace, ConnectionString = connectionString };
+        IGenerator generator = GetGenerator(config, dataBase);
 
-        // We first generate the code
-        var generatedCode = await generator.Generate(nspace);
+        // Get to be created classes
+        var generateTables = generator.Generate();
+
+        // Generate code
+        AsmeraldTableClassBuilder classGenerator = new AsmeraldTableClassBuilder();
+        Dictionary<string, string> dicRes = new Dictionary<string, string>();
+        foreach (var tbl in generateTables)
+        {
+            var generatedCode = classGenerator.Build(config.Namespace, tbl);
+            dicRes.Add(tbl.Name_class, generatedCode);
+        }
 
         // Then we create the directory - if necessary
         var directoryInfo = new DirectoryInfo(targetDir);
@@ -83,11 +117,32 @@ public class Program
             directoryInfo.Create();
         }
 
-        // No write generated code to files
-        foreach (var genCode in generatedCode)
+        // Now write generated code to files
+        foreach (var genCode in dicRes)
         {
-            var fileName = Path.Combine(directoryInfo.FullName, $"Typesafe.{genCode.Key}.cs");
+            var fileName = Path.Combine(directoryInfo.FullName, $"{nameof(Asmerald)}.{genCode.Key}.cs");
             await File.WriteAllTextAsync(fileName, genCode.Value);
+        }
+    }
+
+    private IGenerator GetGenerator(GenerateConfiguration config, DataBase dataBase)
+    {
+        switch (dataBase)
+        {
+            case DataBase.SQLite:
+                return new AsmeraldGenerator(config, new SQLiteDatabaseSchemeLoader(config), new SQLiteMapper());
+            case DataBase.PostgreSQL:
+                return new AsmeraldGenerator(config, new PostgreSQLDatabaseSchemeLoader(config), new FileMapper("postgresql_type_mapping.csv"));
+            case DataBase.MySQL:
+                return new AsmeraldGenerator(config, new MySQLDatabaseSchemeLoader(config), new FileMapper("mysql_type_mapping.csv"));
+            case DataBase.MariaDB:
+                return new AsmeraldGenerator(config, new MariaDBDatabaseSchemeLoader(config), new FileMapper("mariadb_type_mapping.csv"));
+            case DataBase.MSSQL:
+                return new AsmeraldGenerator(config, new MSSQLDatabaseSchemeLoader(config), new FileMapper("mssql_type_mapping.csv"));
+            case DataBase.Oracle:
+                return new AsmeraldGenerator(config, new OracleDatabaseSchemeLoader(config), new FileMapper("oracle_type_mapping.csv"));
+            default:
+                throw new NotImplementedException($"Database provider '{dataBase}' not yet implemented!");
         }
     }
 }

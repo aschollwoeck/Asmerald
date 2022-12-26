@@ -6,7 +6,7 @@ namespace Asmerald.QueryBuilders
 {
     public class SQLiteQueryBuilder : QueryBuilderBase
     {
-        public SQLiteQueryBuilder() : base(new SqLiteTransformer())
+        public SQLiteQueryBuilder() : base(new SQLiteTransformer())
         {
 
         }

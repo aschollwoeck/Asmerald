@@ -1,0 +1,53 @@
+﻿DbType;CSharpType;AsmeraldType
+bool;System.Boolean;BooleanColumn
+boolean;System.Boolean;BooleanColumn
+bit(1);System.Boolean;BooleanColumn
+tinyint;System.SByte;IntegerColumn
+tinyint unsigned;System.Byte;ByteColumn
+smallint;System.Int16;IntegerColumn
+year;System.Int16;IntegerColumn
+int;System.Int32;IntegerColumn
+integer;System.Int32;IntegerColumn
+smallint unsigned;System.Int32;IntegerColumn
+mediumint;System.Int32;IntegerColumn
+bigint;System.Int64;LongColumn
+int unsigned;System.Int64;LongColumn
+integer unsigned;System.Int64;LongColumn
+bit;System.Int64;LongColumn
+float;System.Single;DecimalColumn
+double;System.Double;DecimalColumn
+real;System.Double;DecimalColumn
+decimal;System.Decimal;DecimalColumn
+numeric;System.Decimal;DecimalColumn
+dec;System.Decimal;DecimalColumn
+fixed;System.Decimal;DecimalColumn
+bigint unsigned;System.Decimal;DecimalColumn
+float unsigned;System.Decimal;DecimalColumn
+double unsigned;System.Decimal;DecimalColumn
+serial;System.Decimal;DecimalColumn
+date;System.DateTime;DateTimeColumn
+timestamp;System.DateTime;DateTimeColumn
+datetime;System.DateTime;DateTimeColumn
+datetimeoffset;System.DateTimeOffset;DateTimeOffsetColumn
+time;System.TimeSpan;TimeSpanColumn
+char;System.String;StringColumn
+varchar;System.String;StringColumn
+tinytext;System.String;StringColumn
+text;System.String;StringColumn
+mediumtext;System.String;StringColumn
+longtext;System.String;StringColumn
+set;System.String;StringColumn
+enum;System.String;StringColumn
+nchar;System.String;StringColumn
+national char;System.String;StringColumn
+nvarchar;System.String;StringColumn
+national varchar;System.String;StringColumn
+character varying;System.String;StringColumn
+binary;System.Byte[];ByteArrColumn
+varbinary;System.Byte[];ByteArrColumn
+tinyblob;System.Byte[];ByteArrColumn
+blob;System.Byte[];ByteArrColumn
+mediumblob;System.Byte[];ByteArrColumn
+longblob;System.Byte[];ByteArrColumn
+char byte;System.Byte[];ByteArrColumn
+geometry2;System.Data.Spatial.DbGeometry;

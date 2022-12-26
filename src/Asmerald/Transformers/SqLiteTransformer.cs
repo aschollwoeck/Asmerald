@@ -12,7 +12,7 @@ using Asmerald.Statements.SQLite;
 
 namespace Asmerald
 {
-    internal class SqLiteTransformer : ISqlTransformer
+    internal class SQLiteTransformer : ISqlTransformer
     {
         public Dictionary<string, object> Transform(IStatement statement, StringBuilder builder, ref int paraCount)
         {

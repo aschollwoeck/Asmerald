@@ -5,8 +5,7 @@ using Asmerald.Expressions;
 
 namespace Asmerald.Columns
 {
-
-    public abstract class BlobColumn : IOrderByColumn, IOrderBy
+    public abstract class LongColumn : IOrderByColumn, IOrderBy
     {
         public IOrderByColumn Asc()
         {
@@ -21,55 +20,50 @@ namespace Asmerald.Columns
         public abstract string Name();
     }
 
-    public abstract class BlobColumn<D> : BlobColumn, IColumn<byte[], D> where D : ITable
+    public abstract class LongColumn<D> : LongColumn, IColumn<long, D> where D : ITable
     {
-        public EqualConditionalExpression Equal(byte[] condition)
+        public EqualConditionalExpression Equal(long condition)
         {
             return new EqualConditionalExpression((IColumn)this, condition);
         }
 
-        public GreaterConditionalExpression Greater(byte[] condition)
+        public GreaterConditionalExpression Greater(long condition)
         {
             return new GreaterConditionalExpression((IColumn)this, condition);
         }
 
-        public GreaterOrEqualConditionalExpression GreaterOrEqual(byte[] condition)
+        public GreaterOrEqualConditionalExpression GreaterOrEqual(long condition)
         {
             return new GreaterOrEqualConditionalExpression((IColumn)this, condition);
         }
 
-        public InConditionalExpression In(IEnumerable<byte[]> condition)
+        public InConditionalExpression In(IEnumerable<long> condition)
         {
             return new InConditionalExpression((IColumn)this, condition);
         }
 
-        public LesserConditionalExpression Lesser(byte[] condition)
+        public LesserConditionalExpression Lesser(long condition)
         {
             return new LesserConditionalExpression((IColumn)this, condition);
         }
 
-        public LesserOrEqualConditionalExpression LesserOrEqual(byte[] condition)
+        public LesserOrEqualConditionalExpression LesserOrEqual(long condition)
         {
             return new LesserOrEqualConditionalExpression((IColumn)this, condition);
         }
 
-        public LikeConditionalExpression Like(byte[] condition)
-        {
-            return new LikeConditionalExpression((IColumn)this, condition);
-        }
-
         public IsNullConditionalExpression IsNull()
         {
-            return new IsNullConditionalExpression((IColumn)this);
+            return new IsNullConditionalExpression(this);
         }
 
         public abstract ISelectColumnAlias<D> As(string name);
 
         public abstract ISelectColumn<D> Count();
 
-        public ValueExpression Value(byte[] value) => new ValueExpression(this, value);
+        public ValueExpression Value(long value) => new ValueExpression(this, value);
 
-        public BetweenConditionalExpression Between(byte[] minValue, byte[] maxValue)
+        public BetweenConditionalExpression Between(long minValue, long maxValue)
         {
             return new BetweenConditionalExpression((IColumn)this, minValue, maxValue);
         }

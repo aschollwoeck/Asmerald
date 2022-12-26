@@ -1,0 +1,53 @@
+﻿DbType;CSharpType;AsmeraldType
+boolean;bool;BooleanColumn
+smallint;short;IntegerColumn
+integer;int;IntegerColumn
+bigint;long;LongColumn
+real;float;DecimalColumn
+double precision;double;DecimalColumn
+numeric;decimal;DecimalColumn
+money;decimal;DecimalColumn
+text;string;StringColumn
+character varying;string;StringColumn
+character;string;StringColumn
+citext;string;StringColumn
+json;string;StringColumn
+jsonb;string;StringColumn
+xml;string;StringColumn
+uuid;Guid;GuidColumn
+bytea;byte[];ByteArrColumn
+timestamp without time zone;DateTime (Unspecified);DateTimeColumn
+timestamp with time zone;DateTime (Utc1);DateTimeColumn
+date;DateTime;DateTimeColumn
+time without time zone;TimeSpan;TimeSpanColumn
+time with time zone;DateTimeOffset;DateTimeOffsetColumn
+interval;TimeSpan3;TimeSpanColumn
+cidr;(IPAddress, int);IntegerColumn
+inet;IPAddress;StringColumn
+macaddr;PhysicalAddress;StringColumn
+tsquery;NpgsqlTsQuery;StringColumn
+tsvector;NpgsqlTsVector;StringColumn
+bit(1);bool;BooleanColumn
+bit(n);BitArray;TODO
+bit varying;BitArray;TODO
+point;NpgsqlPoint;StringColumn
+lseg;NpgsqlLSeg;StringColumn
+path;NpgsqlPath;StringColumn
+polygon;NpgsqlPolygon;StringColumn
+line;NpgsqlLine;StringColumn
+circle;NpgsqlCircle;StringColumn
+box;NpgsqlBox;StringColumn
+hstore;Dictionary<string, string>;TODO
+oid;uint;UnsignedIntegerColumn
+xid;uint;UnsignedIntegerColumn
+cid;uint;UnsignedIntegerColumn
+oidvector;uint[];TODO
+name;string;StringColumn
+(internal) char;char;StringColumn
+geometry (PostGIS);PostgisGeometry;StringColumn
+record;object[];TODO
+composite types;T;TODO
+range types;NpgsqlRange<TElement>;TODO
+multirange types (PG14);NpgsqlRange<TElement>[];TODO
+enum types;TEnum;TODO
+array types;Array (of element type);TODO
