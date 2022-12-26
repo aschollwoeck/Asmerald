@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Asmerald.Columns;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -7,30 +8,32 @@ using TinyCsvParser;
 
 namespace Asmerald.Generate.Generators.Mapping
 {
-    public class FileMapper : IDatabaseTypeMapper
+    public class StringMapper : IDatabaseTypeMapper
     {
         private const char CSV_SPLIT_CHAR = ';';
 
         private readonly List<DataBaseTypeMapping> _mappings;
 
-        public FileMapper(string filePath)
+        public StringMapper(string csv)
         {
+            var options = new CsvParserOptions(false, CSV_SPLIT_CHAR);
+
             var csvParser = new CsvParser<DataBaseTypeMapping>(
-                new CsvParserOptions(false, CSV_SPLIT_CHAR),
+                options,
                 new CsvMapping());
 
             _mappings = csvParser
-                .ReadFromFile(filePath, Encoding.Unicode)
+                .ReadFromString(new CsvReaderOptions(new[] { Environment.NewLine }), csv)
                 .Select(p => p.Result)
                 .ToList();
         }
 
         public Type? Map(string dbColumnType)
         {
-            var t = _mappings.FirstOrDefault(r => r.DbType == dbColumnType);
+            var t = _mappings.FirstOrDefault(r => r.DbType.ToLowerInvariant() == dbColumnType.ToLowerInvariant());
             if (t != null)
             {
-                var tr = Type.GetType(t.AsmeraldType);
+                var tr = typeof(StringColumn).Assembly.GetType("Asmerald.Columns." + t.AsmeraldType);
                 if (tr == null)
                 {
                     throw new Exception($"Asmerald column data type '{dbColumnType}' not found in assembly! Missing namespace?");

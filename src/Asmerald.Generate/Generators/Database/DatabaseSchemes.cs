@@ -15,19 +15,19 @@ namespace Asmerald.Generate.Generators.Database
         /// <summary>
         /// Type of the database object, e.g. table or view.
         /// </summary>
-        internal string Type { get; set; }
+        internal string Type { get; set; } = "";
         /// <summary>
         /// Name of the database object.
         /// </summary>
-        internal string Name { get; set; }
+        internal string Name { get; set; } = "";
         /// <summary>
         /// Name of the database object.
         /// </summary>
-        internal string TableName { get; set; }
+        internal string TableName { get; set; } = "";
         /// <summary>
         /// Sql which was used to create the database object.
         /// </summary>
-        internal string Sql { get; set; }
+        internal string Sql { get; set; } = "";
     }
 
     /// <summary>
@@ -42,11 +42,11 @@ namespace Asmerald.Generate.Generators.Database
         /// <summary>
         /// Name of column.
         /// </summary>
-        public string Name { get; set; }
+        public string Name { get; set; } = "";
         /// <summary>
         /// Data type of column.
         /// </summary>
-        public string Type { get; set; }
+        public string Type { get; set; } = "";
         /// <summary>
         /// Flag if column has to be filled with data.
         /// </summary>
@@ -54,7 +54,7 @@ namespace Asmerald.Generate.Generators.Database
         /// <summary>
         /// Default value of column.
         /// </summary>
-        public string DfltValue { get; set; }
+        public string DfltValue { get; set; } = string.Empty;
         /// <summary>
         /// Flag if column is a primary key.
         /// </summary>

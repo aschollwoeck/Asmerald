@@ -42,7 +42,7 @@ public class Program
     // generate SQLite "Data Source=C:\Users\Alexander\Desktop\Digillection\digillection.sqlite3;" "C:\temp\sqlgen"
 
     [Command("scheme", Description = "Generates code based on database details to use with Typesafe library.")]
-    public async Task Scheme(
+    public void Scheme(
         [Operand("database", Description = "Database provider - needs to be supported, e.g. SQLite.")]
         DataBase dataBase,
         [Operand("connectionString", Description = "Full qualified connection string for database access.")]
@@ -132,15 +132,15 @@ public class Program
             case DataBase.SQLite:
                 return new AsmeraldGenerator(config, new SQLiteDatabaseSchemeLoader(config), new SQLiteMapper());
             case DataBase.PostgreSQL:
-                return new AsmeraldGenerator(config, new PostgreSQLDatabaseSchemeLoader(config), new FileMapper("postgresql_type_mapping.csv"));
+                return new AsmeraldGenerator(config, new PostgreSQLDatabaseSchemeLoader(config), new StringMapper(Asmerald.Generate.Properties.Resources.postgresql_type_mapping));
             case DataBase.MySQL:
-                return new AsmeraldGenerator(config, new MySQLDatabaseSchemeLoader(config), new FileMapper("mysql_type_mapping.csv"));
+                return new AsmeraldGenerator(config, new MySQLDatabaseSchemeLoader(config), new StringMapper(Asmerald.Generate.Properties.Resources.mysql_type_mapping));
             case DataBase.MariaDB:
-                return new AsmeraldGenerator(config, new MariaDBDatabaseSchemeLoader(config), new FileMapper("mariadb_type_mapping.csv"));
+                return new AsmeraldGenerator(config, new MariaDBDatabaseSchemeLoader(config), new StringMapper(Asmerald.Generate.Properties.Resources.mariadb_type_mapping));
             case DataBase.MSSQL:
-                return new AsmeraldGenerator(config, new MSSQLDatabaseSchemeLoader(config), new FileMapper("mssql_type_mapping.csv"));
+                return new AsmeraldGenerator(config, new MSSQLDatabaseSchemeLoader(config), new StringMapper(Asmerald.Generate.Properties.Resources.mssql_type_mapping));
             case DataBase.Oracle:
-                return new AsmeraldGenerator(config, new OracleDatabaseSchemeLoader(config), new FileMapper("oracle_type_mapping.csv"));
+                return new AsmeraldGenerator(config, new OracleDatabaseSchemeLoader(config), new StringMapper(Asmerald.Generate.Properties.Resources.oracle_type_mapping));
             default:
                 throw new NotImplementedException($"Database provider '{dataBase}' not yet implemented!");
         }
