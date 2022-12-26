@@ -51,7 +51,7 @@ namespace Asmerald.Generate.Generators.Database
                       NULLABLE as {nameof(TableSchema.Notnull)}, 
                       DATA_TYPE as {nameof(TableSchema.Type)}
                     FROM all_tab_columns
-                    WHERE TABLE_NAME = @table;
+                    WHERE TABLE_NAME = :table;
                     ",
                     new { table = table })
                 .ToList();
