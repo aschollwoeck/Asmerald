@@ -1,4 +1,6 @@
 ﻿# Asmerald
+a shining violett crystal stone with fire engravings, artstation
+
 A library for writing type safe SQL statements in code.
 
 [![CI](https://github.com/aschollwoeck/Amorphous/actions/workflows/ci.yml/badge.svg)](https://github.com/aschollwoeck/Amorphous/actions/workflows/ci.yml)
