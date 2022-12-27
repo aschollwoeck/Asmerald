@@ -3,6 +3,20 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.1</TargetFramework>
     <Nullable>enable</Nullable>
+    <Title>Asmerald</Title>
+    <Version>0.1.0</Version>
+    <Authors>aschollwoeck</Authors>
+    <Company />
+    <Description>A library for writing type safe SQL in C#.</Description>
+    <PackageProjectUrl>https://github.com/aschollwoeck/Asmerald</PackageProjectUrl>
+    <PackageIcon>asmerald_small.png</PackageIcon>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <RepositoryUrl>https://github.com/aschollwoeck/Asmerald</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageTags>SQL typesafe safe sqlite postgresql mssql</PackageTags>
+    <PackageReleaseNotes>Initial release</PackageReleaseNotes>
+    <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
   </PropertyGroup>
 
   <ItemGroup>
@@ -11,6 +25,17 @@
 
   <ItemGroup>
     <Folder Include="Statements\SQLite\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\..\assets\asmerald_small.png">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+    <None Include="..\..\README.md">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
   </ItemGroup>
 
 </Project>
