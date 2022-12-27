@@ -1,4 +1,4 @@
-﻿# Asmerald
+﻿# <img src="assets/asmerald_small.png" alt="Asmerald" width="32"/> Asmerald
 A library for writing type safe SQL statements in code.
 
 [![CI](https://github.com/aschollwoeck/Amorphous/actions/workflows/ci.yml/badge.svg)](https://github.com/aschollwoeck/Amorphous/actions/workflows/ci.yml)
