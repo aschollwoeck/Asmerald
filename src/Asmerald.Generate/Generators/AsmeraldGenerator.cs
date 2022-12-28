@@ -5,6 +5,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using Asmerald.Columns;
 using Asmerald.Generate.Generators.Database;
 using Asmerald.Generate.Generators.Mapping;
 using Dapper;
@@ -46,7 +47,7 @@ namespace Asmerald.Generate.Generators
         /// Generate source code.
         /// </summary>
         /// <returns></returns>
-        public List<TableGenerate> Generate()
+        public (List<TableGenerate>, List<StoredProcedureGenerate>) Generate()
         {
             var codeProvider = CodeDomProvider.CreateProvider("c#");
 
@@ -100,7 +101,60 @@ namespace Asmerald.Generate.Generators
                 templateTables.Add(ctxtTable);
             }
 
-            return templateTables;
+            List<StoredProcedureGenerate> templateSPs = new List<StoredProcedureGenerate>();
+            var sps = this._databaseSchemeLoader.LoadStoredProcedures();
+            foreach (var sp in sps)
+            {
+                StoredProcedureGenerate sgGen = new StoredProcedureGenerate(sp)
+                {
+                    Name = sp.Name,
+                    Name_class = codeProvider.CreateValidIdentifier($"StProc_{sp.Name}"),
+                    Schema = sp.Schema
+                };
+
+                foreach (var para in sp.Parameters)
+                {
+                    sgGen.Parameters.Add(new StoredProcedureGenerate.ParameterGenerate(para)
+                    {
+                        Name = para.Name,
+                        Name_class = codeProvider.CreateValidIdentifier(para.Name.FirstCharToUpper()),
+                        DefaultValue = para.DefaultValue,
+                        IsNullable = para.IsNullable,
+                        IsOutput = para.IsOutput,
+                        Type = GetTypeFromColumn(this._databaseTypeMapper.Map(para.Type).Name).FullName
+                    });
+                }
+
+                templateSPs.Add(sgGen);
+            }
+
+            return (templateTables, templateSPs);
+        }
+
+        private Type GetTypeFromColumn(string column)
+        {
+            var ass = typeof(LongColumn<>).Assembly;
+
+            // We want the generic form of the column type - this is indicated with `1
+            var genClass = ass.GetType($"{nameof(Asmerald)}.{nameof(Asmerald.Columns)}.{column}`1");
+
+            if(genClass == null)
+            {
+                throw new Exception($"Type '{nameof(Asmerald)}.{nameof(Asmerald.Columns)}.{column}`1' not found in Assembly of Asmerald!");
+            }
+
+            // From this type we get then the actual type
+            var columnType = genClass.GetInterface("IColumn`2");
+
+            if(columnType == null)
+            {
+                throw new Exception($"Generic 'IColumn' interface not found for type '{nameof(Asmerald)}.{nameof(Asmerald.Columns)}.{column}`1'");
+            }
+
+            // First argument is the type
+            var t = columnType.GetGenericArguments().First();
+
+            return t;
         }
     }
 }

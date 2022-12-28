@@ -18,11 +18,9 @@ namespace Asmerald.SourceGenerator.Generators
             w.WriteLine("using System;");
             w.WriteLine("using System.Collections.Generic;");
             w.WriteLine("using System.Linq;");
-            //w.WriteLine("using System.Text;");
             w.WriteLine("using Asmerald.Columns;");
             w.WriteLine("using Asmerald.Expressions;");
             w.WriteLine($"using Asmerald.Functions.{generateExtension.nspace};");
-            //w.WriteLine("using Asmerald.QueryBuilders;");
             w.WriteLine("using Asmerald.Statements;");
             w.WriteLine();
             w.WriteLine($"namespace Asmerald.{generateExtension.nspace}");

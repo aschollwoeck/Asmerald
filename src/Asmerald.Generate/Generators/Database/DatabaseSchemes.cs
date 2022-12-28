@@ -13,6 +13,10 @@ namespace Asmerald.Generate.Generators.Database
     public class DatabaseSchema
     {
         /// <summary>
+        /// Schema or database where table is in.
+        /// </summary>
+        internal string Schema { get; set; } = "";
+        /// <summary>
         /// Type of the database object, e.g. table or view.
         /// </summary>
         internal string Type { get; set; } = "";
@@ -59,5 +63,43 @@ namespace Asmerald.Generate.Generators.Database
         /// Flag if column is a primary key.
         /// </summary>
         public int Pk { get; set; }
+    }
+
+    public class StoredProcedureSchema
+    {
+        public class ParameterSchema
+        {
+            public int Id { get; set; }
+            public string Name { get; set; } = "";
+            public string Type { get; set; } = "";
+            public int MaxLength { get; set; }
+            public bool IsOutput { get; set; }
+            public string DefaultValue { get; set; } = "";
+            public bool IsNullable { get; set; }
+
+            public override string ToString()
+            {
+                if(!String.IsNullOrEmpty(Name))
+                {
+                    return $"{Name} {Type} IsOutput: {IsOutput}";
+                }
+
+                return base.ToString();
+            }
+        }
+
+        public string Name { get; set; } = "";
+        public string Schema { get; set; } = "";
+        public List<ParameterSchema> Parameters { get; set; } = new List<ParameterSchema>();
+
+        public override string ToString()
+        {
+            if(!String.IsNullOrEmpty(Name))
+            {
+                return $"{Schema}.{Name} | Parameters: {Parameters.Count}";
+            }
+
+            return base.ToString();
+        }
     }
 }

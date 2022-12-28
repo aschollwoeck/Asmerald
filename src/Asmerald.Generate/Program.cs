@@ -53,7 +53,14 @@ public class Program
         IGenerator generator = GetGenerator(config, dataBase);
 
         // Get to be created classes
-        var tables = generator.Generate();
+        var (tables, sps) = generator.Generate();
+
+        foreach (var sp in sps)
+        {
+            var code = new AsmeraldSPClassBuilder().Build("test", sp);
+        }
+
+
         ConsoleTable ct = new ConsoleTable("Table");
         foreach (var table in tables)
         {
@@ -99,7 +106,7 @@ public class Program
         IGenerator generator = GetGenerator(config, dataBase);
 
         // Get to be created classes
-        var generateTables = generator.Generate();
+        var (generateTables, sps) = generator.Generate();
 
         // Generate code
         AsmeraldTableClassBuilder classGenerator = new AsmeraldTableClassBuilder();

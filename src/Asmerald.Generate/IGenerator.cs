@@ -9,6 +9,6 @@ namespace Asmerald.Generate
 {
     public interface IGenerator
     {
-        List<TableGenerate> Generate();
+        (List<TableGenerate>, List<StoredProcedureGenerate>) Generate();
     }
 }

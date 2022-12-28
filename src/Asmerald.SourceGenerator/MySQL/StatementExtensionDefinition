@@ -1,5 +1,7 @@
 ﻿flowchart LR
 
+Root -->|Call| Call
+
 Root -->|With| WithTable[WithTable<T>]
 Root -->|With| With
 

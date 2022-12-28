@@ -6,7 +6,6 @@ using Asmerald.QueryBuilders;
 using Asmerald.Statements;
 using System.Linq;
 using Asmerald.Statements.SQLite;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Asmerald.Extensions;
 
 namespace Asmerald

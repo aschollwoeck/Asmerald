@@ -4,5 +4,6 @@
     {
         List<DatabaseSchema> LoadTables();
         List<TableSchema> LoadColumns(string table);
+        List<StoredProcedureSchema> LoadStoredProcedures();
     }
 }

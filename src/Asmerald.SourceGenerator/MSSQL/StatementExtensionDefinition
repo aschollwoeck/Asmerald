@@ -1,5 +1,7 @@
 ﻿flowchart LR
 
+Root -->|Exec| Exec
+
 Root -->|With| WithTable[WithTable<T>]
 Root -->|With| With
 

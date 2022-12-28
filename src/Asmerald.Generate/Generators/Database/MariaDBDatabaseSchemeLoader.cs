@@ -57,5 +57,57 @@ namespace Asmerald.Generate.Generators.Database
                 _dbConnection.Close();
             }
         }
+
+        public List<StoredProcedureSchema> LoadStoredProcedures()
+        {
+            Dictionary<string, StoredProcedureSchema> res = new Dictionary<string, StoredProcedureSchema>();
+
+            _dbConnection
+                .Query<StoredProcedureSchema, StoredProcedureSchema.ParameterSchema, StoredProcedureSchema>($@"
+
+                    select     
+                        so.routine_schema as '{{nameof(StoredProcedureSchema.Schema)',
+                        so.routine_name as '{nameof(StoredProcedureSchema.Name)}',
+                        p.ordinal_position as {nameof(StoredProcedureSchema.ParameterSchema.Id)},
+                        p.parameter_name as {nameof(StoredProcedureSchema.ParameterSchema.Name)},
+                        p.parameter_mode as 'Mode',
+                        0 as {nameof(StoredProcedureSchema.ParameterSchema.IsOutput)},
+                        p.data_type as {nameof(StoredProcedureSchema.ParameterSchema.MaxLength)},
+                        p.character_maximum_length as {nameof(StoredProcedureSchema.ParameterSchema.MaxLength)},
+                        null as {nameof(StoredProcedureSchema.ParameterSchema.DefaultValue)},
+                        0 as {nameof(StoredProcedureSchema.ParameterSchema.IsNullable)}
+                    from information_schema.routines as so
+                    left join information_schema.parameters as p ON so.specific_name = p.specific_name
+                    WHERE 
+                        so.routine_type = 'PROCEDURE'
+                    ORDER BY so.routine_schema, so.routine_name, p.ordinal_position;
+                    ",
+                    (sp, p) =>
+                    {
+                        if (p != null && String.IsNullOrEmpty(p.Name))
+                        {
+                            sp.Parameters.Add(p);
+                        }
+                        var key = $"{sp.Schema}.{sp.Name}";
+                        if (res.ContainsKey(key) == false)
+                        {
+                            res.Add(key, sp);
+                        }
+                        else
+                        {
+                            if (p != null && String.IsNullOrEmpty(p.Name))
+                            {
+                                res[key].Parameters.Add(p);
+                            }
+                        }
+
+                        return sp;
+                    })
+                .ToList();
+
+            return res
+                .Values
+                .ToList();
+        }
     }
 }
