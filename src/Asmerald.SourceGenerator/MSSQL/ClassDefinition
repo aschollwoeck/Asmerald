@@ -81,7 +81,7 @@ Strftime = Strftime(string format, ISelectExpression value, string[] modifier)
 
 
 [CLASSES]
-EXEC = EXEC(IStoredProcedure)
+Exec = Exec(IStoredProcedure sp)
 
 Not = Not
 

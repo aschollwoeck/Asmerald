@@ -15,6 +15,7 @@ See this very good answer on Stackoverflow: https://stackoverflow.com/questions/
 |                   |    SQLite |  PostgreSQL |   MySql   |  MariaDb  | MSSql | Oracle  |
 |------------       |---------  |--------   |--------   |--------  |------  |-------- |
 | SQL standard      | ✓       |   ✓     |     ✓   |     ✓   |  ✓  |   ✓   |
+| Stored Procedures |         |   ✓     |     ✓   |     ✓   |  ✓  |   ✓   |
 | Provider specific | ✓       |        |         |        |    |      |
 
 SQL standard = Most common statements such as "SELECT", "WHERE", "JOIN"s, "HAVING", etc. (mostly SQL-92)

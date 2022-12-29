@@ -11,6 +11,13 @@ namespace Asmerald.Test.MariaDB
     public class NotImplementedTest
     {
         [TestMethod]
+        public void CallStatementImplementTest()
+        {
+            var qb = new MariaDBDSLContext().QueryBuilder;
+            qb.AddStatment(new CallStatement());
+            AssertEx.DoesNotThrow<NotImplementedException>(() => qb.Build());
+        }
+        [TestMethod]
         public void NotStatementImplementTest()
         {
             var qb = new MariaDBDSLContext().QueryBuilder;

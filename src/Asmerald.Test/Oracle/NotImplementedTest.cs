@@ -11,6 +11,20 @@ namespace Asmerald.Test.Oracle
     public class NotImplementedTest
     {
         [TestMethod]
+        public void BeginSPStatementImplementTest()
+        {
+            var qb = new OracleDSLContext().QueryBuilder;
+            qb.AddStatment(new BeginSPStatement());
+            AssertEx.DoesNotThrow<NotImplementedException>(() => qb.Build());
+        }
+        [TestMethod]
+        public void EndStatementImplementTest()
+        {
+            var qb = new OracleDSLContext().QueryBuilder;
+            qb.AddStatment(new EndStatement());
+            AssertEx.DoesNotThrow<NotImplementedException>(() => qb.Build());
+        }
+        [TestMethod]
         public void NotStatementImplementTest()
         {
             var qb = new OracleDSLContext().QueryBuilder;

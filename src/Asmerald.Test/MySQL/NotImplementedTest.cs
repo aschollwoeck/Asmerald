@@ -11,6 +11,13 @@ namespace Asmerald.Test.MySQL
     public class NotImplementedTest
     {
         [TestMethod]
+        public void CallStatementImplementTest()
+        {
+            var qb = new MySQLDSLContext().QueryBuilder;
+            qb.AddStatment(new CallStatement());
+            AssertEx.DoesNotThrow<NotImplementedException>(() => qb.Build());
+        }
+        [TestMethod]
         public void NotStatementImplementTest()
         {
             var qb = new MySQLDSLContext().QueryBuilder;

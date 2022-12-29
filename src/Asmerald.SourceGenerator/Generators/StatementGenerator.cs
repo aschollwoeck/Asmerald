@@ -21,6 +21,7 @@ namespace Asmerald.SourceGenerator.Generators
             //w.WriteLine("using Asmerald.Statements;");
             w.WriteLine("using Asmerald.QueryBuilders;");
             w.WriteLine("using Asmerald.Expressions;");
+            w.WriteLine("using Asmerald.StoredProcedures;");
             w.WriteLine();
             w.WriteLine($"namespace Asmerald.Statements.{classObj.nspace}");
             w.WriteLine("{");

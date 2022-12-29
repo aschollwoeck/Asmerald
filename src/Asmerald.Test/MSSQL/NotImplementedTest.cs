@@ -11,6 +11,13 @@ namespace Asmerald.Test.MSSQL
     public class NotImplementedTest
     {
         [TestMethod]
+        public void ExecStatementImplementTest()
+        {
+            var qb = new MSSQLDSLContext().QueryBuilder;
+            qb.AddStatment(new ExecStatement());
+            AssertEx.DoesNotThrow<NotImplementedException>(() => qb.Build());
+        }
+        [TestMethod]
         public void NotStatementImplementTest()
         {
             var qb = new MSSQLDSLContext().QueryBuilder;

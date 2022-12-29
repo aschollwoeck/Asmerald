@@ -18,7 +18,26 @@ namespace Asmerald
         {
             Dictionary<string, object> parameters = new Dictionary<string, object>();
 
-            if (statement is CompoundStatement compoundStatement)
+            if(statement is CallStatement callStatement)
+            {
+                builder.Append($"CALL {callStatement.Sp.Name()}(");
+                bool bPara = false;
+                foreach (var (k, v) in callStatement.Sp.GetParameters())
+                {
+                    if(bPara)
+                    {
+                        builder.Append(", ");
+                    }
+
+                    builder.Append($"@{paraCount}");
+                    parameters.Add(paraCount.ToString(), v);
+                    paraCount++;
+
+                    bPara = true;
+                }
+                builder.Append(")");
+            }
+            else if (statement is CompoundStatement compoundStatement)
             {
                 builder.AppendLine();
                 if (statement is UnionAllStatement unionAllStatement)

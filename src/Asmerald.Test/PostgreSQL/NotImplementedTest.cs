@@ -11,6 +11,13 @@ namespace Asmerald.Test.PostgreSQL
     public class NotImplementedTest
     {
         [TestMethod]
+        public void CallStatementImplementTest()
+        {
+            var qb = new PostgreSQLDSLContext().QueryBuilder;
+            qb.AddStatment(new CallStatement());
+            AssertEx.DoesNotThrow<NotImplementedException>(() => qb.Build());
+        }
+        [TestMethod]
         public void NotStatementImplementTest()
         {
             var qb = new PostgreSQLDSLContext().QueryBuilder;
