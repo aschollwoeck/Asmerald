@@ -66,7 +66,7 @@ namespace Asmerald.Generate.Generators.Database
                 .Query<StoredProcedureSchema, StoredProcedureSchema.ParameterSchema, StoredProcedureSchema>($@"
 
                     select     
-                        so.routine_schema as '{{nameof(StoredProcedureSchema.Schema)',
+                        so.routine_schema as '{nameof(StoredProcedureSchema.Schema)}',
                         so.routine_name as '{nameof(StoredProcedureSchema.Name)}',
                         p.ordinal_position as {nameof(StoredProcedureSchema.ParameterSchema.Id)},
                         p.parameter_name as {nameof(StoredProcedureSchema.ParameterSchema.Name)},
