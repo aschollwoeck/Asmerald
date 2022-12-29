@@ -102,4 +102,43 @@ namespace Asmerald.Generate.Generators.Database
             return base.ToString();
         }
     }
+
+    public class FunctionSchema
+    {
+        public class ParameterSchema
+        {
+            public int Id { get; set; }
+            public string Name { get; set; } = "";
+            public string Type { get; set; } = "";
+            public int MaxLength { get; set; }
+            public bool IsOutput { get; set; }
+            public string DefaultValue { get; set; } = "";
+            public bool IsNullable { get; set; }
+
+            public override string ToString()
+            {
+                if (!String.IsNullOrEmpty(Name))
+                {
+                    return $"{Name} {Type} IsOutput: {IsOutput}";
+                }
+
+                return base.ToString();
+            }
+        }
+
+        public string Name { get; set; } = "";
+        public string Schema { get; set; } = "";
+        public string Type { get; set; } = "";
+        public List<ParameterSchema> Parameters { get; set; } = new List<ParameterSchema>();
+
+        public override string ToString()
+        {
+            if (!String.IsNullOrEmpty(Name))
+            {
+                return $"{Schema}.{Name} | Parameters: {Parameters.Count}";
+            }
+
+            return base.ToString();
+        }
+    }
 }
