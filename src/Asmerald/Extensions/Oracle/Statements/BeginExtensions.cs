@@ -7,6 +7,7 @@ using Asmerald.QueryBuilders;
 using Asmerald.Statements;
 using Asmerald.Statements.Oracle;
 
+using Asmerald.StoredProcedures;
 namespace Asmerald.Oracle
 {
     public static partial class AsmeraldBeginExtensions

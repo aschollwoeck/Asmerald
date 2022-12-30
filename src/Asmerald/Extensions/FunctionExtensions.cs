@@ -7,11 +7,23 @@ using Asmerald.Statements;
 using System.Linq;
 using Asmerald.Statements.SQLite;
 using Asmerald.Extensions;
+using Asmerald.Columns;
+using Asmerald.Functions;
 
 namespace Asmerald
 {
     public static partial class AsmeraldExtensions
     {
+        public static EqualConditionalExpression Equal<T>(this IFunction<T> function, T condition)
+        {
+            return new EqualConditionalExpression(function, condition);
+        }
+
+        public static GreaterConditionalExpression Greater<T>(this IFunction<T> function, T condition)
+        {
+            return new GreaterConditionalExpression(function, condition);
+        }
+
         public static ISelectExpression Expr(this Int16 v)
         {
             return new ScalarExpression(v);

@@ -6,6 +6,7 @@ using Asmerald.Expressions;
 using Asmerald.QueryBuilders;
 using Asmerald.Statements;
 using Asmerald.Statements.PostgreSQL;
+using Asmerald.StoredProcedures;
 
 namespace Asmerald.PostgreSQL
 {

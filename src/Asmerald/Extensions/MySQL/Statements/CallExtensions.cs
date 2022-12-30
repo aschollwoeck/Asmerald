@@ -7,6 +7,7 @@ using Asmerald.QueryBuilders;
 using Asmerald.Statements;
 using Asmerald.Statements.MySQL;
 
+using Asmerald.StoredProcedures;
 namespace Asmerald.MySQL
 {
     public static partial class AsmeraldCallExtensions
