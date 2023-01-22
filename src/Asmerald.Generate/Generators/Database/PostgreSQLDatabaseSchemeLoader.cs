@@ -29,7 +29,7 @@ namespace Asmerald.Generate.Generators.Database
                         table_name as {nameof(DatabaseSchema.Name)}, 
                         table_name as {nameof(DatabaseSchema.TableName)}, 
                         '' as {nameof(DatabaseSchema.Sql)}
-                    FROM INFORMATION_SCHEMA.TABLES;")
+                    FROM INFORMATION_SCHEMA.TABLES")
                 .ToList();
         }
 
@@ -44,7 +44,7 @@ namespace Asmerald.Generate.Generators.Database
                       (CASE WHEN IS_NULLABLE = 'YES' THEN 1 ELSE 0 END) as {nameof(TableSchema.Notnull)}, 
                       DATA_TYPE as {nameof(TableSchema.Type)}
                     FROM INFORMATION_SCHEMA.COLUMNS
-                    WHERE TABLE_NAME = @table;
+                    WHERE TABLE_NAME = @table
                     ",
                     new { table = table })
                 .ToList();
@@ -80,22 +80,22 @@ namespace Asmerald.Generate.Generators.Database
                     left join information_schema.parameters as p ON so.specific_name = p.specific_name
                     WHERE 
                         routine_type = 'PROCEDURE'
-                    ORDER BY so.routine_schema, so.routine_name, p.ordinal_position;
+                    ORDER BY so.routine_schema, so.routine_name, p.ordinal_position
                     ",
                     (sp, p) =>
                     {
-                        if (p != null && String.IsNullOrEmpty(p.Name))
-                        {
-                            sp.Parameters.Add(p);
-                        }
                         var key = $"{sp.Schema}.{sp.Name}";
                         if (res.ContainsKey(key) == false)
                         {
                             res.Add(key, sp);
+                            if (p != null && String.IsNullOrEmpty(p.Name) == false)
+                            {
+                                sp.Parameters.Add(p);
+                            }
                         }
                         else
                         {
-                            if (p != null && String.IsNullOrEmpty(p.Name))
+                            if (p != null && String.IsNullOrEmpty(p.Name) == false)
                             {
                                 res[key].Parameters.Add(p);
                             }
@@ -108,6 +108,11 @@ namespace Asmerald.Generate.Generators.Database
             return res
                 .Values
                 .ToList();
+        }
+
+        public List<FunctionSchema> LoadFunctions()
+        {
+            throw new NotImplementedException();
         }
     }
 }

@@ -52,7 +52,11 @@ namespace Asmerald.Generate.Generators
         /// </summary>
         public string DbType { get; set; } = "";
         /// <summary>
-        /// Schema in which table lives in (also called "database").
+        /// Database in which table lives in.
+        /// </summary>
+        public string Database { get; set; } = "";
+        /// <summary>
+        /// Schema in which table lives in.
         /// </summary>
         public string Schema { get; set; } = "";
         /// <summary>
@@ -227,7 +231,11 @@ namespace Asmerald.Generate.Generators
 
         private readonly FunctionSchema _storedProcedureSchema;
         /// <summary>
-        /// Schema or database where function lives in.
+        /// Database where function lives in.
+        /// </summary>
+        public string Database { get; set; } = "";
+        /// <summary>
+        /// Schema where function lives in.
         /// </summary>
         public string Schema { get; set; } = "";
         /// <summary>

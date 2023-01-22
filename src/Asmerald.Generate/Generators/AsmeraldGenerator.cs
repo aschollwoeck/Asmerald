@@ -47,7 +47,7 @@ namespace Asmerald.Generate.Generators
         /// Generate source code.
         /// </summary>
         /// <returns></returns>
-        public (List<TableGenerate>, List<StoredProcedureGenerate>) Generate()
+        public (List<TableGenerate>, List<StoredProcedureGenerate>, List<FunctionGenerate>) Generate()
         {
             var codeProvider = CodeDomProvider.CreateProvider("c#");
 
@@ -93,6 +93,8 @@ namespace Asmerald.Generate.Generators
                 {
                     DbName = t.Name,
                     DbType = t.Type,
+                    Database = t.Database,
+                    Schema = t.Schema,
                     Name_class = this._generateConfiguration.TablePrefixFunc(t) + codeProvider.CreateValidIdentifier(t.TableName.FirstCharToUpper()),
                     Name = t.TableName,
                     Columns = ctxtColumns
@@ -128,7 +130,36 @@ namespace Asmerald.Generate.Generators
                 templateSPs.Add(sgGen);
             }
 
-            return (templateTables, templateSPs);
+            List<FunctionGenerate> templateFNs = new List<FunctionGenerate>();
+            var fns = this._databaseSchemeLoader.LoadFunctions();
+            foreach (var fn in fns)
+            {
+                FunctionGenerate fnGen = new FunctionGenerate(fn)
+                {
+                    Name = fn.Name,
+                    Name_class = codeProvider.CreateValidIdentifier($"Fn_{fn.Name}"),
+                    Database = fn.Database,
+                    Schema = fn.Schema,
+                    Type = GetTypeFromColumn(this._databaseTypeMapper.Map(fn.Type).Name).FullName
+                };
+
+                foreach (var para in fn.Parameters)
+                {
+                    fnGen.Parameters.Add(new FunctionGenerate.ParameterGenerate(para)
+                    {
+                        Name = para.Name,
+                        Name_class = codeProvider.CreateValidIdentifier(para.Name.FirstCharToUpper()),
+                        DefaultValue = para.DefaultValue,
+                        IsNullable = para.IsNullable,
+                        IsOutput = para.IsOutput,
+                        Type = GetTypeFromColumn(this._databaseTypeMapper.Map(para.Type).Name).FullName
+                    });
+                }
+
+                templateFNs.Add(fnGen);
+            }
+
+            return (templateTables, templateSPs, templateFNs);
         }
 
         private Type GetTypeFromColumn(string column)

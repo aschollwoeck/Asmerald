@@ -1,4 +1,5 @@
 ﻿using Asmerald.Columns;
+using MySqlX.XDevAPI.Relational;
 using System;
 using System.CodeDom.Compiler;
 using System.Collections.Generic;
@@ -76,7 +77,7 @@ namespace Asmerald.Generate.Generators
             w.WriteLine("{");
             w.Indent++;
 
-            w.WriteLine($"public string {nameof(Asmerald.StoredProcedures.IStoredProcedure.Name)}() => \"{sp.Name}\";");
+            w.WriteLine($"public string {nameof(Asmerald.StoredProcedures.IStoredProcedure.Name)}() => \"{sp.Schema}.{sp.Name}\";");
             w.WriteLine();
 
             foreach (var para in sp.Parameters)

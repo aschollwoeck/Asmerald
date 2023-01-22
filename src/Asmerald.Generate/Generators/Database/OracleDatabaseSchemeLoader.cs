@@ -36,7 +36,7 @@ namespace Asmerald.Generate.Generators.Database
                         view_name as {nameof(DatabaseSchema.Name)}, 
                         view_name as {nameof(DatabaseSchema.TableName)}, 
                         '' as {nameof(DatabaseSchema.Sql)}
-                    FROM all_views;")
+                    FROM all_views")
                 .ToList();
         }
 
@@ -51,7 +51,7 @@ namespace Asmerald.Generate.Generators.Database
                       NULLABLE as {nameof(TableSchema.Notnull)}, 
                       DATA_TYPE as {nameof(TableSchema.Type)}
                     FROM all_tab_columns
-                    WHERE TABLE_NAME = :table;
+                    WHERE TABLE_NAME = :table
                     ",
                     new { table = table })
                 .ToList();
@@ -93,18 +93,18 @@ namespace Asmerald.Generate.Generators.Database
                             and object_type = 'PROCEDURE'
                     order by proc.owner,
                                 proc.object_name,
-                                args.position;
+                                args.position
                     ",
                     (sp, p) =>
                     {
-                        if (p != null && String.IsNullOrEmpty(p.Name) == false)
-                        {
-                            sp.Parameters.Add(p);
-                        }
                         var key = $"{sp.Schema}.{sp.Name}";
                         if (res.ContainsKey(key) == false)
                         {
                             res.Add(key, sp);
+                            if (p != null && String.IsNullOrEmpty(p.Name) == false)
+                            {
+                                sp.Parameters.Add(p);
+                            }
                         }
                         else
                         {
@@ -121,6 +121,11 @@ namespace Asmerald.Generate.Generators.Database
             return res
                 .Values
                 .ToList();
+        }
+
+        public List<FunctionSchema> LoadFunctions()
+        {
+            throw new NotImplementedException();
         }
     }
 }

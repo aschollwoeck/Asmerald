@@ -13,25 +13,29 @@ namespace Asmerald.Generate.Generators.Database
     public class DatabaseSchema
     {
         /// <summary>
-        /// Schema or database where table is in.
+        /// Database where table is in.
         /// </summary>
-        internal string Schema { get; set; } = "";
+        public string Database { get; set; } = "";
+        /// <summary>
+        /// Schema where table is in.
+        /// </summary>
+        public string Schema { get; set; } = "";
         /// <summary>
         /// Type of the database object, e.g. table or view.
         /// </summary>
-        internal string Type { get; set; } = "";
+        public string Type { get; set; } = "";
         /// <summary>
         /// Name of the database object.
         /// </summary>
-        internal string Name { get; set; } = "";
+        public string Name { get; set; } = "";
         /// <summary>
         /// Name of the database object.
         /// </summary>
-        internal string TableName { get; set; } = "";
+        public string TableName { get; set; } = "";
         /// <summary>
         /// Sql which was used to create the database object.
         /// </summary>
-        internal string Sql { get; set; } = "";
+        public string Sql { get; set; } = "";
     }
 
     /// <summary>
@@ -127,6 +131,7 @@ namespace Asmerald.Generate.Generators.Database
         }
 
         public string Name { get; set; } = "";
+        public string Database { get; set; } = "";
         public string Schema { get; set; } = "";
         public string Type { get; set; } = "";
         public List<ParameterSchema> Parameters { get; set; } = new List<ParameterSchema>();

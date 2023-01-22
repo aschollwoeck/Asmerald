@@ -2,7 +2,7 @@
   "profiles": {
     "Asmerald.Generate": {
       "commandName": "Project",
-      "commandLineArgs": "scheme SQLite \"Data Source=C:\\Users\\Alexander\\Desktop\\Digillection\\digillection.sqlite3;\""
+      "commandLineArgs": "scheme MSSQL \"Server=localhost;Database=master;User Id=sa;Password=yourStrong(!)Password;\""
     }
   }
 }

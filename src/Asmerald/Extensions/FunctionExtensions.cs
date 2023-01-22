@@ -24,6 +24,39 @@ namespace Asmerald
             return new GreaterConditionalExpression(function, condition);
         }
 
+        public static GreaterOrEqualConditionalExpression GreaterOrEqual<T>(this IFunction<T> function, T condition)
+        {
+            return new GreaterOrEqualConditionalExpression(function, condition);
+        }
+
+        public static InConditionalExpression In<T>(this IFunction<T> function, IEnumerable<T> condition)
+        {
+            return new InConditionalExpression(function, condition);
+        }
+
+        public static LesserConditionalExpression Lesser<T>(this IFunction<T> function, T condition)
+        {
+            return new LesserConditionalExpression(function, condition);
+        }
+
+        public static LesserOrEqualConditionalExpression LesserOrEqual<T>(this IFunction<T> function, T condition)
+        {
+            return new LesserOrEqualConditionalExpression(function, condition);
+        }
+
+        public static IsNullConditionalExpression IsNull<T>(this IFunction<T> function)
+        {
+            return new IsNullConditionalExpression(function);
+        }
+
+        public static BetweenConditionalExpression Between<T>(this IFunction<T> function, T minValue, T maxValue)
+        {
+            return new BetweenConditionalExpression(function, minValue, maxValue);
+        }
+
+
+
+
         public static ISelectExpression Expr(this Int16 v)
         {
             return new ScalarExpression(v);

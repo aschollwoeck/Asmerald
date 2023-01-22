@@ -56,11 +56,10 @@ namespace Asmerald.Generate.Generators
 
             if (String.IsNullOrEmpty(nspace) == false)
             {
-                w.WriteLine($"namespace {nspace}");
+                w.WriteLine($"namespace {nspace}.{func.Database}");
                 w.WriteLine("{");
                 w.Indent++;
             }
-
 
             var ctorParas = func.Parameters.Select(p => $"{p.Type} {p.Name_class.FirstCharToLower()}");
 
@@ -78,7 +77,7 @@ namespace Asmerald.Generate.Generators
             w.WriteLine("{");
             w.Indent++;
 
-            w.WriteLine($"public string Name() => \"{func.Name}\";");
+            w.WriteLine($"public string Name() => \"{func.Schema}.{func.Name}\";");
             w.WriteLine();
 
             foreach (var para in func.Parameters)

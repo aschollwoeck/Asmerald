@@ -28,9 +28,14 @@ namespace Asmerald.Generate.Generators
             w.WriteLine($"using {nameof(Asmerald)}.{nameof(Asmerald.Columns)};");
             w.WriteLine();
 
-            if (String.IsNullOrEmpty(nspace) == false)
+            var nspaces = new List<string>();
+            if (String.IsNullOrEmpty(nspace) == false) nspaces.Add(nspace);
+            if (String.IsNullOrEmpty(table.Database) == false) nspaces.Add(table.Database);
+            if (String.IsNullOrEmpty(table.Schema) == false) nspaces.Add(table.Schema);
+
+            if (nspaces.Count > 0)
             {
-                w.WriteLine($"namespace {nspace}");
+                w.Write($"namespace {String.Join('.', nspaces)}");
                 w.WriteLine("{");
                 w.Indent++;
             }
@@ -46,7 +51,14 @@ namespace Asmerald.Generate.Generators
             w.WriteLine("{");
             w.Indent++;
 
-            w.WriteLine($"string {nameof(ITable)}.{nameof(ITable.Name)}() => \"{table.Name}\";");
+            // We make sure to always reference the full table name
+            // This could be up to database.schema.table
+            var tableNameParts = new List<string>();
+            if (String.IsNullOrEmpty(table.Database) == false) tableNameParts.Add(table.Database);
+            if (String.IsNullOrEmpty(table.Schema) == false) tableNameParts.Add(table.Schema);
+            tableNameParts.Add(table.Name);
+
+            w.WriteLine($"string {nameof(ITable)}.{nameof(ITable.Name)}() => \"{String.Join('.', tableNameParts)}\";");
 
             foreach (var column in table.Columns)
             {
@@ -81,7 +93,7 @@ namespace Asmerald.Generate.Generators
                 w.WriteLine("}");
             }
 
-            if (String.IsNullOrEmpty(nspace) == false)
+            if (nspaces.Count > 0)
             {
                 w.Indent--;
                 w.WriteLine("}");
