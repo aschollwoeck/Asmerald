@@ -18,6 +18,7 @@ using Asmerald.Generate.Generators.Mapping;
 using Asmerald.Generate.Generators.Database;
 using System.Reflection.Emit;
 using static Org.BouncyCastle.Math.EC.ECCurve;
+using MySqlX.XDevAPI;
 
 public class Program
 {
@@ -41,6 +42,9 @@ public class Program
 
     // generate SQLite "Data Source=C:\Users\Alexander\Desktop\Digillection\digillection.sqlite3;" "C:\temp\sqlgen"
 
+//    scheme SQLite "Data Source=C:\Users\Alexander\Desktop\Digillection\digillection.sqlite3;"
+
+//scheme MSSQL "Server=localhost;Database=master;User Id=sa;Password=yourStrong(!)Password;"
     [Command("scheme", Description = "Generates code based on database details to use with Typesafe library.")]
     public void Scheme(
         [Operand("database", Description = "Database provider - needs to be supported, e.g. SQLite.")]
@@ -55,15 +59,15 @@ public class Program
         // Get to be created classes
         var (tables, sps, fns) = generator.Generate();
 
-        foreach (var sp in sps)
-        {
-            var code = new AsmeraldSPClassBuilder().Build("test", sp);
-        }
+        //foreach (var sp in sps)
+        //{
+        //    var code = new AsmeraldSPClassBuilder().Build("test", sp);
+        //}
 
-        foreach (var fn in fns)
-        {
-            var code = new AsmeraldFunctionClassBuilder().Build("test", fn);
-        }
+        //foreach (var fn in fns)
+        //{
+        //    var code = new AsmeraldFunctionClassBuilder().Build("test", fn);
+        //}
 
         ConsoleTable ct = new ConsoleTable("Table");
         foreach (var table in tables)
@@ -93,6 +97,60 @@ public class Program
         }
 
         cc.Write();
+
+        ConsoleTable csp = new ConsoleTable("Stored Procedure", "Column", "Type");
+        string spn = "";
+        foreach (var stproc in sps)
+        {
+            if(stproc.Parameters.Count == 0)
+            {
+                csp.AddRow(stproc.Name, "", "");
+            }
+            else
+            {
+                foreach (var kv in stproc.Parameters)
+                {
+                    if (spn != stproc.Name)
+                    {
+                        csp.AddRow(stproc.Name, kv.Name, kv.Type);
+                    }
+                    else
+                    {
+                        csp.AddRow("", kv.Name, kv.Type);
+                    }
+                    spn = stproc.Name;
+                }
+            }
+        }
+
+        csp.Write();
+
+        ConsoleTable cf = new ConsoleTable("Function", "Column", "Type");
+        string f = "";
+        foreach (var func in fns)
+        {
+            if (func.Parameters.Count == 0)
+            {
+                cf.AddRow(func.Name, "", "");
+            }
+            else
+            {
+                foreach (var kv in func.Parameters)
+                {
+                    if (f != func.Name)
+                    {
+                        cf.AddRow(func.Name, kv.Name, kv.Type);
+                    }
+                    else
+                    {
+                        cf.AddRow("", kv.Name, kv.Type);
+                    }
+                    f = func.Name;
+                }
+            }
+        }
+
+        cf.Write();
     }
 
     [Command("generate", Description = "Generates code based on database details to use with Typesafe library.")]
