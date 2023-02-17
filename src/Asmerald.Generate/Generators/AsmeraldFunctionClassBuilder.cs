@@ -60,6 +60,12 @@ namespace Asmerald.Generate.Generators
                 w.WriteLine("{");
                 w.Indent++;
             }
+            else
+            {
+                w.WriteLine($"namespace {func.Database}");
+                w.WriteLine("{");
+                w.Indent++;
+            }
 
             var ctorParas = func.Parameters.Select(p => $"{p.Type} {p.Name_class.FirstCharToLower()}");
 
@@ -99,11 +105,11 @@ namespace Asmerald.Generate.Generators
             w.WriteLine("}");
 
             w.WriteLine();
-            w.WriteLine("public List<(string, object)> GetParameters()");
+            w.WriteLine("public System.Collections.Generic.List<(string, object)> GetParameters()");
             w.WriteLine("{");
             w.Indent++;
 
-            w.WriteLine("return new List<(string, object)>()");
+            w.WriteLine("return new System.Collections.Generic.List<(string, object)>()");
             w.WriteLine("{");
             w.Indent++;
 
@@ -132,11 +138,8 @@ namespace Asmerald.Generate.Generators
                 w.WriteLine("}");
             }
 
-            if (String.IsNullOrEmpty(nspace) == false)
-            {
-                w.Indent--;
-                w.WriteLine("}");
-            }
+            w.Indent--;
+            w.WriteLine("}");
 
             w.Flush();
             return sw.ToString();

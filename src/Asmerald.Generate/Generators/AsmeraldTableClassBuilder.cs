@@ -28,14 +28,15 @@ namespace Asmerald.Generate.Generators
             w.WriteLine($"using {nameof(Asmerald)}.{nameof(Asmerald.Columns)};");
             w.WriteLine();
 
-            var nspaces = new List<string>();
-            if (String.IsNullOrEmpty(nspace) == false) nspaces.Add(nspace);
-            if (String.IsNullOrEmpty(table.Database) == false) nspaces.Add(table.Database);
-            if (String.IsNullOrEmpty(table.Schema) == false) nspaces.Add(table.Schema);
-
-            if (nspaces.Count > 0)
+            if (String.IsNullOrEmpty(nspace) == false)
             {
-                w.Write($"namespace {String.Join('.', nspaces)}");
+                w.WriteLine($"namespace {nspace}.{table.Database}");
+                w.WriteLine("{");
+                w.Indent++;
+            }
+            else
+            {
+                w.WriteLine($"namespace {table.Database}");
                 w.WriteLine("{");
                 w.Indent++;
             }
@@ -45,6 +46,9 @@ namespace Asmerald.Generate.Generators
                 w.WriteLine($"public partial class {table.Schema}");
                 w.WriteLine("{");
                 w.Indent++;
+
+                // Method to create an object of stored procedure
+                w.WriteLine($"public static {table.Name_class} {table.Name}() => new {table.Name_class}();");
             }
 
             w.Write($"public class {table.Name_class} : {nameof(ITable)}");
@@ -54,16 +58,25 @@ namespace Asmerald.Generate.Generators
             // We make sure to always reference the full table name
             // This could be up to database.schema.table
             var tableNameParts = new List<string>();
-            if (String.IsNullOrEmpty(table.Database) == false) tableNameParts.Add(table.Database);
+            //if (String.IsNullOrEmpty(table.Database) == false) tableNameParts.Add(table.Database);
             if (String.IsNullOrEmpty(table.Schema) == false) tableNameParts.Add(table.Schema);
             tableNameParts.Add(table.Name);
 
             w.WriteLine($"string {nameof(ITable)}.{nameof(ITable.Name)}() => \"{String.Join('.', tableNameParts)}\";");
 
+            // Methods to create columns
             foreach (var column in table.Columns)
             {
-                w.WriteLine($"public static {column.Name_class} {column.Name_method}() => new {column.Name_class}();");
-                w.WriteLine($"public static {column.Name_class} {column.Name_method}(string tableAlias) => new {column.Name_class}(tableAlias);");
+                w.WriteLine($"public {column.Name_class} {column.Name_method}() => new {column.Name_class}();");
+            }
+
+            // Static methods to create columns
+            foreach (var column in table.Columns)
+            {
+                // We cannot have instance methods and static methods with same name and parameters
+                // Thats why we use <ColumnName>() only for instance methods and for static methods we a little trick with optional parameter of tableAlias
+                //w.WriteLine($"public static {column.Name_class} {column.Name_method}() => new {column.Name_class}();");
+                w.WriteLine($"public static {column.Name_class} {column.Name_method}(string tableAlias = \"\") => new {column.Name_class}(tableAlias);");
             }
 
             foreach (var column in table.Columns)
@@ -93,11 +106,8 @@ namespace Asmerald.Generate.Generators
                 w.WriteLine("}");
             }
 
-            if (nspaces.Count > 0)
-            {
-                w.Indent--;
-                w.WriteLine("}");
-            }
+            w.Indent--;
+            w.WriteLine("}");
 
             w.Flush();
             return sw.ToString();

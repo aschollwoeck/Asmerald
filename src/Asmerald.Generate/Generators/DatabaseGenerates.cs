@@ -134,6 +134,10 @@ namespace Asmerald.Generate.Generators
 
         private readonly StoredProcedureSchema _storedProcedureSchema;
         /// <summary>
+        /// Database where function lives in.
+        /// </summary>
+        public string Database { get; set; } = "";
+        /// <summary>
         /// Schema or database where stored procedure lives in.
         /// </summary>
         public string Schema { get; set; } = "";
@@ -229,7 +233,7 @@ namespace Asmerald.Generate.Generators
             }
         }
 
-        private readonly FunctionSchema _storedProcedureSchema;
+        private readonly FunctionSchema _functionSchema;
         /// <summary>
         /// Database where function lives in.
         /// </summary>
@@ -258,10 +262,10 @@ namespace Asmerald.Generate.Generators
         /// <summary>
         /// Creates a new function object with reference to database data.
         /// </summary>
-        /// <param name="storedProcedureSchema"></param>
-        public FunctionGenerate(FunctionSchema storedProcedureSchema)
+        /// <param name="functionSchema"></param>
+        public FunctionGenerate(FunctionSchema functionSchema)
         {
-            this._storedProcedureSchema = storedProcedureSchema;
+            this._functionSchema = functionSchema;
         }
 
         public override string ToString()

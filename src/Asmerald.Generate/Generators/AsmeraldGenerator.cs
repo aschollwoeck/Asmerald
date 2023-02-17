@@ -111,6 +111,7 @@ namespace Asmerald.Generate.Generators
                 {
                     Name = sp.Name,
                     Name_class = codeProvider.CreateValidIdentifier($"StProc_{sp.Name}"),
+                    Database = sp.Database,
                     Schema = sp.Schema
                 };
 
