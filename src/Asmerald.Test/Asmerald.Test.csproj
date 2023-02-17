@@ -23,4 +23,8 @@
     <ProjectReference Include="..\Asmerald\Asmerald.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="MSSQL\Generated\" />
+  </ItemGroup>
+
 </Project>

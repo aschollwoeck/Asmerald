@@ -42,9 +42,9 @@ public class Program
 
     // generate SQLite "Data Source=C:\Users\Alexander\Desktop\Digillection\digillection.sqlite3;" "C:\temp\sqlgen"
 
-//    scheme SQLite "Data Source=C:\Users\Alexander\Desktop\Digillection\digillection.sqlite3;"
+    //    scheme SQLite "Data Source=C:\Users\Alexander\Desktop\Digillection\digillection.sqlite3;"
 
-//scheme MSSQL "Server=localhost;Database=master;User Id=sa;Password=yourStrong(!)Password;"
+    //scheme MSSQL "Server=localhost;Database=master;User Id=sa;Password=yourStrong(!)Password;"
     [Command("scheme", Description = "Generates code based on database details to use with Typesafe library.")]
     public void Scheme(
         [Operand("database", Description = "Database provider - needs to be supported, e.g. SQLite.")]
@@ -153,6 +153,8 @@ public class Program
         cf.Write();
     }
 
+
+    //generate MSSQL "Server=localhost;Database=master;User Id=sa;Password=yourStrong(!)Password;" "C:\Users\Alexander\Source\Repos\Asmerald\src\Asmerald.Test\MSSQL\Generated"
     [Command("generate", Description = "Generates code based on database details to use with Typesafe library.")]
     public async Task Generate(
         [Operand("database", Description = "Database provider - needs to be supported, e.g. SQLite.")]
@@ -178,6 +180,18 @@ public class Program
         {
             var generatedCode = classGenerator.Build(config.Namespace, tbl);
             dicRes.Add(tbl.Name_class, generatedCode);
+        }
+
+        foreach (var sp in sps)
+        {
+            var code = new AsmeraldSPClassBuilder().Build(nspace, sp);
+            dicRes.Add(sp.Name_class, code);
+        }
+
+        foreach (var fn in fns)
+        {
+            var code = new AsmeraldFunctionClassBuilder().Build(nspace, fn);
+            dicRes.Add(fn.Name_class, code);
         }
 
         // Then we create the directory - if necessary
